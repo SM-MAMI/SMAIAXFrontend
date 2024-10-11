@@ -1,3 +1,12 @@
+# Smaia-X Frontend
+
+## Open API
+How to generate:  
+* First navigate to `./src/openAPI/` then execute  
+* `npx @openapitools/openapi-generator-cli generate -i http://localhost:5263/swagger/v1/swagger.json -g typescript-axios -o ./ --skip-validate-spec`
+
+> **_NOTE:_** Don't forget to start the backend!
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
