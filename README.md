@@ -1,9 +1,15 @@
 # Smaia-X Frontend
 
+## How to use
+* install node LTS version
+* `npm ci` to install dependencies
+* `npm run dev` to start vite dev environment
+
 ## Open API
-How to generate:  
-* First navigate to `./src/openAPI/` then execute  
-* `npx @openapitools/openapi-generator-cli generate -i http://localhost:5263/swagger/v1/swagger.json -g typescript-axios -o ./ --skip-validate-spec`
+Steps to generate our frontend api:  
+1. `npm install @openapitools/openapi-generator-cli -g`
+2. navigate to `./src/openAPI/` then execute  
+3. `npx @openapitools/openapi-generator-cli generate -i http://localhost:5263/swagger/v1/swagger.json -g typescript-axios -o ./ --skip-validate-spec`
 
 > **_NOTE:_** Don't forget to start the backend!
 
