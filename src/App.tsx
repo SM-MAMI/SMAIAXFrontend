@@ -1,4 +1,3 @@
-import "./css/App.css";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import SignIn from './pages/SignIn.tsx';
