@@ -26,43 +26,6 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface Address
- */
-export interface Address {
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    'street'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    'city'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    'state'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    'zipCode'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Address
-     */
-    'country'?: string | null;
-}
-/**
- * 
- * @export
  * @interface LoginDto
  */
 export interface LoginDto {
@@ -161,12 +124,6 @@ export interface RegisterDto {
      * @memberof RegisterDto
      */
     'name': Name;
-    /**
-     * 
-     * @type {Address}
-     * @memberof RegisterDto
-     */
-    'address': Address;
 }
 /**
  * 
@@ -221,6 +178,39 @@ export const AuthenticationApiAxiosParamCreator = function (configuration?: Conf
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(loginDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {TokenDto} [tokenDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAuthenticationLogoutPost: async (tokenDto?: TokenDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/authentication/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(tokenDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -321,6 +311,18 @@ export const AuthenticationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async apiAuthenticationLogoutPost(tokenDto?: TokenDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthenticationLogoutPost(tokenDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationApi.apiAuthenticationLogoutPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {TokenDto} [tokenDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async apiAuthenticationRefreshPost(tokenDto?: TokenDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TokenDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuthenticationRefreshPost(tokenDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -364,6 +366,15 @@ export const AuthenticationApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        apiAuthenticationLogoutPost(tokenDto?: TokenDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiAuthenticationLogoutPost(tokenDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {TokenDto} [tokenDto] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         apiAuthenticationRefreshPost(tokenDto?: TokenDto, options?: RawAxiosRequestConfig): AxiosPromise<TokenDto> {
             return localVarFp.apiAuthenticationRefreshPost(tokenDto, options).then((request) => request(axios, basePath));
         },
@@ -395,6 +406,17 @@ export class AuthenticationApi extends BaseAPI {
      */
     public apiAuthenticationLoginPost(loginDto?: LoginDto, options?: RawAxiosRequestConfig) {
         return AuthenticationApiFp(this.configuration).apiAuthenticationLoginPost(loginDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {TokenDto} [tokenDto] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthenticationApi
+     */
+    public apiAuthenticationLogoutPost(tokenDto?: TokenDto, options?: RawAxiosRequestConfig) {
+        return AuthenticationApiFp(this.configuration).apiAuthenticationLogoutPost(tokenDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
