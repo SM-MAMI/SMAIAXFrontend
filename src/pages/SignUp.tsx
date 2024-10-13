@@ -10,17 +10,23 @@ import Typography from "@mui/material/Typography";
 import { SitemarkIcon } from "../assets/CustomIcons.tsx";
 import { Link as RouterLink } from "react-router-dom";
 import { CardContainer, Card } from "../components/CardContainer.tsx";
-import { EmailRegex } from "../constants/constants.ts";
+import { useValidation } from '../hooks/useValidation.ts';
 
 export default function SignUp() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [firstnameError, setFirstnameError] = React.useState(false);
-  const [firstnameErrorMessage, setFirstnameErrorMessage] = React.useState("");
-  const [lastnameError, setLastnameError] = React.useState(false);
-  const [lastnameErrorMessage, setLastnameErrorMessage] = React.useState("");
+  const {
+    emailError,
+    emailErrorMessage,
+    passwordError,
+    passwordErrorMessage,
+    firstnameError,
+    firstnameErrorMessage,
+    lastnameError,
+    lastnameErrorMessage,
+    validateEmail,
+    validatePassword,
+    validateFirstname,
+    validateLastname,
+  } = useValidation();
 
   const validateInputs = () => {
     const email = document.getElementById("email") as HTMLInputElement;
@@ -30,40 +36,20 @@ export default function SignUp() {
 
     let isValid = true;
 
-    if (!email.value || !EmailRegex.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
+    if (!validateEmail(email.value)) {
       isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+    if (!validatePassword(password.value)) {
       isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
     }
 
-    if (!firstname.value || firstname.value.length < 1) {
-      setFirstnameError(true);
-      setFirstnameErrorMessage("First name is required.");
+    if (!validateFirstname(firstname.value)) {
       isValid = false;
-    } else {
-      setFirstnameError(false);
-      setFirstnameErrorMessage("");
     }
 
-    if (!lastname.value || lastname.value.length < 1) {
-      setLastnameError(true);
-      setLastnameErrorMessage("Last name is required.");
+    if (!validateLastname(lastname.value)) {
       isValid = false;
-    } else {
-      setLastnameError(false);
-      setLastnameErrorMessage("");
     }
 
     return isValid;
@@ -71,7 +57,9 @@ export default function SignUp() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
+
     console.log({
       name: data.get("name"),
       lastName: data.get("lastName"),

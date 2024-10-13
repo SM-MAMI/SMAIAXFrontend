@@ -11,17 +11,23 @@ import Typography from "@mui/material/Typography";
 import { SitemarkIcon } from "../assets/CustomIcons.tsx";
 import { Link as RouterLink } from "react-router-dom";
 import { CardContainer, Card } from "../components/CardContainer.tsx";
-import { EmailRegex } from "../constants/constants.ts";
+import { useValidation } from '../hooks/useValidation.ts';
 
 export default function SignIn() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const {
+    emailError,
+    emailErrorMessage,
+    passwordError,
+    passwordErrorMessage,
+    validateEmail,
+    validatePassword,
+  } = useValidation();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
+
     console.log({
       email: data.get("email"),
       password: data.get("password"),
@@ -34,22 +40,12 @@ export default function SignIn() {
 
     let isValid = true;
 
-    if (!email.value || !EmailRegex.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
+    if (!validateEmail(email.value)) {
       isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+    if (!validatePassword(password.value)) {
       isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
     }
 
     return isValid;
