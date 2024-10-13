@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./css/index.css";
-import SignUp from "./components/signUp/SignUp.tsx";
-import SignIn from "./components/signIn/SignIn.tsx";
+import SignUp from "./pages/SignUp.tsx";
+import SignIn from "./pages/SignIn.tsx";
 import AppTheme from "./themes/AppTheme.tsx";
 import { CssBaseline } from "@mui/material";
 
