@@ -1,4 +1,4 @@
-import "./App.css";
+import "./css/App.css";
 import ColorModeSelect from "./themes/ColorModeSelect";
 
 function App() {

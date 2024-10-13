@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
-import "./index.css";
+import "./css/index.css";
 import SignUp from "./components/signUp/SignUp.tsx";
 import SignIn from "./components/signIn/SignIn.tsx";
 import AppTheme from "./themes/AppTheme.tsx";
