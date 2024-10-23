@@ -6,29 +6,29 @@ import NotFoundPage from './pages/NotFoundPage.tsx';
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <HomePage />,
     },
     {
-        path: "signin",
+        path: 'signin',
         element: <SignIn />,
     },
     {
-        path: "signup",
+        path: 'signup',
         element: <SignUp />,
     },
     {
-        path: "*",
+        path: '*',
         element: <NotFoundPage />,
     },
 ]);
 
 function App() {
-  return (
-    <>
-        <RouterProvider router={router} />
-    </>
-  );
+    return (
+        <>
+            <RouterProvider router={router} />
+        </>
+    );
 }
 
 export default App;
