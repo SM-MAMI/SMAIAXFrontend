@@ -44,11 +44,11 @@ export default function SignIn() {
         }
 
         try {
-            const userId = await login(loginDto);
+            const tokenDto = await login(loginDto);
 
             // TODO:: implement snackbar
             console.log('Successfully signed in');
-            console.log(userId);
+            console.log(tokenDto);
 
             navigate('/');
         } catch (error) {
