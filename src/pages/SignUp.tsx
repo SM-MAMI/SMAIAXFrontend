@@ -10,7 +10,10 @@ import Typography from '@mui/material/Typography';
 import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink } from 'react-router-dom';
 import { CardContainer, Card } from '../components/CardContainer.tsx';
+import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
+import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
     const {
@@ -28,48 +31,66 @@ export default function SignUp() {
         validateLastname,
     } = useValidation();
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-        const firstname = document.getElementById('firstname') as HTMLInputElement;
-        const lastname = document.getElementById('lastname') as HTMLInputElement;
+    const { register } = useAuthenticationService();
 
+    const navigate = useNavigate();
+
+    const validateInputs = (registerDto: RegisterDto) => {
         let isValid = true;
 
-        if (!validateEmail(email.value)) {
+        if (!validateEmail(registerDto.email)) {
             isValid = false;
         }
 
-        if (!validatePassword(password.value)) {
+        if (!validatePassword(registerDto.password)) {
             isValid = false;
         }
 
-        if (!validateFirstname(firstname.value)) {
+        if (!validateFirstname(registerDto.name.firstName ?? '')) {
             isValid = false;
         }
 
-        if (!validateLastname(lastname.value)) {
+        if (!validateLastname(registerDto.name.lastName ?? '')) {
             isValid = false;
         }
 
         return isValid;
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
 
-        console.log({
-            name: data.get('name'),
-            lastName: data.get('lastName'),
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const registerDto: RegisterDto = {
+            email: data.get('email') as string,
+            password: data.get('password') as string,
+            name: {
+                firstName: data.get('firstname') as string,
+                lastName: data.get('lastname') as string,
+            },
+        };
+
+        if (!validateInputs(registerDto)) {
+            return;
+        }
+
+        try {
+            const userId = await register(registerDto);
+
+            // TODO:: implement snackbar
+            console.log('Successfully signed up');
+            console.log(userId);
+
+            navigate('/signin');
+        } catch (error) {
+            // TODO:: implement snackbar
+            console.error('Registration failed:', error);
+        }
     };
 
     return (
-        <Box sx={{ height: '100%', display: 'flex', }}>
+        <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
                     <SitemarkIcon />
@@ -88,7 +109,9 @@ export default function SignUp() {
 
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={(event) => {
+                            void handleSubmit(event);
+                        }}
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
                         <FormControl>
@@ -96,12 +119,11 @@ export default function SignUp() {
                                 <FormLabel htmlFor="firstname">First name</FormLabel>
                             </Box>
                             <TextField
-                                autoComplete="firstname"
-                                name="firstname"
-                                required
                                 fullWidth
                                 id="firstname"
                                 placeholder="Jon"
+                                name="firstname"
+                                autoComplete="firstname"
                                 error={firstnameError}
                                 helperText={firstnameErrorMessage}
                                 color={firstnameError ? 'error' : 'primary'}
@@ -112,12 +134,11 @@ export default function SignUp() {
                                 <FormLabel htmlFor="lastname">Last name</FormLabel>
                             </Box>
                             <TextField
-                                autoComplete="lastname"
-                                name="lastname"
-                                required
                                 fullWidth
                                 id="lastname"
                                 placeholder="Snow"
+                                name="lastname"
+                                autoComplete="lastname"
                                 error={lastnameError}
                                 helperText={lastnameErrorMessage}
                                 color={lastnameError ? 'error' : 'primary'}
@@ -128,7 +149,6 @@ export default function SignUp() {
                                 <FormLabel htmlFor="email">Email</FormLabel>
                             </Box>
                             <TextField
-                                required
                                 fullWidth
                                 id="email"
                                 placeholder="your@email.com"
@@ -145,14 +165,13 @@ export default function SignUp() {
                                 <FormLabel htmlFor="password">Password</FormLabel>
                             </Box>
                             <TextField
-                                required
                                 fullWidth
-                                name="password"
-                                placeholder="••••••"
-                                type="password"
                                 id="password"
+                                placeholder="••••••"
+                                name="password"
                                 autoComplete="new-password"
                                 variant="outlined"
+                                type="password"
                                 error={passwordError}
                                 helperText={passwordErrorMessage}
                                 color={passwordError ? 'error' : 'primary'}
@@ -163,7 +182,6 @@ export default function SignUp() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            onClick={validateInputs}
                         >
                             Sign up
                         </Button>

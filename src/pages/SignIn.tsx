@@ -9,9 +9,11 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { SitemarkIcon } from '../assets/CustomIcons.tsx';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { CardContainer, Card } from '../components/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
+import { LoginDto } from '../api/openAPI';
+import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 
 export default function SignIn() {
     const {
@@ -23,28 +25,46 @@ export default function SignIn() {
         validatePassword,
     } = useValidation();
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const { login } = useAuthenticationService();
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
 
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const loginDto: LoginDto = {
+            username: data.get('email') as string,
+            password: data.get('password') as string,
+        };
+
+        if (!validateInputs(loginDto)) {
+            return;
+        }
+
+        try {
+            const tokenDto = await login(loginDto);
+
+            // TODO:: implement snackbar
+            console.log('Successfully signed in');
+            console.log(tokenDto);
+
+            navigate('/');
+        } catch (error) {
+            // TODO:: implement snackbar
+            console.error('Signin failed:', error);
+        }
     };
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-
+    const validateInputs = (loginDto: LoginDto) => {
         let isValid = true;
 
-        if (!validateEmail(email.value)) {
+        if (!validateEmail(loginDto.username)) {
             isValid = false;
         }
 
-        if (!validatePassword(password.value)) {
+        if (!validatePassword(loginDto.password)) {
             isValid = false;
         }
 
@@ -72,7 +92,9 @@ export default function SignIn() {
 
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={(event) => {
+                            void handleSubmit(event);
+                        }}
                         noValidate
                         sx={{
                             display: 'flex',
@@ -86,17 +108,17 @@ export default function SignIn() {
                                 <FormLabel htmlFor="email">Email</FormLabel>
                             </Box>
                             <TextField
-                                error={emailError}
-                                helperText={emailErrorMessage}
-                                id="email"
-                                type="email"
-                                name="email"
-                                placeholder="your@email.com"
-                                autoComplete="email"
-                                autoFocus
                                 required
                                 fullWidth
+                                id="email"
+                                placeholder="your@email.com"
+                                name="email"
+                                autoComplete="email"
                                 variant="outlined"
+                                type="email"
+                                autoFocus
+                                error={emailError}
+                                helperText={emailErrorMessage}
                                 color={emailError ? 'error' : 'primary'}
                                 sx={{ ariaLabel: 'email' }}
                             />
@@ -106,17 +128,17 @@ export default function SignIn() {
                                 <FormLabel htmlFor="password">Password</FormLabel>
                             </Box>
                             <TextField
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
-                                name="password"
-                                placeholder="••••••"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                autoFocus
                                 required
                                 fullWidth
+                                id="password"
+                                placeholder="••••••"
+                                name="password"
+                                autoComplete="current-password"
                                 variant="outlined"
+                                type="password"
+                                autoFocus
+                                error={passwordError}
+                                helperText={passwordErrorMessage}
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
@@ -128,7 +150,6 @@ export default function SignIn() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            onClick={validateInputs}
                         >
                             Sign in
                         </Button>
