@@ -46,11 +46,11 @@ export default function SignUp() {
             isValid = false;
         }
 
-        if (!validateFirstname(registerDto.name.firstName ?? '')) {
+        if (!validateFirstname(registerDto.name.firstName)) {
             isValid = false;
         }
 
-        if (!validateLastname(registerDto.name.lastName ?? '')) {
+        if (!validateLastname(registerDto.name.lastName)) {
             isValid = false;
         }
 

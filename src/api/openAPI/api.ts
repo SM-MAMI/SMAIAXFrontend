@@ -45,21 +45,21 @@ export interface LoginDto {
 /**
  * 
  * @export
- * @interface Name
+ * @interface NameDto
  */
-export interface Name {
+export interface NameDto {
     /**
      * 
      * @type {string}
-     * @memberof Name
+     * @memberof NameDto
      */
-    'firstName'?: string | null;
+    'firstName': string;
     /**
      * 
      * @type {string}
-     * @memberof Name
+     * @memberof NameDto
      */
-    'lastName'?: string | null;
+    'lastName': string;
 }
 /**
  * 
@@ -120,10 +120,10 @@ export interface RegisterDto {
     'password': string;
     /**
      * 
-     * @type {Name}
+     * @type {NameDto}
      * @memberof RegisterDto
      */
-    'name': Name;
+    'name': NameDto;
 }
 /**
  * 

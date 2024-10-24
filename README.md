@@ -10,6 +10,6 @@
 ## Open API
 Steps to generate our frontend api:  
 1. `npm install @openapitools/openapi-generator-cli -g` 
-2. `npm run generate-api`
+2. `nypm run generate-api`
 
 > **_NOTE:_** Don't forget to start the backend!
