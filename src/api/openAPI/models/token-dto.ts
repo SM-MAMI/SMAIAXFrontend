@@ -14,5 +14,23 @@
 
 
 
-export * from './apis/authentication-api';
+/**
+ * 
+ * @export
+ * @interface TokenDto
+ */
+export interface TokenDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenDto
+     */
+    'accessToken': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TokenDto
+     */
+    'refreshToken': string;
+}
 

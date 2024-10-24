@@ -1,8 +1,15 @@
 .gitignore
 .npmignore
 api.ts
+apis/authentication-api.ts
 base.ts
 common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/index.ts
+models/login-dto.ts
+models/name-dto.ts
+models/problem-details.ts
+models/register-dto.ts
+models/token-dto.ts

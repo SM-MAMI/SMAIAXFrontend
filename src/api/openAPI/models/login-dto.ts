@@ -14,5 +14,23 @@
 
 
 
-export * from './apis/authentication-api';
+/**
+ * 
+ * @export
+ * @interface LoginDto
+ */
+export interface LoginDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginDto
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginDto
+     */
+    'password': string;
+}
 

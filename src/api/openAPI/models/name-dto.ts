@@ -14,5 +14,23 @@
 
 
 
-export * from './apis/authentication-api';
+/**
+ * 
+ * @export
+ * @interface NameDto
+ */
+export interface NameDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof NameDto
+     */
+    'firstName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NameDto
+     */
+    'lastName': string;
+}
 
