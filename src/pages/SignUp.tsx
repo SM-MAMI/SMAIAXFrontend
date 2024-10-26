@@ -14,7 +14,7 @@ import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useNavigate } from 'react-router-dom';
-import {useSnackbar} from "../components/SnackbarContext.tsx";
+import { useSnackbar } from "../hooks/useSnackbar.ts";
 
 export default function SignUp() {
     const {

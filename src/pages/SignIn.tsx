@@ -14,7 +14,7 @@ import { CardContainer, Card } from '../components/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
-import {useSnackbar} from "../components/SnackbarContext.tsx";
+import { useSnackbar } from "../hooks/useSnackbar.ts";
 
 export default function SignIn() {
     const {
