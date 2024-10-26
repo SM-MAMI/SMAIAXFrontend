@@ -4,6 +4,7 @@ import App from './App.tsx';
 import AppTheme from './themes/AppTheme.tsx';
 import { ApiContext } from './api/ApiContext.tsx';
 import { AuthenticationApi } from './api/openAPI';
+import {SnackbarProvider} from "./components/SnackbarProvider.tsx";
 
 const Root = (): React.ReactElement => {
     const authenticationApi = new AuthenticationApi();
@@ -12,7 +13,9 @@ const Root = (): React.ReactElement => {
         <AppTheme>
             <CssBaseline />
             <ApiContext.Provider value={{ authenticationApi }}>
-                <App />
+                <SnackbarProvider>
+                    <App />
+                </SnackbarProvider>
             </ApiContext.Provider>
         </AppTheme>
     );
