@@ -46,6 +46,9 @@ export default function SignIn() {
         try {
             const tokenDto = await login(loginDto);
 
+            localStorage.setItem('access_token', tokenDto.accessToken);
+            localStorage.setItem('refresh_token', tokenDto.refreshToken);
+
             // TODO:: implement snackbar
             console.log('Successfully signed in');
             console.log(tokenDto);
