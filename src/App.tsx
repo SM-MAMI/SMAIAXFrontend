@@ -5,16 +5,14 @@ import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
 
-const protectedRoutes = ['/'];
+const protectedRoutes = [
+    { path: '/', element: <HomePage /> },
+];
 
 const router = createBrowserRouter([
-    ...protectedRoutes.map((path) => ({
-        path,
-        element: (
-            <ProtectedRoute>
-                <HomePage />
-            </ProtectedRoute>
-        ),
+    ...protectedRoutes.map(route => ({
+        ...route,
+        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
     })),
     {
         path: 'signin',
