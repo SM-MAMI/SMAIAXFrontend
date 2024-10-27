@@ -14,6 +14,7 @@ import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from "../hooks/useSnackbar.ts";
 
 export default function SignUp() {
     const {
@@ -34,6 +35,8 @@ export default function SignUp() {
     const { register } = useAuthenticationService();
 
     const navigate = useNavigate();
+
+    const { showSnackbar } = useSnackbar();
 
     const validateInputs = (registerDto: RegisterDto) => {
         let isValid = true;
@@ -78,13 +81,12 @@ export default function SignUp() {
         try {
             const userId = await register(registerDto);
 
-            // TODO:: implement snackbar
-            console.log('Successfully signed up');
+            showSnackbar('success', 'Successfully signed up!');
             console.log(userId);
 
             navigate('/signin');
         } catch (error) {
-            // TODO:: implement snackbar
+            showSnackbar('error', 'Registration failed!');
             console.error('Registration failed:', error);
         }
     };
