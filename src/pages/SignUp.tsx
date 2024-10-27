@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink } from 'react-router-dom';
-import { CardContainer, Card } from '../components/CardContainer.tsx';
+import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -49,11 +49,11 @@ export default function SignUp() {
             isValid = false;
         }
 
-        if (!validateFirstname(registerDto.name.firstName ?? '')) {
+        if (!validateFirstname(registerDto.name.firstName)) {
             isValid = false;
         }
 
-        if (!validateLastname(registerDto.name.lastName ?? '')) {
+        if (!validateLastname(registerDto.name.lastName)) {
             isValid = false;
         }
 

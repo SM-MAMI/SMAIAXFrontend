@@ -3,12 +3,17 @@ import HomePage from './pages/HomePage.tsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
+import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
+
+const protectedRoutes = [
+    { path: '/', element: <HomePage /> },
+];
 
 const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <HomePage />,
-    },
+    ...protectedRoutes.map(route => ({
+        ...route,
+        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
+    })),
     {
         path: 'signin',
         element: <SignIn />,

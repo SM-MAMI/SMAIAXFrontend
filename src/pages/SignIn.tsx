@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { CardContainer, Card } from '../components/CardContainer.tsx';
+import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -48,6 +48,9 @@ export default function SignIn() {
 
         try {
             const tokenDto = await login(loginDto);
+
+            localStorage.setItem('access_token', tokenDto.accessToken);
+            localStorage.setItem('refresh_token', tokenDto.refreshToken);
 
             showSnackbar('success', 'Successfully signed in!');
             console.log(tokenDto);
