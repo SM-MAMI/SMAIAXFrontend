@@ -14,6 +14,7 @@ import { CardContainer, Card } from '../components/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
+import { useSnackbar } from "../hooks/useSnackbar.ts";
 
 export default function SignIn() {
     const {
@@ -28,6 +29,8 @@ export default function SignIn() {
     const { login } = useAuthenticationService();
 
     const navigate = useNavigate();
+
+    const { showSnackbar } = useSnackbar();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -46,14 +49,13 @@ export default function SignIn() {
         try {
             const tokenDto = await login(loginDto);
 
-            // TODO:: implement snackbar
-            console.log('Successfully signed in');
+            showSnackbar('success', 'Successfully signed in!');
             console.log(tokenDto);
 
             navigate('/');
         } catch (error) {
-            // TODO:: implement snackbar
-            console.error('Signin failed:', error);
+            console.log(error);
+            showSnackbar('error', `Signin failed!`);
         }
     };
 
