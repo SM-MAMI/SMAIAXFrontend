@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { CardContainer, Card } from '../components/CardContainer.tsx';
+import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
