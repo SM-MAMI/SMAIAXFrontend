@@ -1,6 +1,6 @@
-import {Alert, AlertColor, Snackbar} from "@mui/material";
-import {ReactNode, useState} from "react";
-import {SnackbarContext} from "./SnackbarContext.tsx";
+import { Alert, AlertColor, Snackbar } from '@mui/material';
+import { ReactNode, useState } from 'react';
+import { SnackbarContext } from './../context/SnackbarContext.tsx';
 
 interface SnackbarProviderProps {
     children: ReactNode;

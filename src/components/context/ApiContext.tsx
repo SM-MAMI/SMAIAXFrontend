@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthenticationApi } from './openAPI';
+import { AuthenticationApi } from '../../api/openAPI';
 
 interface ApiContextType {
     authenticationApi: AuthenticationApi,
