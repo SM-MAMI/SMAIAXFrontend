@@ -1,5 +1,5 @@
 import { useCallback, useContext } from 'react';
-import { ApiContext } from '../../api//ApiContext.tsx';
+import { ApiContext } from '../../components/context/ApiContext.tsx';
 import {
     LoginDto,
     ProblemDetails,
@@ -19,7 +19,7 @@ export const useAuthenticationService = () => {
     const register = useCallback(
         async (registerDto: RegisterDto): Promise<string> => {
             try {
-                const response = await authenticationApi.apiAuthenticationRegisterPost(registerDto);
+                const response = await authenticationApi.register(registerDto);
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -33,7 +33,7 @@ export const useAuthenticationService = () => {
     const login = useCallback(
         async (loginDto: LoginDto): Promise<TokenDto> => {
             try {
-                const response = await authenticationApi.apiAuthenticationLoginPost(loginDto);
+                const response = await authenticationApi.login(loginDto);
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -47,7 +47,7 @@ export const useAuthenticationService = () => {
     const logout = useCallback(
         async (tokenDto: TokenDto): Promise<void> => {
             try {
-                await authenticationApi.apiAuthenticationLogoutPost(tokenDto);
+                await authenticationApi.logout(tokenDto);
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
                 const errorMessage = axiosError.response?.data.title || axiosError.message;
@@ -60,7 +60,7 @@ export const useAuthenticationService = () => {
     const refresh = useCallback(
         async (tokenDto: TokenDto): Promise<TokenDto> => {
             try {
-                const response = await authenticationApi.apiAuthenticationRefreshPost(tokenDto);
+                const response = await authenticationApi.refresh(tokenDto);
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
