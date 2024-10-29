@@ -2,6 +2,7 @@
 .npmignore
 api.ts
 apis/authentication-api.ts
+apis/smart-meter-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -12,4 +13,6 @@ models/login-dto.ts
 models/name-dto.ts
 models/problem-details.ts
 models/register-dto.ts
+models/smart-meter-create-dto.ts
+models/smart-meter-overview-dto.ts
 models/token-dto.ts

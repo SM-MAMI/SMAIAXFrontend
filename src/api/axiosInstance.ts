@@ -1,10 +1,8 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { ProblemDetails, TokenDto } from './openAPI';
+import { AuthenticationApi, ProblemDetails, TokenDto } from './openAPI';
 import { BASE_PATH } from './openAPI/base.ts';
 
-type RefreshTokenFunction = (tokenDto: TokenDto) => Promise<TokenDto>;
-
-export const createAxiosInstance = (refresh: RefreshTokenFunction): AxiosInstance => {
+export const createCustomAxiosInstance = (authService: AuthenticationApi): AxiosInstance => {
     const axiosInstance = axios.create({
         baseURL: BASE_PATH,
     });
@@ -36,12 +34,12 @@ export const createAxiosInstance = (refresh: RefreshTokenFunction): AxiosInstanc
                     refreshToken: refreshToken,
                 };
 
-                const newTokenDto = await refresh(tokenDto);
+                const response = await authService.refresh(tokenDto);
 
-                localStorage.setItem('access_token', newTokenDto.accessToken);
-                localStorage.setItem('refresh_token', newTokenDto.refreshToken);
+                localStorage.setItem('access_token', response.data.accessToken);
+                localStorage.setItem('refresh_token', response.data.refreshToken);
 
-                error.config.headers['Authorization'] = `Bearer ${newTokenDto.accessToken}`;
+                error.config.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
                 return await axiosInstance.request(error.config);
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;

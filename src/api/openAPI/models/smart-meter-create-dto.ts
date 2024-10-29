@@ -14,6 +14,17 @@
 
 
 
-export * from './apis/authentication-api';
-export * from './apis/smart-meter-api';
+/**
+ * 
+ * @export
+ * @interface SmartMeterCreateDto
+ */
+export interface SmartMeterCreateDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof SmartMeterCreateDto
+     */
+    'name': string;
+}
 

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { AuthenticationApi } from '../../api/openAPI';
+import { AuthenticationApi, SmartMeterApi } from '../../api/openAPI';
 import { ApiContext } from '../context/ApiContext.tsx';
+import { createCustomAxiosInstance } from '../../api/axiosInstance.ts';
 
 interface ApiProviderProps {
     children: ReactNode;
@@ -8,21 +9,11 @@ interface ApiProviderProps {
 
 export const ApiProvider = ({ children }: ApiProviderProps) => {
     const authenticationApi = new AuthenticationApi();
-
-    // const { refresh } = useAuthenticationService();
-    // const axiosInstance = createAxiosInstance(refresh);
-    //
-    // const config = new Configuration({
-    //     basePath: BASE_PATH, // Your API base URL
-    //     baseOptions: {
-    //         axiosInstance,
-    //     },
-    // });
-    //
-    // const smartMeterApi = new AuthenticationApi(config);
+    const axiosInstance = createCustomAxiosInstance(authenticationApi);
+    const smartMeterApi = new SmartMeterApi(undefined, undefined, axiosInstance);
 
     return (
-        <ApiContext.Provider value={{ authenticationApi }}>
+        <ApiContext.Provider value={{ authenticationApi, smartMeterApi }}>
             {children}
         </ApiContext.Provider>
     );
