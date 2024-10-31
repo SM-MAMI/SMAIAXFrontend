@@ -8,13 +8,13 @@ import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useSnackbar } from "../hooks/useSnackbar.ts";
+import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 
 export default function SignIn() {
     const {
@@ -80,7 +80,7 @@ export default function SignIn() {
         <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
-                    <SitemarkIcon />
+                    <SmaiaXTextAndDotsIcon />
 
                     <Typography
                         component="h1"

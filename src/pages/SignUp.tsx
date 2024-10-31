@@ -7,7 +7,6 @@ import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { SitemarkIcon } from '../assets/CustomIcons.tsx';
 import { Link as RouterLink } from 'react-router-dom';
 import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { RegisterDto } from '../api/openAPI';
@@ -15,6 +14,7 @@ import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from "../hooks/useSnackbar.ts";
+import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 
 export default function SignUp() {
     const {
@@ -95,7 +95,7 @@ export default function SignUp() {
         <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
-                    <SitemarkIcon />
+                    <SmaiaXTextAndDotsIcon />
 
                     <Typography
                         component="h1"
