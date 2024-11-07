@@ -5,6 +5,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
+import SmartMeters from './pages/SmartMeters.tsx';
 
 const protectedRoutes = [
     { path: '/', element: <HomePage /> },
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     {
         path: 'signup',
         element: <SignUp />,
+    },
+    {
+        path: 'smart-meters',
+        element: <SmartMeters />,
     },
     {
         path: '*',

@@ -11,8 +11,10 @@ index.ts
 models/index.ts
 models/login-dto.ts
 models/name-dto.ts
+models/ok.ts
 models/problem-details.ts
 models/register-dto.ts
 models/smart-meter-create-dto.ts
 models/smart-meter-overview-dto.ts
+models/smart-meter-update-dto.ts
 models/token-dto.ts
