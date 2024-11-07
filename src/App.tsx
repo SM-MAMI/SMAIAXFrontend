@@ -1,34 +1,51 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, NonIndexRouteObject, RouterProvider } from 'react-router-dom';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
-import Dashboard from './pages/Dashboard.tsx';
-import Home from './pages/dashboard/Home.tsx';
+import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
+import Navbar from './toolpad/Navbar.tsx';
+import HomePage from './pages/dashboard/HomePage.tsx';
+import OrdersPage from './pages/dashboard/OrdersPage.tsx';
+
+type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
+    element: React.ReactNode;
+    children?: ProtectedRouteObject[];
+};
+
+const applyProtectedRoute = (routes: ProtectedRouteObject[]): ProtectedRouteObject[] => {
+    return routes.map(route => ({
+        ...route,
+        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
+        children: route.children ? applyProtectedRoute(route.children) : undefined,
+    }));
+};
 
 const protectedRoutes = [
     {
         path: '/',
-        element: <Dashboard />,
+        element: <Navbar />,
         children: [
             {
                 path: '/',
-                element: <Home/>,
+                element: <HomePage />,
             },
             {
                 path: '/orders',
-                element: <Home/>,
+                element: <OrdersPage />,
             },
         ],
     },
 ];
 
 const router = createBrowserRouter([
-    ...protectedRoutes.map(route => ({
-        ...route,
-        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
-    })),
+    {
+        element: <NavbarNavigation />,
+        children: [
+            ...applyProtectedRoute(protectedRoutes),
+        ],
+    },
     {
         path: 'signin',
         element: <SignIn />,
