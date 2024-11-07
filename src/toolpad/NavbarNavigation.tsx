@@ -1,7 +1,8 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet } from 'react-router-dom';
-import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
+import { type Navigation } from '@toolpad/core/AppProvider';
+import { AppProvider } from '@toolpad/core/react-router-dom';
 
 const NAVIGATION: Navigation = [
     {
