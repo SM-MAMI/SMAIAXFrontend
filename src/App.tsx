@@ -6,8 +6,8 @@ import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
 import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
 import Navbar from './toolpad/Navbar.tsx';
-import HomePage from './pages/dashboard/HomePage.tsx';
-import OrdersPage from './pages/dashboard/OrdersPage.tsx';
+import HomePage from './pages/navbar/HomePage.tsx';
+import OrdersPage from './pages/navbar/OrdersPage.tsx';
 
 type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
     element: React.ReactNode;
