@@ -20,27 +20,7 @@ const SmartMeters = () => {
   const { showSnackbar } = useSnackbar();
   const [smartMeters, setSmartMeters] = useState<
     SmartMeterOverviewDto[] | undefined
-  >([
-    { name: "1" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-    { name: "sllsf" },
-    { name: "sllsf" },
-    { name: "sllssdff" },
-  ]);
+  >(undefined);
   const [smartMeterNameError, setSmartMeterNameError] = useState(false);
   const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] =
     useState("");
@@ -48,23 +28,24 @@ const SmartMeters = () => {
   const { getSmartMeters, addSmartMeter } = useSmartMeterService();
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
-  useEffect(() => {
-    const loadSmartMeters = async () => {
-      try {
-        const sms = await getSmartMeters();
-        setSmartMeters(sms);
-      } catch (error) {
-        console.log(error);
-        showSnackbar("error", `Failed to load smart meters!`);
-      }
-    };
-    void loadSmartMeters();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getSmartMeters]);
+  const loadSmartMeters = async () => {
+    try {
+      const sms = await getSmartMeters();
+      setSmartMeters(sms);
+    } catch (error) {
+      console.log(error);
+      showSnackbar("error", `Failed to load smart meters!`);
+    }
+  };
 
   const openAddForm = () => {
     setAddFormVisible(true);
   };
+
+  useEffect(() => {
+    void loadSmartMeters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateSmartMeterName = (smName: string): boolean => {
     if (isNullOrEmptyOrWhiteSpaces(smName)) {
@@ -85,6 +66,7 @@ const SmartMeters = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const smartMeterName = data.get("smartMeterName") as string;
@@ -98,6 +80,7 @@ const SmartMeters = () => {
       await addSmartMeter(smartMeterDto);
       setAddFormVisible(false);
       showSnackbar("success", "Successfully added smart meter!");
+      void loadSmartMeters();
     } catch (error) {
       console.log(error);
       showSnackbar("error", `Smart meter could not be added!`);
