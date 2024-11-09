@@ -5,17 +5,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.responsive-box {
-    width: 65%;
-    transition: width 0.3s ease;
-}
-
-@media (max-width: 600px) {
-    .responsive-box {
-        width: 90%;
-    }
-}
-
 :root,
 #root,
 body {
