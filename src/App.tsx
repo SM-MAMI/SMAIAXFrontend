@@ -8,6 +8,7 @@ import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
 import Navbar from './toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
 import OrdersPage from './pages/navbar/OrdersPage.tsx';
+import { SmaiaxRoutes } from './constants/constants.ts';
 
 type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
     element: React.ReactNode;
@@ -24,15 +25,15 @@ const applyProtectedRoute = (routes: ProtectedRouteObject[]): ProtectedRouteObje
 
 const protectedRoutes = [
     {
-        path: '/',
+        path: SmaiaxRoutes.HOME,
         element: <Navbar />,
         children: [
             {
-                path: '/',
+                path: SmaiaxRoutes.HOME,
                 element: <HomePage />,
             },
             {
-                path: '/orders',
+                path: SmaiaxRoutes.ORDERS,
                 element: <OrdersPage />,
             },
         ],
@@ -45,15 +46,15 @@ const router = createBrowserRouter([
         children: [...applyProtectedRoute(protectedRoutes)],
     },
     {
-        path: 'sign-in',
+        path: SmaiaxRoutes.SIGN_IN,
         element: <SignIn />,
     },
     {
-        path: 'sign-up',
+        path: SmaiaxRoutes.SIGN_UP,
         element: <SignUp />,
     },
     {
-        path: '*',
+        path: SmaiaxRoutes.NOT_FOUND,
         element: <NotFoundPage />,
     },
 ]);

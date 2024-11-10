@@ -15,6 +15,7 @@ import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
+import { SmaiaxRoutes } from '../constants/constants.ts';
 
 export default function SignIn() {
     const { emailError, emailErrorMessage, passwordError, passwordErrorMessage } = useValidation();
@@ -129,7 +130,11 @@ export default function SignIn() {
                                 Don&apos;t have an account?{' '}
                             </Typography>
                             <Typography>
-                                <Link component={RouterLink} to="/sign-up" variant="body2" sx={{ alignSelf: 'center' }}>
+                                <Link
+                                    component={RouterLink}
+                                    to={'/' + SmaiaxRoutes.SIGN_UP}
+                                    variant="body2"
+                                    sx={{ alignSelf: 'center' }}>
                                     Sign up
                                 </Link>
                             </Typography>
