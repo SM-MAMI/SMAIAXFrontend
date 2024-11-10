@@ -22,8 +22,6 @@ export default function SignIn() {
         emailErrorMessage,
         passwordError,
         passwordErrorMessage,
-        validateEmail,
-        validatePassword,
     } = useValidation();
 
     const { login } = useAuthenticationService();
@@ -42,9 +40,6 @@ export default function SignIn() {
             password: data.get('password') as string,
         };
 
-        if (!validateInputs(loginDto)) {
-            return;
-        }
 
         try {
             const tokenDto = await login(loginDto);
@@ -60,20 +55,6 @@ export default function SignIn() {
             console.log(error);
             showSnackbar('error', `Signin failed!`);
         }
-    };
-
-    const validateInputs = (loginDto: LoginDto) => {
-        let isValid = true;
-
-        if (!validateEmail(loginDto.username)) {
-            isValid = false;
-        }
-
-        if (!validatePassword(loginDto.password)) {
-            isValid = false;
-        }
-
-        return isValid;
     };
 
     return (
@@ -110,7 +91,7 @@ export default function SignIn() {
                     >
                         <FormControl>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="email">Email</FormLabel>
+                                <FormLabel htmlFor="email">Email / Username</FormLabel>
                             </Box>
                             <TextField
                                 required
