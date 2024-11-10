@@ -8,4 +8,3 @@ export const SmaiaxRoutes = {
     SIGN_UP: 'sign-up',
     NOT_FOUND: '*',
 };
-
