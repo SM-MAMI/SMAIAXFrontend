@@ -1,0 +1,11 @@
+*.json
+*.md
+*.html
+*.yml
+
+public/*
+
+src/api/*
+src/assets/*
+
+vite.config.ts

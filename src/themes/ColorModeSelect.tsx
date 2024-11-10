@@ -17,8 +17,7 @@ export default function ColorModeSelect(props: SelectProps) {
                 // @ts-expect-error I don't know
                 'data-screenshot': 'toggle-mode',
             }}
-            {...props}
-        >
+            {...props}>
             <MenuItem value="system">System</MenuItem>
             <MenuItem value="light">Light</MenuItem>
             <MenuItem value="dark">Dark</MenuItem>

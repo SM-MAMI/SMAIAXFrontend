@@ -13,7 +13,7 @@ import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useNavigate } from 'react-router-dom';
-import { useSnackbar } from "../hooks/useSnackbar.ts";
+import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 
 export default function SignUp() {
@@ -60,7 +60,7 @@ export default function SignUp() {
             isValid = false;
         }
 
-        if(!validateUsername(registerDto.username)) {
+        if (!validateUsername(registerDto.username)) {
             isValid = false;
         }
 
@@ -112,8 +112,7 @@ export default function SignUp() {
                             width: '100%',
                             fontSize: 'clamp(2rem, 10vw, 2.15rem)',
                             textAlign: 'center',
-                        }}
-                    >
+                        }}>
                         Sign up
                     </Typography>
 
@@ -122,8 +121,7 @@ export default function SignUp() {
                         onSubmit={(event) => {
                             void handleSubmit(event);
                         }}
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                    >
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <FormControl>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <FormLabel htmlFor="firstname">First name</FormLabel>
@@ -203,11 +201,7 @@ export default function SignUp() {
                             />
                         </FormControl>
                         <Divider />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                        >
+                        <Button type="submit" fullWidth variant="contained">
                             Sign up
                         </Button>
 
@@ -216,12 +210,7 @@ export default function SignUp() {
                                 Already have an account?
                             </Typography>
                             <Typography>
-                                <Link
-                                    component={RouterLink}
-                                    to="/signin"
-                                    variant="body2"
-                                    sx={{ alignSelf: 'center' }}
-                                >
+                                <Link component={RouterLink} to="/signin" variant="body2" sx={{ alignSelf: 'center' }}>
                                     Sign in
                                 </Link>
                             </Typography>
