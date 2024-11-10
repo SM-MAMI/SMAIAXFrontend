@@ -42,9 +42,7 @@ const protectedRoutes = [
 const router = createBrowserRouter([
     {
         element: <NavbarNavigation />,
-        children: [
-            ...applyProtectedRoute(protectedRoutes),
-        ],
+        children: [...applyProtectedRoute(protectedRoutes)],
     },
     {
         path: 'signin',

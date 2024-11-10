@@ -12,15 +12,10 @@ interface AppThemeProps {
     themeComponents?: ThemeOptions['components'];
 }
 
-export default function AppTheme({
-    children,
-    disableCustomTheme,
-    themeComponents,
-}: Readonly<AppThemeProps>) {
+export default function AppTheme({ children, disableCustomTheme, themeComponents }: Readonly<AppThemeProps>) {
     const theme = React.useMemo(() => {
         return disableCustomTheme
-            ? {}
-            : createTheme({
+            ? {} : createTheme({
                 // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
                 cssVariables: {
                     colorSchemeSelector: 'data-mui-color-scheme',

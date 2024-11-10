@@ -26,10 +26,7 @@ const BRANDING = {
 
 const NavbarNavigation = () => {
     return (
-        <AppProvider
-            navigation={NAVIGATION}
-            branding={BRANDING}
-        >
+        <AppProvider navigation={NAVIGATION} branding={BRANDING}>
             <Outlet />
         </AppProvider>
     );

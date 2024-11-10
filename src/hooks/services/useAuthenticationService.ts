@@ -1,10 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../components/context/ApiContext.tsx';
-import {
-    LoginDto,
-    ProblemDetails,
-    RegisterDto, TokenDto,
-} from '../../api/openAPI';
+import { LoginDto, ProblemDetails, RegisterDto, TokenDto } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const useAuthenticationService = () => {
@@ -27,7 +23,7 @@ export const useAuthenticationService = () => {
                 throw new Error(errorMessage);
             }
         },
-        [authenticationApi],
+        [authenticationApi]
     );
 
     const login = useCallback(
@@ -41,7 +37,7 @@ export const useAuthenticationService = () => {
                 throw new Error(errorMessage);
             }
         },
-        [authenticationApi],
+        [authenticationApi]
     );
 
     const logout = useCallback(
@@ -54,7 +50,7 @@ export const useAuthenticationService = () => {
                 throw new Error(errorMessage);
             }
         },
-        [authenticationApi],
+        [authenticationApi]
     );
 
     const refresh = useCallback(
@@ -68,7 +64,7 @@ export const useAuthenticationService = () => {
                 throw new Error(errorMessage);
             }
         },
-        [authenticationApi],
+        [authenticationApi]
     );
 
     return {

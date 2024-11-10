@@ -12,11 +12,7 @@ export const ApiProvider = ({ children }: ApiProviderProps) => {
     const axiosInstance = createCustomAxiosInstance(authenticationApi);
     const smartMeterApi = new SmartMeterApi(undefined, undefined, axiosInstance);
 
-    return (
-        <ApiContext.Provider value={{ authenticationApi, smartMeterApi }}>
-            {children}
-        </ApiContext.Provider>
-    );
+    return <ApiContext.Provider value={{ authenticationApi, smartMeterApi }}>{children}</ApiContext.Provider>;
 };
 
 export { ApiContext };
