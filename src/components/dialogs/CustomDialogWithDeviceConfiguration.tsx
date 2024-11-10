@@ -3,15 +3,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import {DialogProps} from '@toolpad/core';
+import { DialogProps } from '@toolpad/core';
 import TextField from '@mui/material/TextField';
-import {Download} from '@mui/icons-material';
-import React, {useState} from 'react';
+import { Download } from '@mui/icons-material';
+import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import {EncryptionService} from '../../services/EncryptionService.ts';
-import CustomPasswordFormControl from "../CustomPasswordFormControl.tsx";
+import { EncryptionService } from '../../services/EncryptionService.ts';
+import CustomPasswordFormControl from '../CustomPasswordFormControl.tsx';
 
-export default function CustomDialogWithDeviceConfiguration({open, onClose}: DialogProps) {
+export default function CustomDialogWithDeviceConfiguration({ open, onClose }: DialogProps) {
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
 
@@ -35,7 +35,7 @@ export default function CustomDialogWithDeviceConfiguration({open, onClose}: Dia
         };
 
         const jsonString = JSON.stringify(data, null, 2);
-        const blob = new Blob([jsonString], {type: 'application/json'});
+        const blob = new Blob([jsonString], { type: 'application/json' });
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -100,7 +100,7 @@ export default function CustomDialogWithDeviceConfiguration({open, onClose}: Dia
                         void handleDownload();
                     }}
                     variant="outlined"
-                    endIcon={<Download/>}>
+                    endIcon={<Download />}>
                     Download
                 </Button>
             </DialogActions>

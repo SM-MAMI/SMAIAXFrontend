@@ -1,12 +1,12 @@
-﻿import FormControl from "@mui/material/FormControl";
-import { InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
-import React, { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+﻿import FormControl from '@mui/material/FormControl';
+import { InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import React, { useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface CustomPasswordFormControlProps {
     password: string;
-    onPasswordChange:  (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     label: string;
 }
 
