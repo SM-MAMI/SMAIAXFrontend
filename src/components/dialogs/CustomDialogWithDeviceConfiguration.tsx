@@ -3,24 +3,21 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { DialogProps } from '@toolpad/core';
+import {DialogProps} from '@toolpad/core';
 import TextField from '@mui/material/TextField';
-import { InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import { Visibility, VisibilityOff, Download } from '@mui/icons-material';
-import React, { useState } from 'react';
-import FormControl from '@mui/material/FormControl';
+import {Download} from '@mui/icons-material';
+import React, {useState} from 'react';
 import Typography from '@mui/material/Typography';
-import { EncryptionService } from '../../services/EncryptionService.ts';
+import {EncryptionService} from '../../services/EncryptionService.ts';
+import CustomPasswordFormControl from "../CustomPasswordFormControl.tsx";
 
-export default function CustomDialogWithDeviceConfiguration({ open, onClose }: DialogProps) {
-    const [showPassword, setShowPassword] = useState(false);
+export default function CustomDialogWithDeviceConfiguration({open, onClose}: DialogProps) {
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleTogglePasswordVisibility = () => {
-        setShowPassword((prev) => !prev);
-    };
+    function onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPassword(e.target.value);
+    }
 
     const handleDownload = async () => {
         const publicKey = getPublicKey();
@@ -38,7 +35,7 @@ export default function CustomDialogWithDeviceConfiguration({ open, onClose }: D
         };
 
         const jsonString = JSON.stringify(data, null, 2);
-        const blob = new Blob([jsonString], { type: 'application/json' });
+        const blob = new Blob([jsonString], {type: 'application/json'});
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -52,10 +49,6 @@ export default function CustomDialogWithDeviceConfiguration({ open, onClose }: D
 
     function onNetworkNameChange(e: React.ChangeEvent<HTMLInputElement>) {
         setSsid(e.target.value);
-    }
-
-    function onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setPassword(e.target.value);
     }
 
     function getPublicKey() {
@@ -88,23 +81,11 @@ export default function CustomDialogWithDeviceConfiguration({ open, onClose }: D
                     value={ssid}
                     onChange={onNetworkNameChange}
                 />
-                <FormControl variant="outlined" fullWidth margin="normal">
-                    <InputLabel htmlFor="outlined-adornment-password">WIFI Password</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={onPasswordChange}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        label="WIFI Password"
-                    />
-                </FormControl>
+                <CustomPasswordFormControl
+                    password={password}
+                    onPasswordChange={onPasswordChange}
+                    label="WIFI Password"
+                />
             </DialogContent>
             <DialogActions>
                 <Button
@@ -119,7 +100,7 @@ export default function CustomDialogWithDeviceConfiguration({ open, onClose }: D
                         void handleDownload();
                     }}
                     variant="outlined"
-                    endIcon={<Download />}>
+                    endIcon={<Download/>}>
                     Download
                 </Button>
             </DialogActions>
