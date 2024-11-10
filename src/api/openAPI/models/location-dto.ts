@@ -15,37 +15,45 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { NameDto } from './name-dto';
+import type { Continent } from './continent';
 
 /**
  * 
  * @export
- * @interface RegisterDto
+ * @interface LocationDto
  */
-export interface RegisterDto {
+export interface LocationDto {
     /**
      * 
      * @type {string}
-     * @memberof RegisterDto
+     * @memberof LocationDto
      */
-    'username': string;
+    'streetName'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof RegisterDto
+     * @memberof LocationDto
      */
-    'email': string;
+    'city'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof RegisterDto
+     * @memberof LocationDto
      */
-    'password': string;
+    'state'?: string | null;
     /**
      * 
-     * @type {NameDto}
-     * @memberof RegisterDto
+     * @type {string}
+     * @memberof LocationDto
      */
-    'name': NameDto;
+    'country'?: string | null;
+    /**
+     * 
+     * @type {Continent}
+     * @memberof LocationDto
+     */
+    'continent'?: Continent;
 }
+
+
 

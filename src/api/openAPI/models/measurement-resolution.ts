@@ -14,8 +14,22 @@
 
 
 
-export * from './apis/authentication-api';
-export * from './apis/policy-api';
-export * from './apis/policyrequest-api';
-export * from './apis/smart-meter-api';
+/**
+ * 
+ * @export
+ * @enum {number}
+ */
+
+export const MeasurementResolution = {
+    NUMBER_0: 0,
+    NUMBER_1: 1,
+    NUMBER_2: 2,
+    NUMBER_3: 3,
+    NUMBER_4: 4,
+    NUMBER_5: 5
+} as const;
+
+export type MeasurementResolution = typeof MeasurementResolution[keyof typeof MeasurementResolution];
+
+
 
