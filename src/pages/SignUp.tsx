@@ -26,10 +26,13 @@ export default function SignUp() {
         firstnameErrorMessage,
         lastnameError,
         lastnameErrorMessage,
+        usernameError,
+        usernameErrorMessage,
         validateEmail,
         validatePassword,
         validateFirstname,
         validateLastname,
+        validateUsername,
     } = useValidation();
 
     const { register } = useAuthenticationService();
@@ -57,6 +60,10 @@ export default function SignUp() {
             isValid = false;
         }
 
+        if(!validateUsername(registerDto.username)) {
+            isValid = false;
+        }
+
         return isValid;
     };
 
@@ -68,6 +75,7 @@ export default function SignUp() {
         const registerDto: RegisterDto = {
             email: data.get('email') as string,
             password: data.get('password') as string,
+            username: data.get('username') as string,
             name: {
                 firstName: data.get('firstname') as string,
                 lastName: data.get('lastname') as string,
@@ -142,6 +150,21 @@ export default function SignUp() {
                                 error={lastnameError}
                                 helperText={lastnameErrorMessage}
                                 color={lastnameError ? 'error' : 'primary'}
+                            />
+                        </FormControl>
+                        <FormControl>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FormLabel htmlFor="username">Username</FormLabel>
+                            </Box>
+                            <TextField
+                                fullWidth
+                                id="username"
+                                placeholder="JohnSnow42"
+                                name="username"
+                                autoComplete="username"
+                                error={usernameError}
+                                helperText={usernameErrorMessage}
+                                color={usernameError ? 'error' : 'primary'}
                             />
                         </FormControl>
                         <FormControl>

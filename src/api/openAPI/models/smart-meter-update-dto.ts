@@ -14,8 +14,23 @@
 
 
 
-export * from './apis/authentication-api';
-export * from './apis/policy-api';
-export * from './apis/policyrequest-api';
-export * from './apis/smart-meter-api';
+/**
+ * 
+ * @export
+ * @interface SmartMeterUpdateDto
+ */
+export interface SmartMeterUpdateDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof SmartMeterUpdateDto
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SmartMeterUpdateDto
+     */
+    'name'?: string | null;
+}
 
