@@ -15,7 +15,7 @@ type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
 };
 
 const applyProtectedRoute = (routes: ProtectedRouteObject[]): ProtectedRouteObject[] => {
-    return routes.map(route => ({
+    return routes.map((route) => ({
         ...route,
         element: <ProtectedRoute>{route.element}</ProtectedRoute>,
         children: route.children ? applyProtectedRoute(route.children) : undefined,
