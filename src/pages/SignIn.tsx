@@ -17,12 +17,7 @@ import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 
 export default function SignIn() {
-    const {
-        emailError,
-        emailErrorMessage,
-        passwordError,
-        passwordErrorMessage,
-    } = useValidation();
+    const { emailError, emailErrorMessage, passwordError, passwordErrorMessage } = useValidation();
 
     const { login } = useAuthenticationService();
 
@@ -39,7 +34,6 @@ export default function SignIn() {
             username: data.get('email') as string,
             password: data.get('password') as string,
         };
-
 
         try {
             const tokenDto = await login(loginDto);

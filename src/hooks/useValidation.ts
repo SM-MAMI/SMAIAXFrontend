@@ -64,12 +64,12 @@ export const useValidation = () => {
     const validateUsername = (username: string): boolean => {
         if (!username || username.length < 1) {
             setUsernameError(true);
-            setUsernameErrorMessage("Username is required.");
+            setUsernameErrorMessage('Username is required.');
             return false;
         }
 
         setUsernameError(false);
-        setUsernameErrorMessage("");
+        setUsernameErrorMessage('');
         return true;
     };
 

@@ -60,7 +60,7 @@ export default function SignUp() {
             isValid = false;
         }
 
-        if(!validateUsername(registerDto.username)) {
+        if (!validateUsername(registerDto.username)) {
             isValid = false;
         }
 
