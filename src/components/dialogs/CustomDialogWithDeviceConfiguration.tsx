@@ -23,8 +23,6 @@ export default function MyCustomDialog({open, onClose}: DialogProps) {
     };
 
     const handleDownload = async () => {
-        // Create a JSON object with the SSID and password
-
         const publicKey = getPublicKey();
         const encryptedMqttCredentials = getEncryptedMqttCredentials();
         const encryptionService = await EncryptionService.Create(publicKey);
@@ -38,20 +36,16 @@ export default function MyCustomDialog({open, onClose}: DialogProps) {
             mqttCredentials: encryptedMqttCredentials
         };
 
-        // Convert JSON object to a string and create a Blob
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], {type: 'application/json'});
 
-        // Create a link element
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'wifi-config.json';
+        link.download = 'device-config.json';
 
-        // Programmatically click the link to trigger the download, then revoke the object URL
         link.click();
         URL.revokeObjectURL(link.href);
     };
-
 
 
     function onNetworkNameChange(e: React.ChangeEvent<HTMLInputElement>) {

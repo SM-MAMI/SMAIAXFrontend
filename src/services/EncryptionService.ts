@@ -16,7 +16,6 @@ export class EncryptionService implements IEncryptionService{
     }
 
     public async encryptData(data: string): Promise<string> {
-
         const encodedData = EncryptionService.TextEncoder.encode(data);
 
         const encryptedData = await window.crypto.subtle.encrypt(
@@ -32,7 +31,6 @@ export class EncryptionService implements IEncryptionService{
 
     public async decryptData(encryptedData: ArrayBuffer, privateKeyPem: string): Promise<string | null> {
         try {
-            // Convert PEM-formatted private key to ArrayBuffer
             const pemContents = privateKeyPem.substring(
                 EncryptionService.PemHeader.length,
                 privateKeyPem.length - EncryptionService.PemFooter.length
@@ -40,7 +38,6 @@ export class EncryptionService implements IEncryptionService{
             const binaryDerString = atob(pemContents.replace(/\s+/g, ''));
             const binaryDer = Uint8Array.from(binaryDerString, (c) => c.charCodeAt(0));
 
-            // Import the private key
             const privateKey = await window.crypto.subtle.importKey(
                 'pkcs8',
                 binaryDer.buffer,
@@ -52,7 +49,6 @@ export class EncryptionService implements IEncryptionService{
                 ['decrypt']
             );
 
-            // Decrypt the data
             const decryptedData = await window.crypto.subtle.decrypt(
                 {
                     name: 'RSA-OAEP',
@@ -61,7 +57,6 @@ export class EncryptionService implements IEncryptionService{
                 encryptedData
             );
 
-            // Decode the decrypted data to a string
             const decoder = new TextDecoder();
             return decoder.decode(decryptedData);
         } catch (error) {
