@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const refreshToken = localStorage.getItem('refresh_token');
 
     if (!accessToken || !refreshToken) {
-        return <Navigate to="/signin" replace />;
+        return <Navigate to="/sign-in" replace />;
     }
 
     return <>{children}</>;

@@ -92,7 +92,7 @@ export default function SignUp() {
             showSnackbar('success', 'Successfully signed up!');
             console.log(userId);
 
-            navigate('/signin');
+            navigate('/sign-in');
         } catch (error) {
             showSnackbar('error', 'Registration failed!');
             console.error('Registration failed:', error);
@@ -210,7 +210,7 @@ export default function SignUp() {
                                 Already have an account?
                             </Typography>
                             <Typography>
-                                <Link component={RouterLink} to="/signin" variant="body2" sx={{ alignSelf: 'center' }}>
+                                <Link component={RouterLink} to="/sign-in" variant="body2" sx={{ alignSelf: 'center' }}>
                                     Sign in
                                 </Link>
                             </Typography>

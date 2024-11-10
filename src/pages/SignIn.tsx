@@ -129,7 +129,7 @@ export default function SignIn() {
                                 Don&apos;t have an account?{' '}
                             </Typography>
                             <Typography>
-                                <Link component={RouterLink} to="/signup" variant="body2" sx={{ alignSelf: 'center' }}>
+                                <Link component={RouterLink} to="/sign-up" variant="body2" sx={{ alignSelf: 'center' }}>
                                     Sign up
                                 </Link>
                             </Typography>

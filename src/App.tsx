@@ -45,11 +45,11 @@ const router = createBrowserRouter([
         children: [...applyProtectedRoute(protectedRoutes)],
     },
     {
-        path: 'signin',
+        path: 'sign-in',
         element: <SignIn />,
     },
     {
-        path: 'signup',
+        path: 'sign-up',
         element: <SignUp />,
     },
     {
