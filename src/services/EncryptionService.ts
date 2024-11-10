@@ -1,23 +1,24 @@
-﻿import {IEncryptionService} from "./interfaces/IEncryptionService.ts";
+﻿import { IEncryptionService } from './interfaces/IEncryptionService.ts';
 
-export class EncryptionService implements IEncryptionService{
-    private static readonly PemHeader: string = '-----BEGIN PRIVATE KEY-----';
-    private static readonly PemFooter: string = '-----END PRIVATE KEY-----';
+export class EncryptionService implements IEncryptionService {
     private static readonly TextEncoder: TextEncoder = new TextEncoder();
+    private static readonly TextDecoder: TextDecoder = new TextDecoder();
     private readonly publicCryptoKey: CryptoKey;
+    private readonly privateCryptoKey?: CryptoKey;
 
-    private constructor(publicCryptoKey: CryptoKey) {
+    private constructor(publicCryptoKey: CryptoKey, privateCryptoKey?: CryptoKey) {
         this.publicCryptoKey = publicCryptoKey;
+        this.privateCryptoKey = privateCryptoKey;
     }
 
-    public static async Create(publicKey: string) {
+    public static async Create(publicKey: string, privateKey?: string) {
         const publicCryptoKey = await this.ImportPublicKey(publicKey);
-        return new EncryptionService(publicCryptoKey);
+        const privateCryptoKey = privateKey ? await this.ImportPrivateKey(privateKey) : undefined;
+        return new EncryptionService(publicCryptoKey, privateCryptoKey);
     }
 
     public async encryptData(data: string): Promise<string> {
         const encodedData = EncryptionService.TextEncoder.encode(data);
-
         const encryptedData = await window.crypto.subtle.encrypt(
             {
                 name: 'RSA-OAEP',
@@ -25,49 +26,38 @@ export class EncryptionService implements IEncryptionService{
             this.publicCryptoKey,
             encodedData
         );
-
         return EncryptionService.ArrayBufferToBase64(encryptedData);
     }
 
-    public async decryptData(encryptedData: ArrayBuffer, privateKeyPem: string): Promise<string | null> {
-        try {
-            const pemContents = privateKeyPem.substring(
-                EncryptionService.PemHeader.length,
-                privateKeyPem.length - EncryptionService.PemFooter.length
-            );
-            const binaryDerString = atob(pemContents.replace(/\s+/g, ''));
-            const binaryDer = Uint8Array.from(binaryDerString, (c) => c.charCodeAt(0));
-
-            const privateKey = await window.crypto.subtle.importKey(
-                'pkcs8',
-                binaryDer.buffer,
-                {
-                    name: 'RSA-OAEP',
-                    hash: 'SHA-256',
-                },
-                true,
-                ['decrypt']
-            );
-
-            const decryptedData = await window.crypto.subtle.decrypt(
-                {
-                    name: 'RSA-OAEP',
-                },
-                privateKey,
-                encryptedData
-            );
-
-            const decoder = new TextDecoder();
-            return decoder.decode(decryptedData);
-        } catch (error) {
-            console.error('Decryption failed:', error);
-            return null;
+    public async decryptData(encryptedData: string): Promise<string> {
+        if (!this.privateCryptoKey) {
+            throw new Error('Private key is required for decryption.');
         }
+
+        const encryptedArrayBuffer = EncryptionService.Base64ToArrayBuffer(encryptedData);
+        const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
+            {
+                name: 'RSA-OAEP',
+            },
+            this.privateCryptoKey,
+            encryptedArrayBuffer
+        );
+        return EncryptionService.TextDecoder.decode(decryptedArrayBuffer);
     }
 
     private static ArrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
         const encryptedDataArray = new Uint8Array(arrayBuffer);
         return btoa(String.fromCharCode(...encryptedDataArray));
+    }
+
+    private static Base64ToArrayBuffer(base64: string): ArrayBuffer {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
     }
 
     private static async ImportPublicKey(publicKey: string): Promise<CryptoKey> {
@@ -80,6 +70,19 @@ export class EncryptionService implements IEncryptionService{
             },
             false,
             ['encrypt']
+        );
+    }
+
+    private static async ImportPrivateKey(privateKey: string): Promise<CryptoKey> {
+        return await window.crypto.subtle.importKey(
+            'pkcs8',
+            this.StringToArrayBuffer(atob(privateKey)),
+            {
+                name: 'RSA-OAEP',
+                hash: 'SHA-256',
+            },
+            false,
+            ['decrypt']
         );
     }
 
