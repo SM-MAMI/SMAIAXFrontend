@@ -10,6 +10,8 @@ export const useValidation = () => {
     const [firstnameErrorMessage, setFirstnameErrorMessage] = useState("");
     const [lastnameError, setLastnameError] = useState(false);
     const [lastnameErrorMessage, setLastnameErrorMessage] = useState("");
+    const [usernameError, setUsernameError] = useState(false);
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
 
     const validateEmail = (email: string): boolean => {
         if (!email || !EmailRegex.test(email)) {
@@ -24,9 +26,9 @@ export const useValidation = () => {
     };
 
     const validatePassword = (password: string): boolean => {
-        if (!password || password.length < 6) {
+        if (!password || password.length < 8) {
             setPasswordError(true);
-            setPasswordErrorMessage("Password must be at least 6 characters long.");
+            setPasswordErrorMessage("Password must be at least 8 characters long.");
             return false;
         }
 
@@ -59,6 +61,18 @@ export const useValidation = () => {
         return true;
     };
 
+    const validateUsername = (username: string): boolean => {
+        if (!username || username.length < 1) {
+            setUsernameError(true);
+            setUsernameErrorMessage("Username is required.");
+            return false;
+        }
+
+        setUsernameError(false);
+        setUsernameErrorMessage("");
+        return true;
+    };
+
     return {
         emailError,
         emailErrorMessage,
@@ -68,9 +82,12 @@ export const useValidation = () => {
         firstnameErrorMessage,
         lastnameError,
         lastnameErrorMessage,
+        usernameError,
+        usernameErrorMessage,
         validateEmail,
         validatePassword,
         validateFirstname,
-        validateLastname
+        validateLastname,
+        validateUsername,
     };
 };
