@@ -13,24 +13,33 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { LocationDto } from './location-dto';
 
 /**
  * 
  * @export
- * @interface LoginDto
+ * @interface MetadataCreateDto
  */
-export interface LoginDto {
+export interface MetadataCreateDto {
     /**
      * 
      * @type {string}
-     * @memberof LoginDto
+     * @memberof MetadataCreateDto
      */
-    'username'?: string | null;
+    'validFrom': string;
     /**
      * 
-     * @type {string}
-     * @memberof LoginDto
+     * @type {LocationDto}
+     * @memberof MetadataCreateDto
      */
-    'password': string;
+    'location': LocationDto;
+    /**
+     * 
+     * @type {number}
+     * @memberof MetadataCreateDto
+     */
+    'householdSize': number;
 }
 

@@ -29,10 +29,7 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}>
-                <Alert
-                    onClose={handleClose}
-                    severity={severity}
-                    variant="filled">
+                <Alert onClose={handleClose} severity={severity} variant="filled">
                     {message}
                 </Alert>
             </Snackbar>

@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { MetadataCreateDto } from '../models';
+// @ts-ignore
 import type { ProblemDetails } from '../models';
 // @ts-ignore
 import type { SmartMeterCreateDto } from '../models';
@@ -35,6 +37,48 @@ import type { SmartMeterUpdateDto } from '../models';
  */
 export const SmartMeterApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {string} id 
+         * @param {MetadataCreateDto} metadataCreateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addMetadata: async (id: string, metadataCreateDto: MetadataCreateDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('addMetadata', 'id', id)
+            // verify required parameter 'metadataCreateDto' is not null or undefined
+            assertParamExists('addMetadata', 'metadataCreateDto', metadataCreateDto)
+            const localVarPath = `/api/smartMeters/{id}/metadata`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(metadataCreateDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {SmartMeterCreateDto} smartMeterCreateDto 
@@ -143,6 +187,46 @@ export const SmartMeterApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeMetadata: async (smartMeterId: string, metadataId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'smartMeterId' is not null or undefined
+            assertParamExists('removeMetadata', 'smartMeterId', smartMeterId)
+            // verify required parameter 'metadataId' is not null or undefined
+            assertParamExists('removeMetadata', 'metadataId', metadataId)
+            const localVarPath = `/api/smartMeters/{smartMeterId}/metadata/{metadataId}`
+                .replace(`{${"smartMeterId"}}`, encodeURIComponent(String(smartMeterId)))
+                .replace(`{${"metadataId"}}`, encodeURIComponent(String(metadataId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id 
          * @param {SmartMeterUpdateDto} smartMeterUpdateDto 
          * @param {*} [options] Override http request option.
@@ -195,6 +279,19 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {string} id 
+         * @param {MetadataCreateDto} metadataCreateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addMetadata(id: string, metadataCreateDto: MetadataCreateDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addMetadata(id, metadataCreateDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.addMetadata']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {SmartMeterCreateDto} smartMeterCreateDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -230,6 +327,19 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async removeMetadata(smartMeterId: string, metadataId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeMetadata(smartMeterId, metadataId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.removeMetadata']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {string} id 
          * @param {SmartMeterUpdateDto} smartMeterUpdateDto 
          * @param {*} [options] Override http request option.
@@ -251,6 +361,16 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
 export const SmartMeterApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = SmartMeterApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {string} id 
+         * @param {MetadataCreateDto} metadataCreateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addMetadata(id: string, metadataCreateDto: MetadataCreateDto, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.addMetadata(id, metadataCreateDto, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {SmartMeterCreateDto} smartMeterCreateDto 
@@ -279,6 +399,16 @@ export const SmartMeterApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeMetadata(smartMeterId: string, metadataId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.removeMetadata(smartMeterId, metadataId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id 
          * @param {SmartMeterUpdateDto} smartMeterUpdateDto 
          * @param {*} [options] Override http request option.
@@ -297,6 +427,18 @@ export const SmartMeterApiFactory = function (configuration?: Configuration, bas
  * @extends {BaseAPI}
  */
 export class SmartMeterApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} id 
+     * @param {MetadataCreateDto} metadataCreateDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SmartMeterApi
+     */
+    public addMetadata(id: string, metadataCreateDto: MetadataCreateDto, options?: RawAxiosRequestConfig) {
+        return SmartMeterApiFp(this.configuration).addMetadata(id, metadataCreateDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {SmartMeterCreateDto} smartMeterCreateDto 
@@ -327,6 +469,18 @@ export class SmartMeterApi extends BaseAPI {
      */
     public getSmartMeters(options?: RawAxiosRequestConfig) {
         return SmartMeterApiFp(this.configuration).getSmartMeters(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} smartMeterId 
+     * @param {string} metadataId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SmartMeterApi
+     */
+    public removeMetadata(smartMeterId: string, metadataId: string, options?: RawAxiosRequestConfig) {
+        return SmartMeterApiFp(this.configuration).removeMetadata(smartMeterId, metadataId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -13,18 +13,11 @@ import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
-import { useSnackbar } from "../hooks/useSnackbar.ts";
+import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 
 export default function SignIn() {
-    const {
-        emailError,
-        emailErrorMessage,
-        passwordError,
-        passwordErrorMessage,
-        validateEmail,
-        validatePassword,
-    } = useValidation();
+    const { emailError, emailErrorMessage, passwordError, passwordErrorMessage } = useValidation();
 
     const { login } = useAuthenticationService();
 
@@ -42,10 +35,6 @@ export default function SignIn() {
             password: data.get('password') as string,
         };
 
-        if (!validateInputs(loginDto)) {
-            return;
-        }
-
         try {
             const tokenDto = await login(loginDto);
 
@@ -62,20 +51,6 @@ export default function SignIn() {
         }
     };
 
-    const validateInputs = (loginDto: LoginDto) => {
-        let isValid = true;
-
-        if (!validateEmail(loginDto.username)) {
-            isValid = false;
-        }
-
-        if (!validatePassword(loginDto.password)) {
-            isValid = false;
-        }
-
-        return isValid;
-    };
-
     return (
         <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
@@ -85,13 +60,11 @@ export default function SignIn() {
                     <Typography
                         component="h1"
                         variant="h4"
-
                         sx={{
                             width: '100%',
                             fontSize: 'clamp(2rem, 10vw, 2.15rem)',
                             textAlign: 'center',
-                        }}
-                    >
+                        }}>
                         Sign in
                     </Typography>
 
@@ -106,11 +79,10 @@ export default function SignIn() {
                             flexDirection: 'column',
                             width: '100%',
                             gap: 2,
-                        }}
-                    >
+                        }}>
                         <FormControl>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="email">Email</FormLabel>
+                                <FormLabel htmlFor="email">Email / Username</FormLabel>
                             </Box>
                             <TextField
                                 required
@@ -147,15 +119,8 @@ export default function SignIn() {
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                        >
+                        <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+                        <Button type="submit" fullWidth variant="contained">
                             Sign in
                         </Button>
 
@@ -164,12 +129,7 @@ export default function SignIn() {
                                 Don&apos;t have an account?{' '}
                             </Typography>
                             <Typography>
-                                <Link
-                                    component={RouterLink}
-                                    to="/signup"
-                                    variant="body2"
-                                    sx={{ alignSelf: 'center' }}
-                                >
+                                <Link component={RouterLink} to="/signup" variant="body2" sx={{ alignSelf: 'center' }}>
                                     Sign up
                                 </Link>
                             </Typography>
