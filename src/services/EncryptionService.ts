@@ -46,12 +46,16 @@ export class EncryptionService implements IEncryptionService {
     }
 
     private static ArrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
-        const encryptedDataArray = new Uint8Array(arrayBuffer);
-        return btoa(String.fromCharCode(...encryptedDataArray));
+        const uint8Array = new Uint8Array(arrayBuffer);
+        let binaryString = '';
+        for (let i = 0; i < uint8Array.length; i++) {
+            binaryString += String.fromCharCode(uint8Array[i]);
+        }
+        return window.btoa(binaryString);
     }
 
     private static Base64ToArrayBuffer(base64: string): ArrayBuffer {
-        const binaryString = atob(base64);
+        const binaryString = window.atob(base64);
         const len = binaryString.length;
         const bytes = new Uint8Array(len);
         for (let i = 0; i < len; i++) {
@@ -63,7 +67,7 @@ export class EncryptionService implements IEncryptionService {
     private static async ImportPublicKey(publicKey: string): Promise<CryptoKey> {
         return await window.crypto.subtle.importKey(
             'spki',
-            this.StringToArrayBuffer(atob(publicKey)),
+            this.StringToArrayBuffer(window.atob(publicKey)),
             {
                 name: 'RSA-OAEP',
                 hash: 'SHA-256',
@@ -76,7 +80,7 @@ export class EncryptionService implements IEncryptionService {
     private static async ImportPrivateKey(privateKey: string): Promise<CryptoKey> {
         return await window.crypto.subtle.importKey(
             'pkcs8',
-            this.StringToArrayBuffer(atob(privateKey)),
+            this.StringToArrayBuffer(window.atob(privateKey)),
             {
                 name: 'RSA-OAEP',
                 hash: 'SHA-256',
