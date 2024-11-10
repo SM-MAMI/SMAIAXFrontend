@@ -1,5 +1,18 @@
-import { Typography } from '@mui/material';
+import {DialogsProvider, useDialogs} from "@toolpad/core/useDialogs";
+import Button from "@mui/material/Button";
+import MyCustomDialog from "../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx";
 
 export default function HomePage() {
-    return <Typography>Welcome to Toolpad!</Typography>;
+    const dialogs = useDialogs();
+    return <DialogsProvider>
+        <Button
+            onClick={async () => {
+                // preview-start
+                await dialogs.open(MyCustomDialog);
+                // preview-end
+            }}
+        >
+            Open custom
+        </Button>
+    </DialogsProvider>;
 }
