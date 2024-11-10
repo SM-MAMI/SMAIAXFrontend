@@ -3,6 +3,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet } from 'react-router-dom';
 import { type Navigation } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
+import { ElectricMeter, Segment } from '@mui/icons-material';
 
 const NAVIGATION: Navigation = [
     {
@@ -17,6 +18,17 @@ const NAVIGATION: Navigation = [
         segment: 'orders',
         title: 'Orders',
         icon: <ShoppingCartIcon />,
+    },
+    {
+        segment: 'smart-meters',
+        title: 'Smart Meters',
+        icon: <ElectricMeter />,
+    },
+    {
+        segment: 'smart-meters/:id',
+        title: 'Smart Meter Details',
+        pattern: 'smart-meters/:id',
+        icon: <Segment />,
     },
 ];
 

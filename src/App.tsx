@@ -4,11 +4,12 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
-import SmartMeters from './pages/SmartMeters.tsx';
+import SmartMetersPage from './pages/SmartMetersPage.tsx';
 import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
 import Navbar from './toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
 import OrdersPage from './pages/navbar/OrdersPage.tsx';
+import SmartMeterDetailsPage from './pages/SmartMeterDetailsPage.tsx';
 
 type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
     element: React.ReactNode;
@@ -36,6 +37,14 @@ const protectedRoutes = [
                 path: '/orders',
                 element: <OrdersPage />,
             },
+            {
+                path: '/smart-meters',
+                element: <SmartMetersPage />,
+            },
+            {
+                path: '/smart-meters/:id',
+                element: <SmartMeterDetailsPage />,
+            },
         ],
     },
 ];
@@ -52,10 +61,6 @@ const router = createBrowserRouter([
     {
         path: 'signup',
         element: <SignUp />,
-    },
-    {
-        path: 'smart-meters',
-        element: <SmartMeters />,
     },
     {
         path: '*',
