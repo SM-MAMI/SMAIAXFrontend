@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EmailRegex } from '../constants/constants.ts';
+import { EmailRegex, PasswordRegex, UsernameRegex } from '../constants/constants';
 
 export const useValidation = () => {
     const [emailError, setEmailError] = useState(false);
@@ -29,6 +29,15 @@ export const useValidation = () => {
         if (!password || password.length < 8) {
             setPasswordError(true);
             setPasswordErrorMessage('Password must be at least 8 characters long.');
+            return false;
+        }
+
+        if (!PasswordRegex.test(password)) {
+            setPasswordError(true);
+            setPasswordErrorMessage(
+                'Password must contain at least one uppercase letter, ' +
+                    'one lowercase letter, one number, and one special character.'
+            );
             return false;
         }
 
@@ -65,6 +74,12 @@ export const useValidation = () => {
         if (!username || username.length < 1) {
             setUsernameError(true);
             setUsernameErrorMessage('Username is required.');
+            return false;
+        }
+
+        if (!UsernameRegex.test(username)) {
+            setUsernameError(true);
+            setUsernameErrorMessage('Username can only contain letters and numbers.');
             return false;
         }
 
