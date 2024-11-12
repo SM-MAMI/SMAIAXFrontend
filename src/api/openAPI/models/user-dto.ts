@@ -15,25 +15,31 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MetadataCreateDto } from './metadata-create-dto';
+import type { NameDto } from './name-dto';
 
 /**
  * 
  * @export
- * @interface SmartMeterCreateDto
+ * @interface UserDto
  */
-export interface SmartMeterCreateDto {
+export interface UserDto {
+    /**
+     * 
+     * @type {NameDto}
+     * @memberof UserDto
+     */
+    'name'?: NameDto;
     /**
      * 
      * @type {string}
-     * @memberof SmartMeterCreateDto
+     * @memberof UserDto
      */
-    'name': string;
+    'email'?: string | null;
     /**
      * 
-     * @type {MetadataCreateDto}
-     * @memberof SmartMeterCreateDto
+     * @type {string}
+     * @memberof UserDto
      */
-    'metadata'?: MetadataCreateDto;
+    'username'?: string | null;
 }
 

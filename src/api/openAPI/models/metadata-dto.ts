@@ -15,25 +15,37 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MetadataCreateDto } from './metadata-create-dto';
+import type { LocationDto } from './location-dto';
 
 /**
  * 
  * @export
- * @interface SmartMeterCreateDto
+ * @interface MetadataDto
  */
-export interface SmartMeterCreateDto {
+export interface MetadataDto {
     /**
      * 
      * @type {string}
-     * @memberof SmartMeterCreateDto
+     * @memberof MetadataDto
      */
-    'name': string;
+    'id'?: string;
     /**
      * 
-     * @type {MetadataCreateDto}
-     * @memberof SmartMeterCreateDto
+     * @type {string}
+     * @memberof MetadataDto
      */
-    'metadata'?: MetadataCreateDto;
+    'validFrom'?: string;
+    /**
+     * 
+     * @type {LocationDto}
+     * @memberof MetadataDto
+     */
+    'location'?: LocationDto;
+    /**
+     * 
+     * @type {number}
+     * @memberof MetadataDto
+     */
+    'householdSize'?: number;
 }
 

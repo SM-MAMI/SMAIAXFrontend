@@ -7,6 +7,7 @@ import { SmaiaxRoutes } from '../constants/constants.ts';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../api/openAPI';
+import { useUserService } from '../hooks/services/useUserService.ts';
 
 const NAVIGATION: Navigation = [
     {
@@ -33,12 +34,24 @@ const NavbarNavigation = () => {
 
     const { logout } = useAuthenticationService();
 
-    const [session] = React.useState<Session | null>({
+    const { getUser } = useUserService();
+
+    const [session, setSession] = React.useState<Session | null>({
         user: {
-            name: 'Bharat Kashyap',
-            email: 'bharatkashyap@outlook.com',
-            image: 'https://avatars.githubusercontent.com/u/19550456',
+            name: 'Guest',
+            email: '',
+            image: '',
         },
+    });
+
+    getUser().then((user) => {
+        setSession({
+            user: {
+                name: user.name?.firstName + ' ' + user.name?.lastName,
+                email: user.email,
+                image: 'https://avatars.githubusercontent.com/u/19550456',
+            },
+        });
     });
 
     const authentication = React.useMemo(() => {
