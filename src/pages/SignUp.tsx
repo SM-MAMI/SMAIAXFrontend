@@ -15,6 +15,7 @@ import { useAuthenticationService } from '../hooks/services/useAuthenticationSer
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
+import { SmaiaxRoutes } from '../constants/constants.ts';
 
 export default function SignUp() {
     const {
@@ -92,7 +93,7 @@ export default function SignUp() {
             showSnackbar('success', 'Successfully signed up!');
             console.log(userId);
 
-            navigate('/signin');
+            navigate(SmaiaxRoutes.SIGN_IN);
         } catch (error) {
             showSnackbar('error', 'Registration failed!');
             console.error('Registration failed:', error);
@@ -210,7 +211,11 @@ export default function SignUp() {
                                 Already have an account?
                             </Typography>
                             <Typography>
-                                <Link component={RouterLink} to="/signin" variant="body2" sx={{ alignSelf: 'center' }}>
+                                <Link
+                                    component={RouterLink}
+                                    to={'/' + SmaiaxRoutes.SIGN_IN}
+                                    variant="body2"
+                                    sx={{ alignSelf: 'center' }}>
                                     Sign in
                                 </Link>
                             </Typography>

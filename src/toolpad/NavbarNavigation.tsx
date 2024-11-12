@@ -3,6 +3,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet } from 'react-router-dom';
 import { type Navigation } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
+import { SmaiaxRoutes } from '../constants/constants.ts';
 
 const NAVIGATION: Navigation = [
     {
@@ -14,7 +15,7 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
-        segment: 'orders',
+        segment: SmaiaxRoutes.ORDERS,
         title: 'Orders',
         icon: <ShoppingCartIcon />,
     },
