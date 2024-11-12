@@ -1,9 +1,12 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Outlet } from 'react-router-dom';
-import { type Navigation } from '@toolpad/core/AppProvider';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { SmaiaxRoutes } from '../constants/constants.ts';
+import React from 'react';
+import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
+import { TokenDto } from '../api/openAPI';
 
 const NAVIGATION: Navigation = [
     {
@@ -22,12 +25,48 @@ const NAVIGATION: Navigation = [
 ];
 
 const BRANDING = {
-    title: 'My Toolpad Core App',
+    title: 'S M A I A - X',
 };
 
 const NavbarNavigation = () => {
+    const navigate = useNavigate();
+
+    const { logout } = useAuthenticationService();
+
+    const [session] = React.useState<Session | null>({
+        user: {
+            name: 'Bharat Kashyap',
+            email: 'bharatkashyap@outlook.com',
+            image: 'https://avatars.githubusercontent.com/u/19550456',
+        },
+    });
+
+    const authentication = React.useMemo(() => {
+        return {
+            signIn: () => {},
+            signOut: () => {
+                const accessToken = localStorage.getItem('access_token');
+                const refreshToken = localStorage.getItem('refresh_token');
+
+                if (!accessToken || !refreshToken) {
+                    navigate(SmaiaxRoutes.SIGN_IN);
+                    return;
+                }
+
+                const tokenDto: TokenDto = {
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                };
+                logout(tokenDto);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                navigate(SmaiaxRoutes.SIGN_IN);
+            },
+        };
+    }, []);
+
     return (
-        <AppProvider navigation={NAVIGATION} branding={BRANDING}>
+        <AppProvider navigation={NAVIGATION} branding={BRANDING} authentication={authentication} session={session}>
             <Outlet />
         </AppProvider>
     );
