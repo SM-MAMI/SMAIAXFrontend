@@ -8,6 +8,7 @@ import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../api/openAPI';
 import { useUserService } from '../hooks/services/useUserService.ts';
+import { useSnackbar } from '../hooks/useSnackbar.ts';
 
 const NAVIGATION: Navigation = [
     {
@@ -32,6 +33,8 @@ const BRANDING = {
 const NavbarNavigation = () => {
     const navigate = useNavigate();
 
+    const { showSnackbar } = useSnackbar();
+
     const { logout } = useAuthenticationService();
 
     const { getUser } = useUserService();
@@ -44,15 +47,24 @@ const NavbarNavigation = () => {
         },
     });
 
-    getUser().then((user) => {
-        setSession({
-            user: {
-                name: user.name?.firstName + ' ' + user.name?.lastName,
-                email: user.email,
-                image: 'https://avatars.githubusercontent.com/u/19550456',
-            },
-        });
-    });
+    React.useEffect(() => {
+        getUser()
+            .then((user) => {
+                const firstName = user.name?.firstName ?? 'N/A';
+                const lastName = user.name?.lastName ?? 'N/A';
+
+                setSession({
+                    user: {
+                        name: `${firstName} ${lastName}`,
+                        email: user.email,
+                        image: 'https://avatars.githubusercontent.com/u/19550456',
+                    },
+                });
+            })
+            .catch(() => {
+                showSnackbar('error', 'Get user information failed!');
+            });
+    }, [getUser, showSnackbar]);
 
     const authentication = React.useMemo(() => {
         return {
@@ -70,13 +82,16 @@ const NavbarNavigation = () => {
                     accessToken: accessToken,
                     refreshToken: refreshToken,
                 };
-                logout(tokenDto);
+
+                void logout(tokenDto);
+
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
+
                 navigate(SmaiaxRoutes.SIGN_IN);
             },
         };
-    }, []);
+    }, [logout, navigate]);
 
     return (
         <AppProvider navigation={NAVIGATION} branding={BRANDING} authentication={authentication} session={session}>
