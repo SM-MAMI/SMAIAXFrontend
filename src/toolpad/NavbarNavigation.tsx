@@ -9,6 +9,8 @@ import { useAuthenticationService } from '../hooks/services/useAuthenticationSer
 import { TokenDto } from '../api/openAPI';
 import { useUserService } from '../hooks/services/useUserService.ts';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
+import { SmaiaxLogo } from '../assets/SmaiaxLogo.tsx';
+import Typography from '@mui/material/Typography';
 
 const NAVIGATION: Navigation = [
     {
@@ -27,7 +29,17 @@ const NAVIGATION: Navigation = [
 ];
 
 const BRANDING = {
-    title: 'S M A I A - X',
+    title: (
+        <Typography
+            sx={{
+                fontFamily: 'Montserrat',
+                fontWeight: 700,
+                fontSize: 18,
+            }}>
+            S M A I A - X
+        </Typography>
+    ),
+    logo: SmaiaxLogo(),
 };
 
 const NavbarNavigation = () => {
@@ -57,7 +69,6 @@ const NavbarNavigation = () => {
                     user: {
                         name: `${firstName} ${lastName}`,
                         email: user.email,
-                        image: 'https://avatars.githubusercontent.com/u/19550456',
                     },
                 });
             })
@@ -94,6 +105,7 @@ const NavbarNavigation = () => {
     }, [logout, navigate]);
 
     return (
+        // @ts-expect-error - Needed for custom typography in branding
         <AppProvider navigation={NAVIGATION} branding={BRANDING} authentication={authentication} session={session}>
             <Outlet />
         </AppProvider>
