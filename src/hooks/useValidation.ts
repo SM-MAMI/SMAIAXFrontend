@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { EmailRegex, PasswordRegex, UsernameRegex } from '../constants/constants';
 
+export const isNullOrEmptyOrWhiteSpaces = (str: string | null | undefined) => {
+    return str === null || str === undefined || RegExp(/^ *$/).exec(str) !== null;
+};
+
 export const useValidation = () => {
     const [emailError, setEmailError] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
