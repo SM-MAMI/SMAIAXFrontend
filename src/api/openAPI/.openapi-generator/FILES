@@ -17,13 +17,14 @@ models/location-resolution.ts
 models/login-dto.ts
 models/measurement-resolution.ts
 models/metadata-create-dto.ts
+models/metadata-dto.ts
 models/name-dto.ts
-models/ok.ts
 models/policy-create-dto.ts
 models/policy-request-create-dto.ts
 models/problem-details.ts
 models/register-dto.ts
 models/smart-meter-create-dto.ts
+models/smart-meter-dto.ts
 models/smart-meter-overview-dto.ts
 models/smart-meter-update-dto.ts
 models/token-dto.ts

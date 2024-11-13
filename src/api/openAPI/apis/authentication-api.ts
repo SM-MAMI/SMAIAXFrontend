@@ -24,8 +24,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { LoginDto } from '../models';
 // @ts-ignore
-import type { Ok } from '../models';
-// @ts-ignore
 import type { ProblemDetails } from '../models';
 // @ts-ignore
 import type { RegisterDto } from '../models';

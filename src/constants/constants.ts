@@ -6,5 +6,6 @@ export const SmaiaxRoutes = {
     ORDERS: 'orders',
     SIGN_IN: 'sign-in',
     SIGN_UP: 'sign-up',
+    SMART_METERS: 'smart-meters',
     NOT_FOUND: '*',
 };
