@@ -217,7 +217,7 @@ export const AuthenticationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async logout(tokenDto: TokenDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ok>> {
+        async logout(tokenDto: TokenDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.logout(tokenDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthenticationApi.logout']?.[localVarOperationServerIndex]?.url;
@@ -272,7 +272,7 @@ export const AuthenticationApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        logout(tokenDto: TokenDto, options?: RawAxiosRequestConfig): AxiosPromise<Ok> {
+        logout(tokenDto: TokenDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.logout(tokenDto, options).then((request) => request(axios, basePath));
         },
         /**

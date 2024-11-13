@@ -1,35 +1,65 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomePage from './pages/HomePage.tsx';
+import { createBrowserRouter, NonIndexRouteObject, RouterProvider } from 'react-router-dom';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
 import SmartMeters from './pages/SmartMeters.tsx';
+import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
+import Navbar from './toolpad/Navbar.tsx';
+import HomePage from './pages/navbar/HomePage.tsx';
+import OrdersPage from './pages/navbar/OrdersPage.tsx';
+import { SmaiaxRoutes } from './constants/constants.ts';
+
+type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
+    element: React.ReactNode;
+    children?: ProtectedRouteObject[];
+};
+
+const applyProtectedRoute = (routes: ProtectedRouteObject[]): ProtectedRouteObject[] => {
+    return routes.map((route) => ({
+        ...route,
+        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
+        children: route.children ? applyProtectedRoute(route.children) : undefined,
+    }));
+};
 
 const protectedRoutes = [
-    { path: '/', element: <HomePage /> },
+    {
+        path: SmaiaxRoutes.HOME,
+        element: <Navbar />,
+        children: [
+            {
+                path: SmaiaxRoutes.HOME,
+                element: <HomePage />,
+            },
+            {
+                path: SmaiaxRoutes.ORDERS,
+                element: <OrdersPage />,
+            },
+        ],
+    },
 ];
 
 const router = createBrowserRouter([
-    ...protectedRoutes.map(route => ({
-        ...route,
-        element: <ProtectedRoute>{route.element}</ProtectedRoute>,
-    })),
     {
-        path: 'signin',
+        element: <NavbarNavigation />,
+        children: [...applyProtectedRoute(protectedRoutes)],
+    },
+    {
+        path: SmaiaxRoutes.SIGN_IN,
         element: <SignIn />,
     },
     {
-        path: 'signup',
+        path: SmaiaxRoutes.SIGN_UP,
         element: <SignUp />,
     },
     {
-        path: 'smart-meters',
+        path: SmaiaxRoutes.SMART_METERS,
         element: <SmartMeters />,
     },
     {
-        path: '*',
+        path: SmaiaxRoutes.NOT_FOUND,
         element: <NotFoundPage />,
     },
 ]);
