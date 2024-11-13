@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { type Navigation } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { SmaiaxRoutes } from '../constants/constants.ts';
-import { ElectricMeter, Segment } from '@mui/icons-material';
+import { ElectricMeter } from '@mui/icons-material';
 
 const NAVIGATION: Navigation = [
     {
@@ -23,13 +23,8 @@ const NAVIGATION: Navigation = [
     {
         segment: SmaiaxRoutes.SMART_METERS,
         title: 'Smart Meters',
+        pattern: 'smart-meters/:id*',
         icon: <ElectricMeter />,
-    },
-    {
-        segment: SmaiaxRoutes.SMART_METER_DETAILS,
-        title: 'Smart Meter Details',
-        pattern: SmaiaxRoutes.SMART_METER_DETAILS,
-        icon: <Segment />,
     },
 ];
 
