@@ -1,13 +1,14 @@
 import { Breadcrumb, PageContainer, useActivePage } from '@toolpad/core';
-import { SmartMeterOverviewDto } from '../api/openAPI';
+import { SmartMeterDto } from '../api/openAPI';
 import { useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
 import invariant from '../tiny-invariant';
+import EditMetadata from '../components/smartMeter/EditMetadata';
 
 const SmartMeterDetailsPage = () => {
-    const [smartMeter, setSmartMeter] = useState<SmartMeterOverviewDto | undefined>(undefined);
+    const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
 
     const params = useParams<{ id: string }>();
     const activePage = useActivePage();
@@ -15,7 +16,7 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
 
     invariant(activePage, 'No navigation match');
-    const path = `${activePage.path}/${params.id}`;
+    const path = `${activePage.path}/${params.id ?? ''}`;
 
     const title = useMemo<string>(() => {
         return smartMeter?.name ?? 'NOT FOUND';
@@ -23,7 +24,7 @@ const SmartMeterDetailsPage = () => {
 
     const breadcrumbs = useMemo<Breadcrumb[]>(() => {
         return [...activePage.breadcrumbs, { title, path }];
-    }, [activePage, title]);
+    }, [activePage.breadcrumbs, path, title]);
 
     useEffect(() => {
         const loadSmartMeter = async () => {
@@ -39,11 +40,12 @@ const SmartMeterDetailsPage = () => {
             }
         };
         void loadSmartMeter();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params.id]);
 
     return (
         <PageContainer title={title} breadcrumbs={breadcrumbs}>
-            {smartMeter && smartMeter.name}
+            {smartMeter?.metadata?.map((md) => <EditMetadata metadata={md} key={md.id} />)}
         </PageContainer>
     );
 };

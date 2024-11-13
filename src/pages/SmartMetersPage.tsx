@@ -1,11 +1,11 @@
-import { Box, FormControl, FormLabel, TextField, Typography, Button, useMediaQuery } from '@mui/material';
+import { Box, FormControl, FormLabel, TextField, Button, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
 import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
 import { SmartMeterCreateDto, SmartMeterOverviewDto } from '../api/openAPI';
 import { isNullOrEmptyOrWhiteSpaces } from '../hooks/useValidation';
-import SmartMeterIcon from '../assets/SmartMeterIcon';
 import { useNavigate } from 'react-router-dom';
+import SmartMeterCard from '../components/smartMeter/SmartMeterCard';
 
 const SmartMetersPage = () => {
     const [addFormVisible, setAddFormVisible] = useState(false);
@@ -22,7 +22,7 @@ const SmartMetersPage = () => {
         try {
             const sms = await getSmartMeters();
             const sortedSms = sms
-                ?.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)
+                .sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)
                 .sort((a, b) => (a.name === recentlyAddedSmartMeter ? -1 : b.name === recentlyAddedSmartMeter ? 1 : 0));
             setSmartMeters(sortedSms);
             setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
@@ -138,39 +138,22 @@ const SmartMetersPage = () => {
                     justifyContent: isSmallScreen ? 'center' : 'space-evenly',
                     alignItems: 'center',
                 }}>
-                {smartMeters &&
-                    smartMeters.map((sm) => (
-                        <div
-                            key={sm.name}
-                            style={{
-                                flex: isSmallScreen ? '1 1 100%' : '1 1 30%', // Full width on small screens
-                                boxSizing: 'border-box',
-                            }}>
-                            <Button
-                                variant="text"
-                                sx={{
-                                    flexDirection: 'column',
-                                    color: 'white',
-                                }}
-                                onClick={() => navigate(`/smart-meters/${sm.id}`)}>
-                                <Typography
-                                    component="h1"
-                                    variant="h4"
-                                    sx={{
-                                        textAlign: 'center',
-                                    }}>
-                                    {sm.name}
-                                </Typography>
-                                <SmartMeterIcon />
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    sx={{ visibility: sm.name === recentlyAddedSmartMeter ? 'visible' : 'collapse' }}>
-                                    Add Metadata
-                                </Button>
-                            </Button>
-                        </div>
-                    ))}
+                {smartMeters?.map((sm) => (
+                    <div
+                        key={sm.id}
+                        style={{
+                            flex: isSmallScreen ? '1 1 100%' : '1 1 30%', // Full width on small screens
+                            boxSizing: 'border-box',
+                        }}>
+                        <SmartMeterCard
+                            smartMeterOverview={sm}
+                            showAddMetadata={sm.name !== undefined && sm.name === recentlyAddedSmartMeter}
+                            navigateToDetails={() => {
+                                navigate(`/smart-meters/${sm.id ?? ''}`);
+                            }}
+                        />
+                    </div>
+                ))}
             </div>
         </div>
     );

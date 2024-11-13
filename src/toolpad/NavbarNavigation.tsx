@@ -21,14 +21,14 @@ const NAVIGATION: Navigation = [
         icon: <ShoppingCartIcon />,
     },
     {
-        segment: 'smart-meters',
+        segment: SmaiaxRoutes.SMART_METERS,
         title: 'Smart Meters',
         icon: <ElectricMeter />,
     },
     {
-        segment: 'smart-meters/:id',
+        segment: SmaiaxRoutes.SMART_METER_DETAILS,
         title: 'Smart Meter Details',
-        pattern: 'smart-meters/:id',
+        pattern: SmaiaxRoutes.SMART_METER_DETAILS,
         icon: <Segment />,
     },
 ];

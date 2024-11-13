@@ -28,7 +28,7 @@ export interface RegisterDto {
      * @type {string}
      * @memberof RegisterDto
      */
-    'userName': string;
+    'username': string;
     /**
      * 
      * @type {string}
