@@ -28,6 +28,8 @@ import type { ProblemDetails } from '../models';
 // @ts-ignore
 import type { SmartMeterCreateDto } from '../models';
 // @ts-ignore
+import type { SmartMeterDto } from '../models';
+// @ts-ignore
 import type { SmartMeterOverviewDto } from '../models';
 // @ts-ignore
 import type { SmartMeterUpdateDto } from '../models';
@@ -308,7 +310,7 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSmartMeterById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SmartMeterOverviewDto>> {
+        async getSmartMeterById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SmartMeterDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSmartMeterById(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.getSmartMeterById']?.[localVarOperationServerIndex]?.url;
@@ -386,7 +388,7 @@ export const SmartMeterApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSmartMeterById(id: string, options?: RawAxiosRequestConfig): AxiosPromise<SmartMeterOverviewDto> {
+        getSmartMeterById(id: string, options?: RawAxiosRequestConfig): AxiosPromise<SmartMeterDto> {
             return localVarFp.getSmartMeterById(id, options).then((request) => request(axios, basePath));
         },
         /**

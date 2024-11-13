@@ -14,7 +14,7 @@ import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
-import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
+import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 import { SmaiaxRoutes } from '../constants/constants.ts';
 
 export default function SignIn() {
@@ -56,7 +56,7 @@ export default function SignIn() {
         <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
-                    <SmaiaXTextAndDotsIcon />
+                    <SmaiaxTextAndDotsIcon />
 
                     <Typography
                         component="h1"

@@ -14,7 +14,7 @@ import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
-import { SmaiaXTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
+import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 import { SmaiaxRoutes } from '../constants/constants.ts';
 
 export default function SignUp() {
@@ -104,7 +104,7 @@ export default function SignUp() {
         <Box sx={{ height: '100%', display: 'flex' }}>
             <CardContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
-                    <SmaiaXTextAndDotsIcon />
+                    <SmaiaxTextAndDotsIcon />
 
                     <Typography
                         component="h1"
