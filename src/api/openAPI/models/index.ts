@@ -15,4 +15,3 @@ export * from './smart-meter-dto';
 export * from './smart-meter-overview-dto';
 export * from './smart-meter-update-dto';
 export * from './token-dto';
-export * from './user-dto';

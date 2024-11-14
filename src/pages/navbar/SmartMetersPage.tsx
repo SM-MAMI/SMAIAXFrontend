@@ -22,7 +22,7 @@ const SmartMetersPage = () => {
         try {
             const sms = await getSmartMeters();
             const sortedSms = sms
-                .sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)
+                .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) => (a.name === recentlyAddedSmartMeter ? -1 : b.name === recentlyAddedSmartMeter ? 1 : 0));
             setSmartMeters(sortedSms);
             setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
@@ -147,12 +147,12 @@ const SmartMetersPage = () => {
                         }}>
                         <SmartMeterCard
                             smartMeterOverview={sm}
-                            showAddMetadata={sm.name !== undefined && sm.name === recentlyAddedSmartMeter}
+                            showAddMetadata={sm.name === recentlyAddedSmartMeter}
                             navigateToDetails={() => {
-                                navigate(`/smart-meters/${sm.id ?? ''}`);
+                                navigate(`/smart-meters/${sm.id}`);
                             }}
                             navigateToDetailsWithOpenMetadata={() => {
-                                navigate(`/smart-meters/${sm.id ?? ''}/?open=true`);
+                                navigate(`/smart-meters/${sm.id}/?open=true`);
                             }}
                         />
                     </div>

@@ -17,16 +17,16 @@
 /**
  * 
  * @export
- * @enum {number}
+ * @enum {string}
  */
 
 export const LocationResolution = {
-    NUMBER_0: 0,
-    NUMBER_1: 1,
-    NUMBER_2: 2,
-    NUMBER_3: 3,
-    NUMBER_4: 4,
-    NUMBER_5: 5
+    None: 'None',
+    StreetName: 'StreetName',
+    City: 'City',
+    State: 'State',
+    Country: 'Country',
+    Continent: 'Continent'
 } as const;
 
 export type LocationResolution = typeof LocationResolution[keyof typeof LocationResolution];

@@ -28,18 +28,18 @@ export interface SmartMeterDto {
      * @type {string}
      * @memberof SmartMeterDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof SmartMeterDto
      */
-    'name'?: string | null;
+    'name': string;
     /**
      * 
      * @type {Array<MetadataDto>}
      * @memberof SmartMeterDto
      */
-    'metadata'?: Array<MetadataDto> | null;
+    'metadata': Array<MetadataDto>;
 }
 

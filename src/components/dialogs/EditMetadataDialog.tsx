@@ -98,13 +98,13 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditM
                                 }));
                             }}>
                             <option aria-label="None" value={undefined} />
-                            <option value={Continent.NUMBER_0}>Africa</option>
-                            <option value={Continent.NUMBER_1}>Antarctica</option>
-                            <option value={Continent.NUMBER_2}>Asia</option>
-                            <option value={Continent.NUMBER_3}>Europe</option>
-                            <option value={Continent.NUMBER_4}>North America</option>
-                            <option value={Continent.NUMBER_5}>Oceania</option>
-                            <option value={Continent.NUMBER_6}>South America</option>
+                            <option value={Continent.Africa}>Africa</option>
+                            <option value={Continent.Antarctica}>Antarctica</option>
+                            <option value={Continent.Asia}>Asia</option>
+                            <option value={Continent.Europe}>Europe</option>
+                            <option value={Continent.NorthAmerica}>North America</option>
+                            <option value={Continent.Oceania}>Oceania</option>
+                            <option value={Continent.SouthAmerica}>South America</option>
                         </NativeSelect>
                     </FormControl>
                     <FormControl disabled={isNullOrEmptyOrWhiteSpaces(location.continent?.toString())}>

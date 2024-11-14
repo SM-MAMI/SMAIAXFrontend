@@ -5,7 +5,6 @@ apis/authentication-api.ts
 apis/policy-api.ts
 apis/policyrequest-api.ts
 apis/smart-meter-api.ts
-apis/user-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -29,4 +28,3 @@ models/smart-meter-dto.ts
 models/smart-meter-overview-dto.ts
 models/smart-meter-update-dto.ts
 models/token-dto.ts
-models/user-dto.ts
