@@ -43,11 +43,9 @@ export default function SignIn() {
             localStorage.setItem('refresh_token', tokenDto.refreshToken);
 
             showSnackbar('success', 'Successfully signed in!');
-            console.log(tokenDto);
-
             navigate('/');
         } catch (error) {
-            console.log(error);
+            console.error(error);
             showSnackbar('error', `Signin failed!`);
         }
     };

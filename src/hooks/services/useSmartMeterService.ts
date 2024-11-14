@@ -1,6 +1,12 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../components/context/ApiContext.tsx';
-import { ProblemDetails, SmartMeterCreateDto, SmartMeterDto, SmartMeterOverviewDto } from '../../api/openAPI';
+import {
+    MetadataCreateDto,
+    ProblemDetails,
+    SmartMeterCreateDto,
+    SmartMeterDto,
+    SmartMeterOverviewDto,
+} from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const useSmartMeterService = () => {
@@ -16,6 +22,21 @@ export const useSmartMeterService = () => {
         async (smartMeterCreatedDto: SmartMeterCreateDto): Promise<string> => {
             try {
                 const response = await smartMeterApi.addSmartMeter(smartMeterCreatedDto);
+
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [smartMeterApi]
+    );
+
+    const addMetadata = useCallback(
+        async (smartMeterId: string, metadataCreateDto: MetadataCreateDto): Promise<string> => {
+            try {
+                const response = await smartMeterApi.addMetadata(smartMeterId, metadataCreateDto);
 
                 return response.data;
             } catch (error) {
@@ -56,6 +77,7 @@ export const useSmartMeterService = () => {
 
     return {
         addSmartMeter,
+        addMetadata,
         getSmartMeters,
         getSmartMeter,
     };

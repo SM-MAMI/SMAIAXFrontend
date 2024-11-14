@@ -27,7 +27,7 @@ const SmartMetersPage = () => {
             setSmartMeters(sortedSms);
             setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             showSnackbar('error', `Failed to load smart meters!`);
         }
     };
@@ -82,7 +82,7 @@ const SmartMetersPage = () => {
             showSnackbar('success', 'Successfully added smart meter!');
             void loadSmartMeters(smartMeterDto.name);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             showSnackbar('error', `Smart meter could not be added!`);
         }
     };

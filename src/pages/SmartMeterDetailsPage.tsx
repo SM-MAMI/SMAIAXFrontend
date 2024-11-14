@@ -5,10 +5,12 @@ import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
 import invariant from '../tiny-invariant';
-import EditMetadata from '../components/smartMeter/EditMetadata';
+import { Button } from '@mui/material';
+import EditMetadataDialog from '../components/dialogs/EditMetadataDialog';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
+    const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
     const activePage = useActivePage();
@@ -35,7 +37,7 @@ const SmartMeterDetailsPage = () => {
                 const sm = await getSmartMeter(params.id);
                 setSmartMeter(sm);
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 showSnackbar('error', `Failed to load smart meter!`);
             }
         };
@@ -45,7 +47,31 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <PageContainer title={title} breadcrumbs={breadcrumbs}>
-            {smartMeter?.metadata?.map((md) => <EditMetadata metadata={md} key={md.id} />)}
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: '100%',
+                    width: '100%',
+                }}>
+                <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => {
+                        setOpenAddMetadata(true);
+                    }}>
+                    +
+                </Button>
+            </div>
+            <EditMetadataDialog
+                smartMeterId={smartMeter?.id ?? ''}
+                isNew={true}
+                open={openAddMetadata}
+                onClose={() => {
+                    setOpenAddMetadata(false);
+                }}
+            />
         </PageContainer>
     );
 };
