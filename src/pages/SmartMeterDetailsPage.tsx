@@ -68,7 +68,10 @@ const SmartMeterDetailsPage = () => {
                 smartMeterId={smartMeter?.id ?? ''}
                 isNew={true}
                 open={openAddMetadata}
-                onClose={() => {
+                onOk={(successful: boolean) => {
+                    setOpenAddMetadata(!successful);
+                }}
+                onCancel={() => {
                     setOpenAddMetadata(false);
                 }}
             />

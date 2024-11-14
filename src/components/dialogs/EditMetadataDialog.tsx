@@ -24,10 +24,11 @@ interface EditMetadataDialogProps {
     smartMeterId: string;
     isNew: boolean;
     open: boolean;
-    onClose: () => void;
+    onOk: (successful: boolean) => void;
+    onCancel: () => void;
 }
 
-const EditMetadataDialog = ({ smartMeterId, isNew, open, onClose }: EditMetadataDialogProps) => {
+const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditMetadataDialogProps) => {
     const [location, setLocation] = useState<LocationDto>({});
 
     const { addMetadata } = useSmartMeterService();
@@ -41,22 +42,24 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onClose }: EditMetadata
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
+        const householdSize = data.get('householdsize') as unknown as number;
+        const validFrom = data.get('validfrom') as string;
 
         const metadataCreate: MetadataCreateDto = {
-            householdSize: Number(data.get('householdsize') as string),
+            householdSize: householdSize,
             location: location,
-            validFrom: new Date(data.get('validfrom') as string).toISOString(),
+            validFrom: new Date(validFrom).toUTCString(),
         };
-
-        //todo: validation
 
         try {
             await addMetadata(smartMeterId, metadataCreate);
 
             showSnackbar('success', 'Successfully added metadata!');
+            onOk(true);
         } catch (error) {
             showSnackbar('error', 'Add metadata failed!');
             console.error('Add metadata failed:', error);
+            onOk(false);
         }
     };
 
@@ -72,7 +75,13 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onClose }: EditMetadata
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
                     <FormControl>
                         <FormLabel htmlFor="householdsize">Household Size</FormLabel>
-                        <Input type="number" id="householdsize" name="householdsize" />
+                        <Input
+                            type="number"
+                            defaultValue={0}
+                            id="householdsize"
+                            name="householdsize"
+                            inputProps={{ min: 0 }}
+                        />
                     </FormControl>
                     <FormControl>
                         <FormLabel htmlFor="continent">Select a Continent</FormLabel>
@@ -82,8 +91,11 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onClose }: EditMetadata
                                 id: 'uncontrolled-native',
                             }}
                             defaultValue="None"
-                            onChange={(event: { target: { value: Continent | undefined } }) => {
-                                setLocation((prevLocation) => ({ ...prevLocation, continent: event.target.value }));
+                            onChange={(event) => {
+                                setLocation((prevLocation) => ({
+                                    ...prevLocation,
+                                    continent: event.target.value as unknown as Continent | undefined,
+                                }));
                             }}>
                             <option aria-label="None" value={undefined} />
                             <option value={Continent.NUMBER_0}>Africa</option>
@@ -150,18 +162,12 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onClose }: EditMetadata
                     </FormControl>
                     <DatePicker name="validfrom" label="Valid From" defaultValue={dayjs()} disablePast />
                     <DialogActions>
-                        <Button
-                            type="submit"
-                            onClick={() => {
-                                // todo: only close if successful
-                                onClose();
-                            }}
-                            variant="outlined">
+                        <Button type="submit" variant="outlined">
                             Ok
                         </Button>
                         <Button
                             onClick={() => {
-                                onClose();
+                                onCancel();
                             }}
                             variant="outlined">
                             Cancel
