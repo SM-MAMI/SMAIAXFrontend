@@ -6,9 +6,15 @@ interface SmartMeterCardProps {
     smartMeterOverview: SmartMeterOverviewDto;
     navigateToDetails: () => void;
     showAddMetadata?: boolean;
+    navigateToDetailsWithOpenMetadata: () => void;
 }
 
-const SmartMeterCard = ({ smartMeterOverview, navigateToDetails, showAddMetadata }: SmartMeterCardProps) => {
+const SmartMeterCard = ({
+    smartMeterOverview,
+    navigateToDetails,
+    showAddMetadata,
+    navigateToDetailsWithOpenMetadata,
+}: SmartMeterCardProps) => {
     return (
         <div
             style={{
@@ -23,7 +29,7 @@ const SmartMeterCard = ({ smartMeterOverview, navigateToDetails, showAddMetadata
                 <SmartMeterIcon />
             </Button>
             {showAddMetadata && (
-                <Button variant="outlined" color="secondary" onClick={navigateToDetails}>
+                <Button variant="outlined" color="secondary" onClick={navigateToDetailsWithOpenMetadata}>
                     Add Metadata
                 </Button>
             )}

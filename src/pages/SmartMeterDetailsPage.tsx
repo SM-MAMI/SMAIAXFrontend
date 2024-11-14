@@ -1,6 +1,6 @@
 import { Breadcrumb, PageContainer, useActivePage } from '@toolpad/core';
 import { SmartMeterDto } from '../api/openAPI';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
@@ -13,6 +13,7 @@ const SmartMeterDetailsPage = () => {
     const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
+    const searchParams = useSearchParams();
     const activePage = useActivePage();
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
@@ -42,6 +43,12 @@ const SmartMeterDetailsPage = () => {
             }
         };
         void loadSmartMeter();
+
+        const open = searchParams[0].get('open');
+        if (open) {
+            setOpenAddMetadata(true);
+            searchParams[0].delete('open');
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 

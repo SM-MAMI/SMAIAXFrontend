@@ -151,6 +151,9 @@ const SmartMetersPage = () => {
                             navigateToDetails={() => {
                                 navigate(`/smart-meters/${sm.id ?? ''}`);
                             }}
+                            navigateToDetailsWithOpenMetadata={() => {
+                                navigate(`/smart-meters/${sm.id ?? ''}/?open=true`);
+                            }}
                         />
                     </div>
                 ))}
