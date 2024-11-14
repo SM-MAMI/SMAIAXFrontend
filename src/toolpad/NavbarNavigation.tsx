@@ -75,7 +75,8 @@ const NavbarNavigation = () => {
             .catch(() => {
                 showSnackbar('error', 'Get user information failed!');
             });
-    }, [getUser, showSnackbar]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getUser]);
 
     const authentication = React.useMemo(() => {
         return {
