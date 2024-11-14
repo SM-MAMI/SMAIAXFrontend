@@ -1,12 +1,12 @@
-import { Breadcrumb, PageContainer, useActivePage } from '@toolpad/core';
-import { SmartMeterDto } from '../api/openAPI';
+import { useActivePage } from '@toolpad/core';
+import { SmartMeterDto } from '../../api/openAPI';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
+import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useMemo, useState } from 'react';
-import { useSnackbar } from '../hooks/useSnackbar';
-import invariant from '../tiny-invariant';
+import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import invariant from '../../tiny-invariant.ts';
 import { Button, Typography } from '@mui/material';
-import EditMetadataDialog from '../components/dialogs/EditMetadataDialog';
+import EditMetadataDialog from '../../components/dialogs/EditMetadataDialog.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
@@ -19,15 +19,10 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
 
     invariant(activePage, 'No navigation match');
-    const path = `${activePage.path}/${params.id ?? ''}`;
 
     const title = useMemo<string>(() => {
         return smartMeter?.name ?? 'NOT FOUND';
     }, [smartMeter]);
-
-    const breadcrumbs = useMemo<Breadcrumb[]>(() => {
-        return [...activePage.breadcrumbs, { title, path }];
-    }, [activePage.breadcrumbs, path, title]);
 
     useEffect(() => {
         const loadSmartMeter = async () => {
@@ -53,8 +48,8 @@ const SmartMeterDetailsPage = () => {
     }, [params.id]);
 
     return (
-        <PageContainer title={title} breadcrumbs={breadcrumbs}>
-            <Typography variant="h4">Metadata</Typography>
+        <>
+            <Typography variant={'h6'}>{title}</Typography>
             <div
                 style={{
                     display: 'flex',
@@ -69,7 +64,7 @@ const SmartMeterDetailsPage = () => {
                     onClick={() => {
                         setOpenAddMetadata(true);
                     }}>
-                    +
+                    Edit
                 </Button>
             </div>
             <EditMetadataDialog
@@ -83,7 +78,7 @@ const SmartMeterDetailsPage = () => {
                     setOpenAddMetadata(false);
                 }}
             />
-        </PageContainer>
+        </>
     );
 };
 

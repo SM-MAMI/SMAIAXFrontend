@@ -1,11 +1,11 @@
 import { Box, FormControl, FormLabel, TextField, Button, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSnackbar } from '../hooks/useSnackbar';
-import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
-import { SmartMeterCreateDto, SmartMeterOverviewDto } from '../api/openAPI';
-import { isNullOrEmptyOrWhiteSpaces } from '../hooks/useValidation';
+import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
+import { SmartMeterCreateDto, SmartMeterOverviewDto } from '../../api/openAPI';
+import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation.ts';
 import { useNavigate } from 'react-router-dom';
-import SmartMeterCard from '../components/smartMeter/SmartMeterCard';
+import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 
 const SmartMetersPage = () => {
     const [addFormVisible, setAddFormVisible] = useState(false);
