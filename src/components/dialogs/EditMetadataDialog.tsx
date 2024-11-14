@@ -48,7 +48,7 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditM
         const metadataCreate: MetadataCreateDto = {
             householdSize: householdSize,
             location: location,
-            validFrom: new Date(validFrom).toUTCString(),
+            validFrom: new Date(validFrom).toISOString(),
         };
 
         try {
