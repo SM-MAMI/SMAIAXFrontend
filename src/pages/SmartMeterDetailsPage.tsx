@@ -5,7 +5,7 @@ import { useSmartMeterService } from '../hooks/services/useSmartMeterService';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
 import invariant from '../tiny-invariant';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import EditMetadataDialog from '../components/dialogs/EditMetadataDialog';
 
 const SmartMeterDetailsPage = () => {
@@ -47,6 +47,7 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <PageContainer title={title} breadcrumbs={breadcrumbs}>
+            <Typography variant="h4">Metadata</Typography>
             <div
                 style={{
                     display: 'flex',
