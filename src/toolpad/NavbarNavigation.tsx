@@ -8,10 +8,9 @@ import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../api/openAPI';
-import { useUserService } from '../hooks/services/useUserService.ts';
-import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxLogo } from '../assets/SmaiaxLogo.tsx';
 import Typography from '@mui/material/Typography';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 const NAVIGATION: Navigation = [
     {
@@ -52,38 +51,21 @@ const BRANDING = {
 const NavbarNavigation = () => {
     const navigate = useNavigate();
 
-    const { showSnackbar } = useSnackbar();
-
     const { logout } = useAuthenticationService();
 
-    const { getUser } = useUserService();
-
-    const [session, setSession] = React.useState<Session | null>({
-        user: {
-            name: 'Guest',
-            email: '',
-            image: '',
-        },
-    });
+    const [session, setSession] = React.useState<Session | null>();
 
     React.useEffect(() => {
-        getUser()
-            .then((user) => {
-                const firstName = user.name?.firstName ?? 'N/A';
-                const lastName = user.name?.lastName ?? 'N/A';
+        const accessToken = localStorage.getItem('access_token');
 
-                setSession({
-                    user: {
-                        name: `${firstName} ${lastName}`,
-                        email: user.email,
-                    },
-                });
-            })
-            .catch(() => {
-                showSnackbar('error', 'Get user information failed!');
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getUser]);
+        if (!accessToken) {
+            navigate(SmaiaxRoutes.SIGN_IN);
+            return;
+        }
+
+        const { sub, unique_name, email } = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
+        setSession({ user: { id: sub, name: unique_name, email } });
+    }, [navigate]);
 
     const authentication = React.useMemo(() => {
         return {
