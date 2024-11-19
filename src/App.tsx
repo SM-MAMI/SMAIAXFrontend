@@ -4,11 +4,13 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
+import SmartMetersPage from './pages/navbar/SmartMetersPage.tsx';
 import NavbarNavigation from './toolpad/NavbarNavigation.tsx';
 import Navbar from './toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
 import OrdersPage from './pages/navbar/OrdersPage.tsx';
 import { SmaiaxRoutes } from './constants/constants.ts';
+import SmartMeterDetailsPage from './pages/details/SmartMeterDetailsPage.tsx';
 
 type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
     element: React.ReactNode;
@@ -35,6 +37,14 @@ const protectedRoutes = [
             {
                 path: SmaiaxRoutes.ORDERS,
                 element: <OrdersPage />,
+            },
+            {
+                path: SmaiaxRoutes.SMART_METERS,
+                element: <SmartMetersPage />,
+            },
+            {
+                path: SmaiaxRoutes.SMART_METER_DETAILS,
+                element: <SmartMeterDetailsPage />,
             },
         ],
     },

@@ -19,7 +19,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title || axiosError.message;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
                 throw new Error(errorMessage);
             }
         },
@@ -33,7 +33,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title || axiosError.message;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
                 throw new Error(errorMessage);
             }
         },
@@ -46,7 +46,7 @@ export const useAuthenticationService = () => {
                 await authenticationApi.logout(tokenDto);
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title || axiosError.message;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
                 throw new Error(errorMessage);
             }
         },
@@ -60,7 +60,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title || axiosError.message;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
                 throw new Error(errorMessage);
             }
         },

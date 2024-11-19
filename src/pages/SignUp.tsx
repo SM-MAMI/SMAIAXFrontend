@@ -88,11 +88,9 @@ export default function SignUp() {
         }
 
         try {
-            const userId = await register(registerDto);
+            await register(registerDto);
 
             showSnackbar('success', 'Successfully signed up!');
-            console.log(userId);
-
             navigate(SmaiaxRoutes.SIGN_IN);
         } catch (error) {
             showSnackbar('error', 'Registration failed!');

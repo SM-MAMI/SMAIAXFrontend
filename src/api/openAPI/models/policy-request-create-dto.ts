@@ -34,43 +34,43 @@ export interface PolicyRequestCreateDto {
      * @type {boolean}
      * @memberof PolicyRequestCreateDto
      */
-    'isAutomaticContractingEnabled'?: boolean;
+    'isAutomaticContractingEnabled': boolean;
     /**
      * 
      * @type {MeasurementResolution}
      * @memberof PolicyRequestCreateDto
      */
-    'measurementResolution'?: MeasurementResolution;
+    'measurementResolution': MeasurementResolution;
     /**
      * 
      * @type {number}
      * @memberof PolicyRequestCreateDto
      */
-    'minHouseHoldSize'?: number;
+    'minHouseHoldSize': number;
     /**
      * 
      * @type {number}
      * @memberof PolicyRequestCreateDto
      */
-    'maxHouseHoldSize'?: number;
+    'maxHouseHoldSize': number;
     /**
      * 
      * @type {Array<LocationDto>}
      * @memberof PolicyRequestCreateDto
      */
-    'locations'?: Array<LocationDto> | null;
+    'locations': Array<LocationDto>;
     /**
      * 
      * @type {LocationResolution}
      * @memberof PolicyRequestCreateDto
      */
-    'locationResolution'?: LocationResolution;
+    'locationResolution': LocationResolution;
     /**
      * 
      * @type {number}
      * @memberof PolicyRequestCreateDto
      */
-    'maxPrice'?: number;
+    'maxPrice': number;
 }
 
 

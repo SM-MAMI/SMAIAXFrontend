@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { SmaiaxRoutes } from '../constants/constants.ts';
+import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../api/openAPI';
@@ -24,6 +25,12 @@ const NAVIGATION: Navigation = [
         segment: SmaiaxRoutes.ORDERS,
         title: 'Orders',
         icon: <ShoppingCartIcon />,
+    },
+    {
+        segment: SmaiaxRoutes.SMART_METERS,
+        title: 'Smart Meters',
+        pattern: 'smart-meters/:id*',
+        icon: <ElectricMeter />,
     },
 ];
 

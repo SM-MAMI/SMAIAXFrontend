@@ -25,12 +25,12 @@ export interface SmartMeterUpdateDto {
      * @type {string}
      * @memberof SmartMeterUpdateDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof SmartMeterUpdateDto
      */
-    'name'?: string | null;
+    'name': string;
 }
 

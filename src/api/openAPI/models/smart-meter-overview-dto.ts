@@ -25,24 +25,24 @@ export interface SmartMeterOverviewDto {
      * @type {string}
      * @memberof SmartMeterOverviewDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof SmartMeterOverviewDto
      */
-    'name'?: string | null;
+    'name': string;
     /**
      * 
      * @type {number}
      * @memberof SmartMeterOverviewDto
      */
-    'metadataCount'?: number;
+    'metadataCount': number;
     /**
      * 
      * @type {number}
      * @memberof SmartMeterOverviewDto
      */
-    'policyCount'?: number;
+    'policyCount': number;
 }
 

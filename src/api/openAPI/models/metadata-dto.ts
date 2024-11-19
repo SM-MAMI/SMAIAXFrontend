@@ -28,24 +28,24 @@ export interface MetadataDto {
      * @type {string}
      * @memberof MetadataDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof MetadataDto
      */
-    'validFrom'?: string;
+    'validFrom': string;
     /**
      * 
      * @type {LocationDto}
      * @memberof MetadataDto
      */
-    'location'?: LocationDto;
+    'location': LocationDto;
     /**
      * 
      * @type {number}
      * @memberof MetadataDto
      */
-    'householdSize'?: number;
+    'householdSize': number;
 }
 
