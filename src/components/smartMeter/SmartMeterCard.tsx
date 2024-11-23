@@ -1,19 +1,22 @@
 import { Button, Typography } from '@mui/material';
 import SmartMeterIcon from '../../assets/SmartMeterIcon';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
+import { ReactNode } from 'react';
 
 interface SmartMeterCardProps {
     smartMeterOverview: SmartMeterOverviewDto;
     navigateToDetails: () => void;
     showAddMetadata?: boolean;
     navigateToDetailsWithOpenMetadata: () => void;
+    children?: ReactNode;
 }
 
-const SmartMeterCard = ({
+const SmartMeterCard: React.FC<SmartMeterCardProps> = ({
     smartMeterOverview,
     navigateToDetails,
     showAddMetadata,
     navigateToDetailsWithOpenMetadata,
+    children,
 }: SmartMeterCardProps) => {
     return (
         <div
@@ -33,6 +36,7 @@ const SmartMeterCard = ({
                     Add Metadata
                 </Button>
             )}
+            {children}
         </div>
     );
 };
