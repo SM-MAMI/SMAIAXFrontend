@@ -1,42 +1,49 @@
 import { Button, Typography } from '@mui/material';
 import SmartMeterIcon from '../../assets/SmartMeterIcon';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
-import { ReactNode } from 'react';
+import KebabMenu from '../menus/KebabMenu';
 
 interface SmartMeterCardProps {
     smartMeterOverview: SmartMeterOverviewDto;
     navigateToDetails: () => void;
     showAddMetadata?: boolean;
     navigateToDetailsWithOpenMetadata: () => void;
-    children?: ReactNode;
+    kebabItems: Array<{ name: string; onClick: () => void }>;
 }
 
-const SmartMeterCard: React.FC<SmartMeterCardProps> = ({
+const SmartMeterCard = ({
     smartMeterOverview,
     navigateToDetails,
     showAddMetadata,
     navigateToDetailsWithOpenMetadata,
-    children,
+    kebabItems,
 }: SmartMeterCardProps) => {
     return (
         <div
             style={{
                 display: 'grid',
                 gridTemplateRows: '1fr 5fr 1fr',
-                gridTemplateColumns: '1fr',
                 justifyItems: 'center',
                 alignItems: 'center',
             }}>
-            <Typography variant="h5">{smartMeterOverview.name}</Typography>
-            <Button onClick={navigateToDetails}>
+            <Typography style={{ gridColumn: 1, gridRow: 1 }} variant="h5">
+                {smartMeterOverview.name}
+            </Typography>
+            <div style={{ gridColumn: 2, gridRow: 1 }}>
+                <KebabMenu items={kebabItems} />
+            </div>
+            <Button style={{ gridColumn: 1, gridRow: 2 }} onClick={navigateToDetails}>
                 <SmartMeterIcon />
             </Button>
             {showAddMetadata && (
-                <Button variant="outlined" color="secondary" onClick={navigateToDetailsWithOpenMetadata}>
+                <Button
+                    style={{ gridColumn: 1, gridRow: 3 }}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={navigateToDetailsWithOpenMetadata}>
                     Add Metadata
                 </Button>
             )}
-            {children}
         </div>
     );
 };

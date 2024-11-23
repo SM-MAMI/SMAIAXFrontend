@@ -152,25 +152,19 @@ const SmartMetersPage = () => {
                             flex: isSmallScreen ? '1 1 100%' : '1 1 30%', // Full width on small screens
                             boxSizing: 'border-box',
                         }}>
-                        <SmartMeterCard
-                            smartMeterOverview={sm}
-                            showAddMetadata={sm.name === recentlyAddedSmartMeter}
-                            navigateToDetails={() => {
-                                navigate(`/smart-meters/${sm.id}`);
-                            }}
-                            navigateToDetailsWithOpenMetadata={() => {
-                                navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
-                            }}>
-                            <DialogsProvider>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => {
-                                        void openDialog();
-                                    }}>
-                                    Configure device
-                                </Button>
-                            </DialogsProvider>
-                        </SmartMeterCard>
+                        <DialogsProvider>
+                            <SmartMeterCard
+                                smartMeterOverview={sm}
+                                showAddMetadata={sm.name === recentlyAddedSmartMeter}
+                                navigateToDetails={() => {
+                                    navigate(`/smart-meters/${sm.id}`);
+                                }}
+                                navigateToDetailsWithOpenMetadata={() => {
+                                    navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
+                                }}
+                                kebabItems={[{ name: 'Device configuration', onClick: () => void openDialog() }]}
+                            />
+                        </DialogsProvider>
                     </div>
                 ))}
             </div>

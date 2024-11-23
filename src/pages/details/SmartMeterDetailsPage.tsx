@@ -39,6 +39,7 @@ const SmartMeterDetailsPage = () => {
         };
         void loadSmartMeter();
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (location.state?.openDialog) {
             setOpenAddMetadata(true);
         }
