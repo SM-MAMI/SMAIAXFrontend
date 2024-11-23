@@ -6,7 +6,7 @@ import { SmartMeterCreateDto, SmartMeterOverviewDto } from '../../api/openAPI';
 import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation.ts';
 import { useNavigate } from 'react-router-dom';
 import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
-import { DialogsProvider, useDialogs } from '@toolpad/core';
+import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 
 const SmartMetersPage = () => {
@@ -152,19 +152,17 @@ const SmartMetersPage = () => {
                             flex: isSmallScreen ? '1 1 100%' : '1 1 30%', // Full width on small screens
                             boxSizing: 'border-box',
                         }}>
-                        <DialogsProvider>
-                            <SmartMeterCard
-                                smartMeterOverview={sm}
-                                showAddMetadata={sm.name === recentlyAddedSmartMeter}
-                                navigateToDetails={() => {
-                                    navigate(`/smart-meters/${sm.id}`);
-                                }}
-                                navigateToDetailsWithOpenMetadata={() => {
-                                    navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
-                                }}
-                                kebabItems={[{ name: 'Device configuration', onClick: () => void openDialog() }]}
-                            />
-                        </DialogsProvider>
+                        <SmartMeterCard
+                            smartMeterOverview={sm}
+                            showAddMetadata={sm.name === recentlyAddedSmartMeter}
+                            navigateToDetails={() => {
+                                navigate(`/smart-meters/${sm.id}`);
+                            }}
+                            navigateToDetailsWithOpenMetadata={() => {
+                                navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
+                            }}
+                            kebabItems={[{ name: 'Device configuration', onClick: () => void openDialog() }]}
+                        />
                     </div>
                 ))}
             </div>

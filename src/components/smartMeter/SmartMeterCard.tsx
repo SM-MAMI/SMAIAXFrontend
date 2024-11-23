@@ -23,8 +23,10 @@ const SmartMeterCard = ({
             style={{
                 display: 'grid',
                 gridTemplateRows: '1fr 5fr 1fr',
+                gridTemplateColumns: '1fr 0.25fr',
                 justifyItems: 'center',
                 alignItems: 'center',
+                width: 'fit-content',
             }}>
             <Typography style={{ gridColumn: 1, gridRow: 1 }} variant="h5">
                 {smartMeterOverview.name}
@@ -32,12 +34,17 @@ const SmartMeterCard = ({
             <div style={{ gridColumn: 2, gridRow: 1 }}>
                 <KebabMenu items={kebabItems} />
             </div>
-            <Button style={{ gridColumn: 1, gridRow: 2 }} onClick={navigateToDetails}>
+            <Button
+                style={{
+                    gridColumn: 'span 2',
+                    gridRow: 2,
+                }}
+                onClick={navigateToDetails}>
                 <SmartMeterIcon />
             </Button>
             {showAddMetadata && (
                 <Button
-                    style={{ gridColumn: 1, gridRow: 3 }}
+                    style={{ gridColumn: 'span 2', gridRow: 3 }}
                     variant="outlined"
                     color="secondary"
                     onClick={navigateToDetailsWithOpenMetadata}>
