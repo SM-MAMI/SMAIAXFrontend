@@ -7,10 +7,12 @@ import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
 import { Button, Typography } from '@mui/material';
 import EditMetadataDialog from '../../components/dialogs/EditMetadataDialog.tsx';
+import CreatePolicyDialog from '../../components/dialogs/CreatePolicyDialog.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
+    const [openCreatePolicy, setOpenCreatePolicy] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
     const searchParams = useSearchParams();
@@ -67,6 +69,23 @@ const SmartMeterDetailsPage = () => {
                     Edit
                 </Button>
             </div>
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    height: '100%',
+                    width: '100%',
+                }}>
+                <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => {
+                        setOpenCreatePolicy(true);
+                    }}>
+                    Create Policy
+                </Button>
+            </div>
             <EditMetadataDialog
                 smartMeterId={smartMeter?.id ?? ''}
                 isNew={true}
@@ -76,6 +95,16 @@ const SmartMeterDetailsPage = () => {
                 }}
                 onCancel={() => {
                     setOpenAddMetadata(false);
+                }}
+            />
+            <CreatePolicyDialog
+                smartMeterId={smartMeter?.id ?? ''}
+                open={openCreatePolicy}
+                onOk={() => {
+                    setOpenCreatePolicy(false);
+                }}
+                onCancel={() => {
+                    setOpenCreatePolicy(false);
                 }}
             />
         </>
