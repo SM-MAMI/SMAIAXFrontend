@@ -14,15 +14,13 @@ import FormControl from '@mui/material/FormControl';
 import { MeasurementResolution, LocationResolution, PolicyCreateDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { DialogProps } from '@toolpad/core';
 
-interface CreatePolicyDialogProps {
+interface CreatePolicyDialogPayload {
     smartMeterId: string;
-    open: boolean;
-    onOk: () => void;
-    onCancel: () => void;
 }
 
-const CreatePolicyDialog = ({ smartMeterId, open, onOk, onCancel }: CreatePolicyDialogProps) => {
+const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
     const { createPolicy } = usePolicyService();
     const { showSnackbar } = useSnackbar();
 
@@ -35,18 +33,18 @@ const CreatePolicyDialog = ({ smartMeterId, open, onOk, onCancel }: CreatePolicy
             measurementResolution: data.get('measurementResolution') as MeasurementResolution,
             locationResolution: data.get('locationResolution') as LocationResolution,
             price: data.get('price') as unknown as number,
-            smartMeterId: smartMeterId,
+            smartMeterId: payload.smartMeterId,
         };
 
         try {
             await createPolicy(policyCreateDto);
             showSnackbar('success', 'Successfully created policy!');
+
+            void onClose();
         } catch (error) {
             showSnackbar('error', 'Create policy failed!');
             console.error('Create policy failed:', error);
         }
-
-        onOk();
     };
 
     return (
@@ -123,7 +121,7 @@ const CreatePolicyDialog = ({ smartMeterId, open, onOk, onCancel }: CreatePolicy
                         </Button>
                         <Button
                             onClick={() => {
-                                onCancel();
+                                void onClose();
                             }}
                             variant="outlined">
                             Cancel

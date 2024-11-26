@@ -19,16 +19,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation';
+import { DialogProps } from '@toolpad/core';
 
-interface EditMetadataDialogProps {
+interface EditMetadataDialogPayload {
     smartMeterId: string;
     isNew: boolean;
-    open: boolean;
-    onOk: (successful: boolean) => void;
-    onCancel: () => void;
 }
 
-const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditMetadataDialogProps) => {
+const EditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
     const [location, setLocation] = useState<LocationDto>({});
 
     const { addMetadata } = useSmartMeterService();
@@ -52,20 +50,19 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditM
         };
 
         try {
-            await addMetadata(smartMeterId, metadataCreate);
+            await addMetadata(payload.smartMeterId, metadataCreate);
 
             showSnackbar('success', 'Successfully added metadata!');
-            onOk(true);
+            void onClose();
         } catch (error) {
             showSnackbar('error', 'Add metadata failed!');
             console.error('Add metadata failed:', error);
-            onOk(false);
         }
     };
 
     return (
         <Dialog open={open}>
-            <DialogTitle>{isNew ? 'Add Metadata' : 'Edit Metadata'}</DialogTitle>
+            <DialogTitle>{payload.isNew ? 'Add Metadata' : 'Edit Metadata'}</DialogTitle>
             <DialogContent>
                 <Box
                     component="form"
@@ -167,7 +164,7 @@ const EditMetadataDialog = ({ smartMeterId, isNew, open, onOk, onCancel }: EditM
                         </Button>
                         <Button
                             onClick={() => {
-                                onCancel();
+                                void onClose();
                             }}
                             variant="outlined">
                             Cancel
