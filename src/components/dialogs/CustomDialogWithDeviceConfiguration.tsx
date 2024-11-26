@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { EncryptionService } from '../../services/EncryptionService.ts';
 import CustomPasswordFormControl from '../CustomPasswordFormControl.tsx';
 
-export default function CustomDialogWithDeviceConfiguration({ open, onClose }: DialogProps) {
+export default function CustomDialogWithDeviceConfiguration({ open, onClose }: Readonly<DialogProps>) {
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
 

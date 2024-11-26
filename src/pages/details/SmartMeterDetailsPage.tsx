@@ -1,4 +1,4 @@
-import { useActivePage } from '@toolpad/core';
+import { useActivePage, useDialogs } from '@toolpad/core';
 import { SmartMeterDto } from '../../api/openAPI';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
@@ -11,12 +11,11 @@ import CreatePolicyDialog from '../../components/dialogs/CreatePolicyDialog.tsx'
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
-    const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
-    const [openCreatePolicy, setOpenCreatePolicy] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
     const searchParams = useSearchParams();
     const activePage = useActivePage();
+    const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
 
@@ -43,11 +42,24 @@ const SmartMeterDetailsPage = () => {
 
         const open = searchParams[0].get('open');
         if (open) {
-            setOpenAddMetadata(true);
+            void openEditMetadataDialog();
             searchParams[0].delete('open');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
+
+    const openEditMetadataDialog = async () => {
+        await dialogs.open(EditMetadataDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+            isNew: true,
+        });
+    };
+
+    const openCreatePolicyDialog = async () => {
+        await dialogs.open(CreatePolicyDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+        });
+    };
 
     return (
         <>
@@ -64,7 +76,7 @@ const SmartMeterDetailsPage = () => {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                        setOpenAddMetadata(true);
+                        void openEditMetadataDialog();
                     }}>
                     Edit
                 </Button>
@@ -81,32 +93,11 @@ const SmartMeterDetailsPage = () => {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                        setOpenCreatePolicy(true);
+                        void openCreatePolicyDialog();
                     }}>
                     Create Policy
                 </Button>
             </div>
-            <EditMetadataDialog
-                smartMeterId={smartMeter?.id ?? ''}
-                isNew={true}
-                open={openAddMetadata}
-                onOk={(successful: boolean) => {
-                    setOpenAddMetadata(!successful);
-                }}
-                onCancel={() => {
-                    setOpenAddMetadata(false);
-                }}
-            />
-            <CreatePolicyDialog
-                smartMeterId={smartMeter?.id ?? ''}
-                open={openCreatePolicy}
-                onOk={() => {
-                    setOpenCreatePolicy(false);
-                }}
-                onCancel={() => {
-                    setOpenCreatePolicy(false);
-                }}
-            />
         </>
     );
 };
