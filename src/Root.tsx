@@ -6,6 +6,7 @@ import { SnackbarProvider } from './components/provider/SnackbarProvider.tsx';
 import { ApiProvider } from './components/provider/ApiProvider.tsx';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { DialogsProvider } from '@toolpad/core';
 
 const Root = (): React.ReactElement => {
     return (
@@ -13,9 +14,11 @@ const Root = (): React.ReactElement => {
             <CssBaseline />
             <ApiProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <SnackbarProvider>
-                        <App />
-                    </SnackbarProvider>
+                    <DialogsProvider>
+                        <SnackbarProvider>
+                            <App />
+                        </SnackbarProvider>
+                    </DialogsProvider>
                 </LocalizationProvider>
             </ApiProvider>
         </AppTheme>

@@ -6,6 +6,8 @@ import { SmartMeterCreateDto, SmartMeterOverviewDto } from '../../api/openAPI';
 import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation.ts';
 import { useNavigate } from 'react-router-dom';
 import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
+import { useDialogs } from '@toolpad/core';
+import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 
 const SmartMetersPage = () => {
     const [addFormVisible, setAddFormVisible] = useState(false);
@@ -17,6 +19,7 @@ const SmartMetersPage = () => {
 
     const { getSmartMeters, addSmartMeter } = useSmartMeterService();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const dialogs = useDialogs();
 
     const loadSmartMeters = async (recentlyAddedSmartMeter?: string) => {
         try {
@@ -87,6 +90,10 @@ const SmartMetersPage = () => {
         }
     };
 
+    async function openDialog() {
+        await dialogs.open(CustomDialogWithDeviceConfiguration);
+    }
+
     return (
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height: '100%', width: '100%' }}>
             <div>
@@ -152,8 +159,9 @@ const SmartMetersPage = () => {
                                 navigate(`/smart-meters/${sm.id}`);
                             }}
                             navigateToDetailsWithOpenMetadata={() => {
-                                navigate(`/smart-meters/${sm.id}/?open=true`);
+                                navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
                             }}
+                            kebabItems={[{ name: 'Device configuration', onClick: () => void openDialog() }]}
                         />
                     </div>
                 ))}

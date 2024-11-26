@@ -29,7 +29,7 @@ const NAVIGATION: Navigation = [
     {
         segment: SmaiaxRoutes.SMART_METERS,
         title: 'Smart Meters',
-        pattern: 'smart-meters/:id*',
+        pattern: 'smart-meters{/:id}*',
         icon: <ElectricMeter />,
     },
 ];
