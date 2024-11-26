@@ -7,11 +7,11 @@ import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
 import { Button, Typography } from '@mui/material';
 import EditMetadataDialog from '../../components/dialogs/EditMetadataDialog.tsx';
+import CreatePolicyDialog from '../../components/dialogs/CreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
-    const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
     const location = useLocation();
@@ -42,15 +42,28 @@ const SmartMeterDetailsPage = () => {
         void loadSmartMeter();
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (location.state?.openDialog) {
-            setOpenAddMetadata(true);
+        if (location.state?.openDialog === true) {
+            void openEditMetadataDialog();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
-    async function openDialog() {
+    const openEditMetadataDialog = async () => {
+        await dialogs.open(EditMetadataDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+            isNew: true,
+        });
+    };
+
+    const openCreatePolicyDialog = async () => {
+        await dialogs.open(CreatePolicyDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+        });
+    };
+
+    const openCustomDialogWithDeviceConfiguration = async () => {
         await dialogs.open(CustomDialogWithDeviceConfiguration);
-    }
+    };
 
     return (
         <>
@@ -68,7 +81,7 @@ const SmartMeterDetailsPage = () => {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                        setOpenAddMetadata(true);
+                        void openEditMetadataDialog();
                     }}>
                     Edit
                 </Button>
@@ -76,22 +89,19 @@ const SmartMeterDetailsPage = () => {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                        void openDialog();
+                        void openCustomDialogWithDeviceConfiguration();
                     }}>
                     Device configuration
                 </Button>
+                <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => {
+                        void openCreatePolicyDialog();
+                    }}>
+                    Create Policy
+                </Button>
             </div>
-            <EditMetadataDialog
-                smartMeterId={smartMeter?.id ?? ''}
-                isNew={true}
-                open={openAddMetadata}
-                onOk={(successful: boolean) => {
-                    setOpenAddMetadata(!successful);
-                }}
-                onCancel={() => {
-                    setOpenAddMetadata(false);
-                }}
-            />
         </>
     );
 };
