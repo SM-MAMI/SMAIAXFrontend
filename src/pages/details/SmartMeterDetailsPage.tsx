@@ -1,20 +1,22 @@
-import { useActivePage } from '@toolpad/core';
+import { useActivePage, useDialogs } from '@toolpad/core';
 import { SmartMeterDto } from '../../api/openAPI';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
 import { Button, Typography } from '@mui/material';
 import EditMetadataDialog from '../../components/dialogs/EditMetadataDialog.tsx';
+import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [openAddMetadata, setOpenAddMetadata] = useState<boolean>(false);
 
     const params = useParams<{ id: string }>();
-    const searchParams = useSearchParams();
+    const location = useLocation();
     const activePage = useActivePage();
+    const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
 
@@ -39,17 +41,20 @@ const SmartMeterDetailsPage = () => {
         };
         void loadSmartMeter();
 
-        const open = searchParams[0].get('open');
-        if (open) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (location.state?.openDialog) {
             setOpenAddMetadata(true);
-            searchParams[0].delete('open');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    async function openDialog() {
+        await dialogs.open(CustomDialogWithDeviceConfiguration);
+    }
+
     return (
         <>
-            <Typography variant={'h6'}>{title}</Typography>
+            <Typography variant={'h4'}>{title}</Typography>
             <div
                 style={{
                     display: 'flex',
@@ -57,6 +62,7 @@ const SmartMeterDetailsPage = () => {
                     flexDirection: 'column',
                     height: '100%',
                     width: '100%',
+                    gap: '10px',
                 }}>
                 <Button
                     variant="contained"
@@ -65,6 +71,14 @@ const SmartMeterDetailsPage = () => {
                         setOpenAddMetadata(true);
                     }}>
                     Edit
+                </Button>
+                <Button
+                    variant="contained"
+                    size="large"
+                    onClick={() => {
+                        void openDialog();
+                    }}>
+                    Device configuration
                 </Button>
             </div>
             <EditMetadataDialog
