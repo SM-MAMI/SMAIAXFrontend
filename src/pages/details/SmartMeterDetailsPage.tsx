@@ -93,15 +93,6 @@ const SmartMeterDetailsPage = () => {
                     }}>
                     Device configuration
                 </Button>
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: '100%',
-                    width: '100%',
-                }}>
                 <Button
                     variant="contained"
                     size="large"
