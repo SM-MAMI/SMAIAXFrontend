@@ -8,12 +8,15 @@ import { DialogProps } from '@toolpad/core';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
 
 const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => {
     const { showSnackbar } = useSnackbar();
     const { addSmartMeter } = useSmartMeterService();
 
     const [activeStep, setActiveStep] = useState(0);
+    const [smartMeterName, setSmartMeterName] = useState<string>(''); // State to persist smart meter name
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
 
@@ -23,6 +26,10 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
             content: (
                 <FormControl fullWidth>
                     <TextField
+                        value={smartMeterName}
+                        onChange={(e) => {
+                            setSmartMeterName(e.target.value);
+                        }}
                         id="smartMeterName"
                         placeholder="Enter Smart Meter Name"
                         name="smartMeterName"
@@ -39,11 +46,20 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
         },
         {
             title: 'Step 3: Review & Confirm',
-            content: <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>,
+            content: (
+                <>
+                    <Box marginBottom={2}>
+                        <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>
+                    </Box>
+                    <Typography>
+                        <strong>Smart Meter Name:</strong> {smartMeterName}
+                    </Typography>
+                </>
+            ),
         },
     ];
 
-    const validateSmartMeterName = (smartMeterName: string): boolean => {
+    const validateSmartMeterName = (): boolean => {
         if (!smartMeterName.trim()) {
             setSmartMeterNameError(true);
             setSmartMeterNameErrorMessage('Smart meter name is required.');
@@ -57,8 +73,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
 
     const handleNext = () => {
         if (activeStep === 0) {
-            const smartMeterName = (document.getElementById('smartMeterName') as HTMLInputElement).value;
-            const valid = validateSmartMeterName(smartMeterName);
+            const valid = validateSmartMeterName();
             if (!valid) {
                 return;
             }
@@ -72,9 +87,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
     };
 
     const handleSubmit = async () => {
-        const smartMeterName = (document.getElementById('smartMeterName') as HTMLInputElement).value;
-
-        const valid = validateSmartMeterName(smartMeterName);
+        const valid = validateSmartMeterName();
         if (!valid) return;
 
         const smartMeterDto: SmartMeterCreateDto = {
@@ -85,6 +98,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
             await addSmartMeter(smartMeterDto);
             showSnackbar('success', 'Successfully added smart meter!');
             setActiveStep(0);
+            setSmartMeterName('');
             await onClose();
         } catch (error) {
             console.error(error);
@@ -93,8 +107,18 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
     };
 
     return (
-        <Dialog fullWidth open={open}>
-            <DialogTitle>Device Configuration</DialogTitle>
+        <Dialog
+            fullWidth
+            open={open}
+            sx={{
+                '& .MuiDialog-paper': {
+                    width: '30%',
+                    maxWidth: '1000px',
+                    height: '30%',
+                    maxHeight: '90vh',
+                },
+            }}>
+            <DialogTitle>Add Smart Meter</DialogTitle>
             <DialogContent>
                 <Box sx={{ width: '100%', p: 2 }}>
                     <CustomStepper
@@ -109,6 +133,15 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                     />
                 </Box>
             </DialogContent>
+            <DialogActions>
+                <Button
+                    onClick={() => {
+                        void onClose();
+                    }}
+                    variant="outlined">
+                    Cancel
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };
