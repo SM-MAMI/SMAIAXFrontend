@@ -68,31 +68,31 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                         <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>
                     </Box>
                     <Typography>
-                        <strong>Smart Meter Name:</strong> {smartMeterName || 'N/A'}
+                        <strong>Smart Meter Name:</strong> {smartMeterName ?? 'N/A'}
                     </Typography>
                     <Typography>
-                        <strong>Household Size:</strong> {householdSize || 'N/A'}
+                        <strong>Household Size:</strong> {householdSize ?? 'N/A'}
                     </Typography>
                     <Typography>
-                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD') || 'N/A'}
+                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD') ?? 'N/A'}
                     </Typography>
                     <Typography>
                         <strong>Location:</strong>
                         <ul>
                             <li>
-                                <strong>Continent:</strong> {location.continent || 'N/A'}
+                                <strong>Continent:</strong> {location.continent ?? 'N/A'}
                             </li>
                             <li>
-                                <strong>Country:</strong> {location.country || 'N/A'}
+                                <strong>Country:</strong> {location.country ?? 'N/A'}
                             </li>
                             <li>
-                                <strong>State:</strong> {location.state || 'N/A'}
+                                <strong>State:</strong> {location.state ?? 'N/A'}
                             </li>
                             <li>
-                                <strong>City:</strong> {location.city || 'N/A'}
+                                <strong>City:</strong> {location.city ?? 'N/A'}
                             </li>
                             <li>
-                                <strong>Street Name:</strong> {location.streetName || 'N/A'}
+                                <strong>Street Name:</strong> {location.streetName ?? 'N/A'}
                             </li>
                         </ul>
                     </Typography>

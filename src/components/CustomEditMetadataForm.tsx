@@ -49,7 +49,7 @@ const CustomEditMetadataForm = ({
                         name: 'continent',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.continent || ''}
+                    value={location.continent ?? ''}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({
                             ...prevLocation,
@@ -73,7 +73,7 @@ const CustomEditMetadataForm = ({
                         name: 'country',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.country || ''}
+                    value={location.country ?? ''}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, country: e.target.value }));
                     }}>
@@ -89,7 +89,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="state"
                     name="state"
-                    value={location.state || ''}
+                    value={location.state ?? ''}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.country)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, state: e.target.value }));
@@ -102,7 +102,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="city"
                     name="city"
-                    value={location.city || ''}
+                    value={location.city ?? ''}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.state)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, city: e.target.value }));
@@ -115,7 +115,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="streetname"
                     name="streetname"
-                    value={location.streetName || ''}
+                    value={location.streetName ?? ''}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.city)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, streetName: e.target.value }));
@@ -128,7 +128,7 @@ const CustomEditMetadataForm = ({
                 value={dayjs(validFrom)}
                 disablePast
                 onChange={(date) => {
-                    setValidFrom(date?.toISOString() || validFrom);
+                    setValidFrom(date?.toISOString() ?? validFrom);
                 }}
             />
         </Box>
