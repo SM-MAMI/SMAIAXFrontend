@@ -75,8 +75,19 @@ const NavbarNavigation = () => {
             return;
         }
 
-        const { sub, unique_name, email } = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
-        setSession({ user: { id: sub, name: unique_name, email } });
+        try {
+            const { sub, unique_name, email } = jwtDecode<
+                JwtPayload & {
+                    unique_name: string;
+                    email: string;
+                }
+            >(accessToken);
+
+            setSession({ user: { id: sub, name: unique_name, email } });
+        } catch (error) {
+            console.error(error);
+            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+        }
     }, [navigate]);
 
     const authentication = React.useMemo(() => {

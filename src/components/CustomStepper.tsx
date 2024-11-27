@@ -10,12 +10,12 @@ interface CustomStepperProps {
     steps: StepItem[];
     orientation: 'horizontal' | 'vertical';
     activeStep: number;
-    onNext: () => Promise<void> | void;
+    onNext: () => void;
     onBack: () => void;
-    onReset: () => void;
+    onFinish: () => void;
 }
 
-const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activeStep, onNext, onBack, onReset }) => {
+const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activeStep, onNext, onBack, onFinish }) => {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Stepper activeStep={activeStep} orientation={orientation}>
@@ -35,7 +35,7 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
                                                 Next
                                             </Button>
                                         ) : (
-                                            <Button variant="contained" onClick={onReset}>
+                                            <Button variant="contained" onClick={onFinish}>
                                                 Finish
                                             </Button>
                                         )}
@@ -59,7 +59,7 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
                                 Next
                             </Button>
                         ) : (
-                            <Button variant="contained" onClick={onReset}>
+                            <Button variant="contained" onClick={onFinish}>
                                 Finish
                             </Button>
                         )}
