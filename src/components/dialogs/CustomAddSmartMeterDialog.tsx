@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Box, FormControl, TextField, Typography } from '@mui/material';
+import { Box, FormControl, TextField, Typography, useMediaQuery } from '@mui/material';
 import CustomStepper, { StepItem } from './../CustomStepper';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
-import { SmartMeterCreateDto } from '../../api/openAPI';
+import { LocationDto, MetadataCreateDto, SmartMeterCreateDto } from '../../api/openAPI';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -10,15 +10,21 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
+import dayjs from 'dayjs';
 
 const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => {
-    const { showSnackbar } = useSnackbar();
-    const { addSmartMeter } = useSmartMeterService();
-
     const [activeStep, setActiveStep] = useState(0);
     const [smartMeterName, setSmartMeterName] = useState<string>('');
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
+    const [location, setLocation] = useState<LocationDto>({});
+    const [validFrom, setValidFrom] = useState(dayjs().toISOString());
+    const [householdSize, setHouseholdSize] = useState<number>(0);
+
+    const { showSnackbar } = useSnackbar();
+    const { addSmartMeter } = useSmartMeterService();
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     const steps: StepItem[] = [
         {
@@ -42,7 +48,17 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
         },
         {
             title: 'Step 2: Add Metadata',
-            content: <Typography>Add Metadata</Typography>,
+            content: (
+                <CustomEditMetadataForm
+                    location={location}
+                    setLocation={setLocation}
+                    householdSize={householdSize}
+                    setHouseholdSize={setHouseholdSize}
+                    validFrom={validFrom}
+                    setValidFrom={setValidFrom}
+                />
+            ),
+            optional: true,
         },
         {
             title: 'Step 3: Review & Confirm',
@@ -52,7 +68,33 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                         <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>
                     </Box>
                     <Typography>
-                        <strong>Smart Meter Name:</strong> {smartMeterName}
+                        <strong>Smart Meter Name:</strong> {smartMeterName || 'N/A'}
+                    </Typography>
+                    <Typography>
+                        <strong>Household Size:</strong> {householdSize || 'N/A'}
+                    </Typography>
+                    <Typography>
+                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD') || 'N/A'}
+                    </Typography>
+                    <Typography>
+                        <strong>Location:</strong>
+                        <ul>
+                            <li>
+                                <strong>Continent:</strong> {location.continent || 'N/A'}
+                            </li>
+                            <li>
+                                <strong>Country:</strong> {location.country || 'N/A'}
+                            </li>
+                            <li>
+                                <strong>State:</strong> {location.state || 'N/A'}
+                            </li>
+                            <li>
+                                <strong>City:</strong> {location.city || 'N/A'}
+                            </li>
+                            <li>
+                                <strong>Street Name:</strong> {location.streetName || 'N/A'}
+                            </li>
+                        </ul>
                     </Typography>
                 </>
             ),
@@ -90,8 +132,15 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
         const valid = validateSmartMeterName();
         if (!valid) return;
 
+        const metadataCreate: MetadataCreateDto = {
+            householdSize,
+            location,
+            validFrom,
+        };
+
         const smartMeterDto: SmartMeterCreateDto = {
             name: smartMeterName,
+            metadata: metadataCreate,
         };
 
         try {
@@ -106,15 +155,16 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
         }
     };
 
+    const minWidth = isSmallScreen ? '100%' : '600px';
     return (
         <Dialog
             fullWidth
             open={open}
             sx={{
                 '& .MuiDialog-paper': {
-                    width: '30%',
+                    width: '50%',
                     maxWidth: '1000px',
-                    minWidth: '300px',
+                    minWidth: minWidth,
                     height: '30%',
                     maxHeight: '90vh',
                     minHeight: '500px',
@@ -123,7 +173,11 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
             <DialogTitle>Add Smart Meter</DialogTitle>
             <DialogContent>
                 <Box sx={{ width: '100%', p: 2 }}>
-                    <CustomStepper steps={steps} orientation="vertical" activeStep={activeStep} />
+                    <CustomStepper
+                        steps={steps}
+                        orientation={isSmallScreen ? 'vertical' : 'horizontal'}
+                        activeStep={activeStep}
+                    />
                 </Box>
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-between', p: 3 }}>
