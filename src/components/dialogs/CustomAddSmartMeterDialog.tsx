@@ -16,7 +16,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
     const { addSmartMeter } = useSmartMeterService();
 
     const [activeStep, setActiveStep] = useState(0);
-    const [smartMeterName, setSmartMeterName] = useState<string>(''); // State to persist smart meter name
+    const [smartMeterName, setSmartMeterName] = useState<string>('');
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
 
@@ -123,16 +123,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
             <DialogTitle>Add Smart Meter</DialogTitle>
             <DialogContent>
                 <Box sx={{ width: '100%', p: 2 }}>
-                    <CustomStepper
-                        steps={steps}
-                        orientation="vertical"
-                        activeStep={activeStep}
-                        // onNext={handleNext}
-                        // onBack={handleBack}
-                        // onFinish={() => {
-                        //     void handleSubmit();
-                        // }}
-                    />
+                    <CustomStepper steps={steps} orientation="vertical" activeStep={activeStep} />
                 </Box>
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-between', p: 3 }}>
@@ -159,7 +150,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                         void onClose();
                     }}
                     variant="outlined">
-                    Close
+                    Cancel
                 </Button>
             </DialogActions>
         </Dialog>
