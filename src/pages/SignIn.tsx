@@ -15,7 +15,7 @@ import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
-import { SmaiaxRoutes } from '../constants/constants.ts';
+import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
 
 export default function SignIn() {
     const { emailError, emailErrorMessage, passwordError, passwordErrorMessage } = useValidation();
@@ -130,7 +130,7 @@ export default function SignIn() {
                             <Typography>
                                 <Link
                                     component={RouterLink}
-                                    to={'/' + SmaiaxRoutes.SIGN_UP}
+                                    to={SmaiaXAbsoluteRoutes.SIGN_UP}
                                     variant="body2"
                                     sx={{ alignSelf: 'center' }}>
                                     Sign up

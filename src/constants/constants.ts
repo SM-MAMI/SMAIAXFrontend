@@ -10,3 +10,7 @@ export const SmaiaxRoutes = {
     SMART_METER_DETAILS: 'smart-meters/:id',
     NOT_FOUND: '*',
 };
+export const SmaiaXAbsoluteRoutes = {
+    SIGN_IN: '/' + SmaiaxRoutes.SIGN_IN,
+    SIGN_UP: '/' + SmaiaxRoutes.SIGN_UP,
+};

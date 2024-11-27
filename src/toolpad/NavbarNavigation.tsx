@@ -3,7 +3,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import { SmaiaxRoutes } from '../constants/constants.ts';
+import { SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../constants/constants.ts';
 import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -72,7 +72,7 @@ const NavbarNavigation = () => {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
-            navigate(SmaiaxRoutes.SIGN_IN);
+            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             return;
         }
 
@@ -88,7 +88,7 @@ const NavbarNavigation = () => {
                 const refreshToken = localStorage.getItem('refresh_token');
 
                 if (!accessToken || !refreshToken) {
-                    navigate(SmaiaxRoutes.SIGN_IN);
+                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                     return;
                 }
 
@@ -102,7 +102,7 @@ const NavbarNavigation = () => {
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
 
-                navigate(SmaiaxRoutes.SIGN_IN);
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             },
         };
     }, [logout, navigate]);
