@@ -53,7 +53,6 @@ const BRANDING = {
 const customTheme = createTheme({
     cssVariables: {
         colorSchemeSelector: 'data-toolpad-color-scheme',
-        // cssVarPrefix: 'template',
     },
     colorSchemes,
     typography,
