@@ -103,7 +103,7 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                         activeStep={activeStep}
                         onNext={handleNext}
                         onBack={handleBack}
-                        onReset={() => {
+                        onFinish={() => {
                             void handleSubmit();
                         }}
                     />
