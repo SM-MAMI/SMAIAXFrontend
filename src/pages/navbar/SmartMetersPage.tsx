@@ -38,11 +38,11 @@ const SmartMetersPage = () => {
         }
     };
 
-    const openDeviceConfigurationDialog = async () => {
+    const openDialogWithDeviceConfigurationDialog = async () => {
         await dialogs.open(CustomDialogWithDeviceConfiguration);
     };
 
-    const openStepperDialog = async () => {
+    const openAddSmartMeterDialog = async () => {
         await dialogs.open(CustomAddSmartMeterDialog);
     };
 
@@ -53,7 +53,7 @@ const SmartMetersPage = () => {
                     variant="contained"
                     size="medium"
                     onClick={() => {
-                        void openStepperDialog();
+                        void openAddSmartMeterDialog();
                     }}>
                     Add Smart Meter
                 </Button>
@@ -84,7 +84,10 @@ const SmartMetersPage = () => {
                                 navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
                             }}
                             kebabItems={[
-                                { name: 'Device configuration', onClick: () => void openDeviceConfigurationDialog() },
+                                {
+                                    name: 'Device configuration',
+                                    onClick: () => void openDialogWithDeviceConfigurationDialog(),
+                                },
                             ]}
                         />
                     </div>

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import FormControl from '@mui/material/FormControl';
-import { MeasurementResolution, LocationResolution, PolicyCreateDto } from '../../api/openAPI';
+import { LocationResolution, MeasurementResolution, PolicyCreateDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { DialogProps } from '@toolpad/core';
@@ -20,7 +20,7 @@ interface CreatePolicyDialogPayload {
     smartMeterId: string;
 }
 
-const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
+const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
     const { createPolicy } = usePolicyService();
     const { showSnackbar } = useSnackbar();
 
@@ -133,4 +133,4 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     );
 };
 
-export default CreatePolicyDialog;
+export default CustomCreatePolicyDialog;

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Button, Step, StepContent, StepLabel, Stepper } from '@mui/material';
+import { Box, Button, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
 
 export interface StepItem {
     title: string;
     content: React.ReactNode;
+    optional?: boolean;
 }
 
 interface CustomStepperProps {
@@ -21,7 +22,14 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
             <Stepper activeStep={activeStep} orientation={orientation}>
                 {steps.map((step, index) => (
                     <Step key={index}>
-                        <StepLabel>{step.title}</StepLabel>
+                        <StepLabel>
+                            {step.title}
+                            {step.optional && (
+                                <Typography component="span" variant="caption" sx={{ ml: 1, fontStyle: 'italic' }}>
+                                    (Optional)
+                                </Typography>
+                            )}
+                        </StepLabel>
                         {orientation === 'vertical' && (
                             <StepContent>
                                 <Box sx={{ mb: 2 }}>
@@ -51,8 +59,18 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
             </Stepper>
 
             {orientation === 'horizontal' && (
-                <Box sx={{ mt: 3 }}>
-                    <Box sx={{ mb: 2 }}>{steps[activeStep]?.content}</Box>
+                <Box sx={{ m: 3 }}>
+                    <Box sx={{ mb: 2 }}>
+                        <Typography>
+                            <strong>{steps[activeStep]?.title}</strong>
+                            {steps[activeStep]?.optional && (
+                                <Typography component="span" variant="caption" sx={{ ml: 1, fontStyle: 'italic' }}>
+                                    (Optional)
+                                </Typography>
+                            )}
+                        </Typography>
+                        {steps[activeStep]?.content}
+                    </Box>
 
                     {onNext && onBack && onFinish && (
                         <Box sx={{ display: 'flex', gap: 2 }}>

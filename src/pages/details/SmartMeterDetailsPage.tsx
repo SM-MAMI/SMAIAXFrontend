@@ -6,8 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
 import { Button, Typography } from '@mui/material';
-import EditMetadataDialog from '../../components/dialogs/EditMetadataDialog.tsx';
-import CreatePolicyDialog from '../../components/dialogs/CreatePolicyDialog.tsx';
+import CustomEditMetadataDialog from '../../components/dialogs/CustomEditMetadataDialog.tsx';
+import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 
 const SmartMeterDetailsPage = () => {
@@ -49,14 +49,14 @@ const SmartMeterDetailsPage = () => {
     }, [params.id]);
 
     const openEditMetadataDialog = async () => {
-        await dialogs.open(EditMetadataDialog, {
+        await dialogs.open(CustomEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
             isNew: true,
         });
     };
 
     const openCreatePolicyDialog = async () => {
-        await dialogs.open(CreatePolicyDialog, {
+        await dialogs.open(CustomCreatePolicyDialog, {
             smartMeterId: smartMeter?.id ?? '',
         });
     };
