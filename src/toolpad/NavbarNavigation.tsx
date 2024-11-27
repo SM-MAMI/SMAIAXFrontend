@@ -11,6 +11,8 @@ import { TokenDto } from '../api/openAPI';
 import { SmaiaxLogo } from '../assets/SmaiaxLogo.tsx';
 import Typography from '@mui/material/Typography';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { createTheme } from '@mui/material/styles';
+import { colorSchemes, shadows, shape, typography } from '../themes/themePrimitives.ts';
 
 const NAVIGATION: Navigation = [
     {
@@ -47,6 +49,17 @@ const BRANDING = {
     ),
     logo: SmaiaxLogo(),
 };
+
+const customTheme = createTheme({
+    cssVariables: {
+        colorSchemeSelector: 'data-toolpad-color-scheme',
+        // cssVarPrefix: 'template',
+    },
+    colorSchemes,
+    typography,
+    shadows,
+    shape,
+});
 
 const NavbarNavigation = () => {
     const navigate = useNavigate();
@@ -95,8 +108,13 @@ const NavbarNavigation = () => {
     }, [logout, navigate]);
 
     return (
-        // @ts-expect-error - Needed for custom typography in branding
-        <AppProvider navigation={NAVIGATION} branding={BRANDING} authentication={authentication} session={session}>
+        <AppProvider
+            navigation={NAVIGATION}
+            // @ts-expect-error - Needed for custom typography in branding
+            branding={BRANDING}
+            authentication={authentication}
+            theme={customTheme}
+            session={session}>
             <Outlet />
         </AppProvider>
     );
