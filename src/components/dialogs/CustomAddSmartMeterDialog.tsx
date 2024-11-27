@@ -68,13 +68,13 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                         <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>
                     </Box>
                     <Typography>
-                        <strong>Smart Meter Name:</strong> {smartMeterName ?? 'N/A'}
+                        <strong>Smart Meter Name:</strong> {smartMeterName}
                     </Typography>
                     <Typography>
-                        <strong>Household Size:</strong> {householdSize ?? 'N/A'}
+                        <strong>Household Size:</strong> {householdSize}
                     </Typography>
                     <Typography>
-                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD') ?? 'N/A'}
+                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD')}
                     </Typography>
                     <Typography>
                         <strong>Location:</strong>
