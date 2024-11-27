@@ -10,9 +10,9 @@ interface CustomStepperProps {
     steps: StepItem[];
     orientation: 'horizontal' | 'vertical';
     activeStep: number;
-    onNext: () => void;
-    onBack: () => void;
-    onFinish: () => void;
+    onNext?: () => void;
+    onBack?: () => void;
+    onFinish?: () => void;
 }
 
 const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activeStep, onNext, onBack, onFinish }) => {
@@ -25,21 +25,24 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
                         {orientation === 'vertical' && (
                             <StepContent>
                                 <Box sx={{ mb: 2 }}>
-                                    <div>{step.content}</div>
-                                    <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                                        <Button variant="outlined" onClick={onBack} disabled={index === 0}>
-                                            Back
-                                        </Button>
-                                        {index < steps.length - 1 ? (
-                                            <Button variant="contained" onClick={onNext}>
-                                                Next
+                                    <Box>{step.content}</Box>
+
+                                    {onNext && onBack && onFinish && (
+                                        <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                            <Button variant="outlined" onClick={onBack} disabled={index === 0}>
+                                                Back
                                             </Button>
-                                        ) : (
-                                            <Button variant="contained" onClick={onFinish}>
-                                                Finish
-                                            </Button>
-                                        )}
-                                    </Box>
+                                            {index < steps.length - 1 ? (
+                                                <Button variant="contained" onClick={onNext}>
+                                                    Next
+                                                </Button>
+                                            ) : (
+                                                <Button variant="contained" onClick={onFinish}>
+                                                    Finish
+                                                </Button>
+                                            )}
+                                        </Box>
+                                    )}
                                 </Box>
                             </StepContent>
                         )}
@@ -50,20 +53,23 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
             {orientation === 'horizontal' && (
                 <Box sx={{ mt: 3 }}>
                     <Box sx={{ mb: 2 }}>{steps[activeStep]?.content}</Box>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
-                        <Button variant="outlined" onClick={onBack} disabled={activeStep === 0}>
-                            Back
-                        </Button>
-                        {activeStep < steps.length - 1 ? (
-                            <Button variant="contained" onClick={onNext}>
-                                Next
+
+                    {onNext && onBack && onFinish && (
+                        <Box sx={{ display: 'flex', gap: 2 }}>
+                            <Button variant="outlined" onClick={onBack} disabled={activeStep === 0}>
+                                Back
                             </Button>
-                        ) : (
-                            <Button variant="contained" onClick={onFinish}>
-                                Finish
-                            </Button>
-                        )}
-                    </Box>
+                            {activeStep < steps.length - 1 ? (
+                                <Button variant="contained" onClick={onNext}>
+                                    Next
+                                </Button>
+                            ) : (
+                                <Button variant="contained" onClick={onFinish}>
+                                    Finish
+                                </Button>
+                            )}
+                        </Box>
+                    )}
                 </Box>
             )}
         </Box>

@@ -114,8 +114,10 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                 '& .MuiDialog-paper': {
                     width: '30%',
                     maxWidth: '1000px',
+                    minWidth: '300px',
                     height: '30%',
                     maxHeight: '90vh',
+                    minHeight: '500px',
                 },
             }}>
             <DialogTitle>Add Smart Meter</DialogTitle>
@@ -123,23 +125,41 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
                 <Box sx={{ width: '100%', p: 2 }}>
                     <CustomStepper
                         steps={steps}
-                        orientation="horizontal"
+                        orientation="vertical"
                         activeStep={activeStep}
-                        onNext={handleNext}
-                        onBack={handleBack}
-                        onFinish={() => {
-                            void handleSubmit();
-                        }}
+                        // onNext={handleNext}
+                        // onBack={handleBack}
+                        // onFinish={() => {
+                        //     void handleSubmit();
+                        // }}
                     />
                 </Box>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ justifyContent: 'space-between', p: 3 }}>
+                <Box>
+                    <Button onClick={handleBack} disabled={activeStep === 0} variant="outlined" sx={{ mr: 2 }}>
+                        Back
+                    </Button>
+                    {activeStep < steps.length - 1 ? (
+                        <Button onClick={handleNext} variant="contained">
+                            Next
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={() => {
+                                void handleSubmit();
+                            }}
+                            variant="contained">
+                            Finish
+                        </Button>
+                    )}
+                </Box>
                 <Button
                     onClick={() => {
                         void onClose();
                     }}
                     variant="outlined">
-                    Cancel
+                    Close
                 </Button>
             </DialogActions>
         </Dialog>
