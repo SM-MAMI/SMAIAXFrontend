@@ -79,7 +79,7 @@ const CustomEditMetadataForm = ({
                     }}>
                     <option aria-label="None" value="" />
                     {countryOptions.map((co) => (
-                        <option key={co.value} value={co.value} label={co.label} />
+                        <option key={co.value} value={co.label} label={co.label} />
                     ))}
                 </NativeSelect>
             </FormControl>
