@@ -54,6 +54,13 @@ const SmartMetersPage = () => {
             reloadSmartMeters: (smartMeterName) => {
                 void loadSmartMeters(smartMeterName);
             },
+            isSmartMeterNameUnique: (smartMeterName) => {
+                if (smartMeters == null) {
+                    return false;
+                }
+
+                return !smartMeters.map((smartMeter) => smartMeter.name).includes(smartMeterName);
+            },
         });
     };
 

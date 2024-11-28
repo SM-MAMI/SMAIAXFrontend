@@ -16,6 +16,7 @@ import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
 interface AddSmartMeterDialogPayload {
     reloadSmartMeters: (smartMeterName: string) => void;
+    isSmartMeterNameUnique: (smartMeterName: string) => boolean;
 }
 
 const INITIAL_LOCATION = {};
@@ -129,6 +130,12 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
             return false;
         }
 
+        if (!payload.isSmartMeterNameUnique(smartMeterName)) {
+            setSmartMeterNameError(true);
+            setSmartMeterNameErrorMessage('Smart Meter Name must be unique.');
+            return false;
+        }
+
         setSmartMeterNameError(false);
         setSmartMeterNameErrorMessage('');
         return true;
@@ -151,7 +158,9 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
 
     const handleSubmit = async () => {
         const valid = validateSmartMeterName();
-        if (!valid) return;
+        if (!valid) {
+            return;
+        }
 
         const smartMeterDto: SmartMeterCreateDto = {
             name: smartMeterName,
