@@ -20,7 +20,7 @@ interface AddSmartMeterDialogPayload {
 
 const INITIAL_LOCATION = {};
 const INITIAL_VALID_FROM = dayjs().toISOString();
-const INITIAL_HOUSEHOLD_SIZE = -1;
+const INITIAL_HOUSEHOLD_SIZE = undefined;
 
 const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
     const [activeStep, setActiveStep] = useState(0);
@@ -29,7 +29,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
     const [location, setLocation] = useState<LocationDto>(INITIAL_LOCATION);
     const [validFrom, setValidFrom] = useState(INITIAL_VALID_FROM);
-    const [householdSize, setHouseholdSize] = useState<number>(INITIAL_HOUSEHOLD_SIZE);
+    const [householdSize, setHouseholdSize] = useState<number | undefined>(INITIAL_HOUSEHOLD_SIZE);
 
     const { showSnackbar } = useSnackbar();
     const { addSmartMeter } = useSmartMeterService();
@@ -39,7 +39,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         (JSON.stringify(location) !== JSON.stringify(INITIAL_LOCATION) ||
             validFrom !== INITIAL_VALID_FROM ||
             householdSize !== INITIAL_HOUSEHOLD_SIZE) &&
-        householdSize > INITIAL_HOUSEHOLD_SIZE;
+        householdSize != null;
 
     const steps: StepItem[] = [
         {

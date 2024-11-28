@@ -9,8 +9,8 @@ import { isNullOrEmptyOrWhiteSpaces } from '../hooks/useValidation';
 interface CustomEditMetadataFormProps {
     location: LocationDto;
     setLocation: (location: (prevLocation: LocationDto) => LocationDto) => void;
-    householdSize: number;
-    setHouseholdSize: (size: number) => void;
+    householdSize: number | undefined;
+    setHouseholdSize: (size?: number) => void;
     validFrom: string;
     setValidFrom: (date: string) => void;
 }
@@ -38,11 +38,16 @@ const CustomEditMetadataForm = ({
                         },
                     }}
                     type="number"
-                    value={householdSize < 0 ? '' : householdSize}
+                    value={householdSize == null ? '' : householdSize}
                     id="householdsize"
                     name="householdsize"
                     inputProps={{ min: 0 }}
                     onChange={(e) => {
+                        if (e.target.value === '') {
+                            setHouseholdSize();
+                            return;
+                        }
+
                         setHouseholdSize(Number(e.target.value));
                     }}
                 />

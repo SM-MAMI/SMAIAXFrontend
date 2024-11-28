@@ -17,12 +17,17 @@ interface EditMetadataDialogPayload {
 const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
-    const [householdSize, setHouseholdSize] = useState<number>(-1);
+    const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
 
     const { addMetadata } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
 
     const handleSubmit = async () => {
+        if (householdSize == null) {
+            showSnackbar('error', 'Please add a valid household size');
+            return;
+        }
+
         const metadataCreate: MetadataCreateDto = {
             householdSize,
             location,
