@@ -13,7 +13,11 @@ import DialogActions from '@mui/material/DialogActions';
 import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
 import dayjs from 'dayjs';
 
-const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => {
+interface AddSmartMeterDialogPayload {
+    reloadSmartMeters: (smartMeterName: string) => void;
+}
+
+const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
     const [activeStep, setActiveStep] = useState(0);
     const [smartMeterName, setSmartMeterName] = useState<string>('');
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
@@ -148,6 +152,9 @@ const CustomAddSmartMeterDialog = ({ open, onClose }: Readonly<DialogProps>) => 
             showSnackbar('success', 'Successfully added smart meter!');
             setActiveStep(0);
             setSmartMeterName('');
+
+            payload.reloadSmartMeters(smartMeterName);
+
             await onClose();
         } catch (error) {
             console.error(error);

@@ -6,16 +6,12 @@ import KebabMenu from '../menus/KebabMenu';
 interface SmartMeterCardProps {
     smartMeterOverview: SmartMeterOverviewDto;
     navigateToDetails: () => void;
-    showAddMetadata?: boolean;
-    navigateToDetailsWithOpenMetadata: () => void;
     kebabItems: Array<{ name: string; onClick: () => void }>;
 }
 
 const SmartMeterCard = ({
     smartMeterOverview,
     navigateToDetails,
-    showAddMetadata,
-    navigateToDetailsWithOpenMetadata,
     kebabItems,
 }: SmartMeterCardProps) => {
     return (
@@ -42,15 +38,6 @@ const SmartMeterCard = ({
                 onClick={navigateToDetails}>
                 <SmartMeterIcon />
             </Button>
-            {showAddMetadata && (
-                <Button
-                    style={{ gridColumn: 'span 2', gridRow: 3 }}
-                    variant="outlined"
-                    color="secondary"
-                    onClick={navigateToDetailsWithOpenMetadata}>
-                    Add Metadata
-                </Button>
-            )}
         </div>
     );
 };

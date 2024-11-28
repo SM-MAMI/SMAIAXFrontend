@@ -11,7 +11,6 @@ import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMe
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
-    const [recentlyAddedSmartMeter, setRecentlyAddedSmartMeter] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
     const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -31,7 +30,6 @@ const SmartMetersPage = () => {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) => (a.name === recentlyAddedSmartMeter ? -1 : b.name === recentlyAddedSmartMeter ? 1 : 0));
             setSmartMeters(sortedSms);
-            setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load smart meters!`);
@@ -43,7 +41,11 @@ const SmartMetersPage = () => {
     };
 
     const openAddSmartMeterDialog = async () => {
-        await dialogs.open(CustomAddSmartMeterDialog);
+        await dialogs.open(CustomAddSmartMeterDialog, {
+            reloadSmartMeters: (smartMeterName) => {
+                void loadSmartMeters(smartMeterName);
+            },
+        });
     };
 
     return (
@@ -76,12 +78,8 @@ const SmartMetersPage = () => {
                         }}>
                         <SmartMeterCard
                             smartMeterOverview={sm}
-                            showAddMetadata={sm.name === recentlyAddedSmartMeter}
                             navigateToDetails={() => {
                                 navigate(`/smart-meters/${sm.id}`);
-                            }}
-                            navigateToDetailsWithOpenMetadata={() => {
-                                navigate(`/smart-meters/${sm.id}`, { state: { openDialog: true } });
                             }}
                             kebabItems={[
                                 {
