@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
 import dayjs from 'dayjs';
+import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
 interface AddSmartMeterDialogPayload {
     reloadSmartMeters: (smartMeterName: string) => void;
@@ -28,7 +29,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
 
     const { showSnackbar } = useSnackbar();
     const { addSmartMeter } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
 
     const steps: StepItem[] = [
         {

@@ -8,12 +8,13 @@ import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
+import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
     const dialogs = useDialogs();
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
