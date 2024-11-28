@@ -12,6 +12,7 @@ import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
+    const [recentlyAddedSmartMeter, setRecentlyAddedSmartMeter] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
     const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
@@ -31,6 +32,13 @@ const SmartMetersPage = () => {
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) => (a.name === recentlyAddedSmartMeter ? -1 : b.name === recentlyAddedSmartMeter ? 1 : 0));
             setSmartMeters(sortedSms);
+            setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
+
+            if (recentlyAddedSmartMeter) {
+                setTimeout(() => {
+                    setRecentlyAddedSmartMeter(undefined);
+                }, 1500);
+            }
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load smart meters!`);
@@ -73,6 +81,7 @@ const SmartMetersPage = () => {
                 {smartMeters?.map((sm) => (
                     <div
                         key={sm.id}
+                        className={recentlyAddedSmartMeter === sm.name ? 'pulse-effect' : ''}
                         style={{
                             flex: isSmallScreen ? '1 1 100%' : '1 1 30%',
                             boxSizing: 'border-box',

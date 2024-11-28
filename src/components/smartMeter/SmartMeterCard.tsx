@@ -9,11 +9,7 @@ interface SmartMeterCardProps {
     kebabItems: Array<{ name: string; onClick: () => void }>;
 }
 
-const SmartMeterCard = ({
-    smartMeterOverview,
-    navigateToDetails,
-    kebabItems,
-}: SmartMeterCardProps) => {
+const SmartMeterCard = ({ smartMeterOverview, navigateToDetails, kebabItems }: SmartMeterCardProps) => {
     return (
         <div
             style={{
