@@ -33,7 +33,7 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
                         {orientation === 'vertical' && (
                             <StepContent>
                                 <Box sx={{ mb: 2 }}>
-                                    <Box>{step.content}</Box>
+                                    <Box marginTop={1}>{step.content}</Box>
 
                                     {onNext && onBack && onFinish && (
                                         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
@@ -69,7 +69,8 @@ const CustomStepper: React.FC<CustomStepperProps> = ({ steps, orientation, activ
                                 </Typography>
                             )}
                         </Typography>
-                        {steps[activeStep]?.content}
+
+                        <Box marginTop={2}>{steps[activeStep]?.content}</Box>
                     </Box>
 
                     {onNext && onBack && onFinish && (

@@ -28,10 +28,15 @@ const CustomEditMetadataForm = ({
     }, []);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
             <FormControl>
                 <FormLabel htmlFor="householdsize">Household Size</FormLabel>
                 <Input
+                    sx={{
+                        '&.MuiInputBase-root': {
+                            marginTop: '0px',
+                        },
+                    }}
                     type="number"
                     value={householdSize < 0 ? '' : householdSize}
                     id="householdsize"
@@ -55,6 +60,11 @@ const CustomEditMetadataForm = ({
                             ...prevLocation,
                             continent: e.target.value as unknown as Continent | undefined,
                         }));
+                    }}
+                    sx={{
+                        '&.MuiInputBase-root': {
+                            marginTop: '0px',
+                        },
                     }}>
                     <option aria-label="None" value="" />
                     <option value={Continent.Africa}>Africa</option>
@@ -76,6 +86,11 @@ const CustomEditMetadataForm = ({
                     value={location.country ?? ''}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, country: e.target.value }));
+                    }}
+                    sx={{
+                        '&.MuiInputBase-root': {
+                            marginTop: '0px',
+                        },
                     }}>
                     <option aria-label="None" value="" />
                     {countryOptions.map((co) => (
@@ -127,6 +142,7 @@ const CustomEditMetadataForm = ({
                 label="Valid From"
                 value={dayjs(validFrom)}
                 disablePast
+                sx={{ marginTop: 1 }}
                 onChange={(date) => {
                     setValidFrom(date?.toISOString() ?? validFrom);
                 }}

@@ -64,16 +64,14 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         {
             title: 'Step 2: Add Metadata',
             content: (
-                <Box margin={2}>
-                    <CustomEditMetadataForm
-                        location={location}
-                        setLocation={setLocation}
-                        householdSize={householdSize}
-                        setHouseholdSize={setHouseholdSize}
-                        validFrom={validFrom}
-                        setValidFrom={setValidFrom}
-                    />
-                </Box>
+                <CustomEditMetadataForm
+                    location={location}
+                    setLocation={setLocation}
+                    householdSize={householdSize}
+                    setHouseholdSize={setHouseholdSize}
+                    validFrom={validFrom}
+                    setValidFrom={setValidFrom}
+                />
             ),
             optional: true,
         },
