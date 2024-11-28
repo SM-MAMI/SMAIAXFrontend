@@ -37,7 +37,7 @@ const SmartMetersPage = () => {
             if (recentlyAddedSmartMeter) {
                 setTimeout(() => {
                     setRecentlyAddedSmartMeter(undefined);
-                }, 1500);
+                }, 2000);
             }
         } catch (error) {
             console.error(error);

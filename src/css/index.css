@@ -24,6 +24,6 @@ body {
 }
 
 .pulse-effect {
-    animation: pulse 1.5s infinite;
+    animation: pulse 2s infinite;
     border-radius: 8px;
 }
