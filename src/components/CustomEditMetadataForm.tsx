@@ -38,7 +38,7 @@ const CustomEditMetadataForm = ({
                         },
                     }}
                     type="number"
-                    value={householdSize == null ? '' : householdSize}
+                    value={householdSize ?? ''}
                     id="householdsize"
                     name="householdsize"
                     inputProps={{ min: 0 }}
