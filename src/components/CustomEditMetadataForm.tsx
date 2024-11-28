@@ -28,12 +28,12 @@ const CustomEditMetadataForm = ({
     }, []);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <FormControl>
                 <FormLabel htmlFor="householdsize">Household Size</FormLabel>
                 <Input
                     type="number"
-                    value={householdSize}
+                    value={householdSize < 0 ? '' : householdSize}
                     id="householdsize"
                     name="householdsize"
                     inputProps={{ min: 0 }}

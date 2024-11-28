@@ -17,7 +17,7 @@ interface EditMetadataDialogPayload {
 const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
-    const [householdSize, setHouseholdSize] = useState<number>(0);
+    const [householdSize, setHouseholdSize] = useState<number>(-1);
 
     const { addMetadata } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();

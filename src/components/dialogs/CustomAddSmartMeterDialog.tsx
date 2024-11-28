@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, FormControl, TextField, Typography, useMediaQuery } from '@mui/material';
 import CustomStepper, { StepItem } from './../CustomStepper';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
-import { LocationDto, MetadataCreateDto, SmartMeterCreateDto } from '../../api/openAPI';
+import { LocationDto, SmartMeterCreateDto } from '../../api/openAPI';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -18,18 +18,28 @@ interface AddSmartMeterDialogPayload {
     reloadSmartMeters: (smartMeterName: string) => void;
 }
 
+const INITIAL_LOCATION = {};
+const INITIAL_VALID_FROM = dayjs().toISOString();
+const INITIAL_HOUSEHOLD_SIZE = -1;
+
 const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
     const [activeStep, setActiveStep] = useState(0);
     const [smartMeterName, setSmartMeterName] = useState<string>('');
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
-    const [location, setLocation] = useState<LocationDto>({});
-    const [validFrom, setValidFrom] = useState(dayjs().toISOString());
-    const [householdSize, setHouseholdSize] = useState<number>(0);
+    const [location, setLocation] = useState<LocationDto>(INITIAL_LOCATION);
+    const [validFrom, setValidFrom] = useState(INITIAL_VALID_FROM);
+    const [householdSize, setHouseholdSize] = useState<number>(INITIAL_HOUSEHOLD_SIZE);
 
     const { showSnackbar } = useSnackbar();
     const { addSmartMeter } = useSmartMeterService();
     const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+
+    const isValidMetadataState =
+        (JSON.stringify(location) !== JSON.stringify(INITIAL_LOCATION) ||
+            validFrom !== INITIAL_VALID_FROM ||
+            householdSize !== INITIAL_HOUSEHOLD_SIZE) &&
+        householdSize > INITIAL_HOUSEHOLD_SIZE;
 
     const steps: StepItem[] = [
         {
@@ -54,14 +64,16 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         {
             title: 'Step 2: Add Metadata',
             content: (
-                <CustomEditMetadataForm
-                    location={location}
-                    setLocation={setLocation}
-                    householdSize={householdSize}
-                    setHouseholdSize={setHouseholdSize}
-                    validFrom={validFrom}
-                    setValidFrom={setValidFrom}
-                />
+                <Box margin={2}>
+                    <CustomEditMetadataForm
+                        location={location}
+                        setLocation={setLocation}
+                        householdSize={householdSize}
+                        setHouseholdSize={setHouseholdSize}
+                        validFrom={validFrom}
+                        setValidFrom={setValidFrom}
+                    />
+                </Box>
             ),
             optional: true,
         },
@@ -72,35 +84,41 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                     <Box marginBottom={2}>
                         <Typography>Review all the details and confirm the creation of the Smart Meter.</Typography>
                     </Box>
+
                     <Typography>
                         <strong>Smart Meter Name:</strong> {smartMeterName}
                     </Typography>
-                    <Typography>
-                        <strong>Household Size:</strong> {householdSize}
-                    </Typography>
-                    <Typography>
-                        <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD')}
-                    </Typography>
-                    <Typography>
-                        <strong>Location:</strong>
-                        <ul>
-                            <li>
-                                <strong>Continent:</strong> {location.continent ?? 'N/A'}
-                            </li>
-                            <li>
-                                <strong>Country:</strong> {location.country ?? 'N/A'}
-                            </li>
-                            <li>
-                                <strong>State:</strong> {location.state ?? 'N/A'}
-                            </li>
-                            <li>
-                                <strong>City:</strong> {location.city ?? 'N/A'}
-                            </li>
-                            <li>
-                                <strong>Street Name:</strong> {location.streetName ?? 'N/A'}
-                            </li>
-                        </ul>
-                    </Typography>
+
+                    {isValidMetadataState && (
+                        <>
+                            <Typography>
+                                <strong>Household Size:</strong> {householdSize}
+                            </Typography>
+                            <Typography>
+                                <strong>Valid From:</strong> {dayjs(validFrom).format('YYYY-MM-DD')}
+                            </Typography>
+                            <Typography>
+                                <strong>Location:</strong>
+                                <ul>
+                                    <li>
+                                        <strong>Continent:</strong> {location.continent ?? 'N/A'}
+                                    </li>
+                                    <li>
+                                        <strong>Country:</strong> {location.country ?? 'N/A'}
+                                    </li>
+                                    <li>
+                                        <strong>State:</strong> {location.state ?? 'N/A'}
+                                    </li>
+                                    <li>
+                                        <strong>City:</strong> {location.city ?? 'N/A'}
+                                    </li>
+                                    <li>
+                                        <strong>Street Name:</strong> {location.streetName ?? 'N/A'}
+                                    </li>
+                                </ul>
+                            </Typography>
+                        </>
+                    )}
                 </>
             ),
         },
@@ -137,16 +155,17 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         const valid = validateSmartMeterName();
         if (!valid) return;
 
-        const metadataCreate: MetadataCreateDto = {
-            householdSize,
-            location,
-            validFrom,
-        };
-
         const smartMeterDto: SmartMeterCreateDto = {
             name: smartMeterName,
-            metadata: metadataCreate,
         };
+
+        if (isValidMetadataState) {
+            smartMeterDto.metadata = {
+                householdSize,
+                location,
+                validFrom,
+            };
+        }
 
         try {
             await addSmartMeter(smartMeterDto);
