@@ -3,7 +3,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import { SmaiaxRoutes } from '../constants/constants.ts';
+import { SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../constants/constants.ts';
 import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -11,6 +11,8 @@ import { TokenDto } from '../api/openAPI';
 import { SmaiaxLogo } from '../assets/SmaiaxLogo.tsx';
 import Typography from '@mui/material/Typography';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { createTheme } from '@mui/material/styles';
+import { colorSchemes, shadows, shape, typography } from '../themes/themePrimitives.ts';
 
 const NAVIGATION: Navigation = [
     {
@@ -48,6 +50,16 @@ const BRANDING = {
     logo: SmaiaxLogo(),
 };
 
+const customTheme = createTheme({
+    cssVariables: {
+        colorSchemeSelector: 'data-toolpad-color-scheme',
+    },
+    colorSchemes,
+    typography,
+    shadows,
+    shape,
+});
+
 const NavbarNavigation = () => {
     const navigate = useNavigate();
 
@@ -59,12 +71,23 @@ const NavbarNavigation = () => {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
-            navigate(SmaiaxRoutes.SIGN_IN);
+            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             return;
         }
 
-        const { sub, unique_name, email } = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
-        setSession({ user: { id: sub, name: unique_name, email } });
+        try {
+            const { sub, unique_name, email } = jwtDecode<
+                JwtPayload & {
+                    unique_name: string;
+                    email: string;
+                }
+            >(accessToken);
+
+            setSession({ user: { id: sub, name: unique_name, email } });
+        } catch (error) {
+            console.error(error);
+            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+        }
     }, [navigate]);
 
     const authentication = React.useMemo(() => {
@@ -75,7 +98,7 @@ const NavbarNavigation = () => {
                 const refreshToken = localStorage.getItem('refresh_token');
 
                 if (!accessToken || !refreshToken) {
-                    navigate(SmaiaxRoutes.SIGN_IN);
+                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                     return;
                 }
 
@@ -89,14 +112,19 @@ const NavbarNavigation = () => {
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
 
-                navigate(SmaiaxRoutes.SIGN_IN);
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             },
         };
     }, [logout, navigate]);
 
     return (
-        // @ts-expect-error - Needed for custom typography in branding
-        <AppProvider navigation={NAVIGATION} branding={BRANDING} authentication={authentication} session={session}>
+        <AppProvider
+            navigation={NAVIGATION}
+            // @ts-expect-error - Needed for custom typography in branding
+            branding={BRANDING}
+            authentication={authentication}
+            theme={customTheme}
+            session={session}>
             <Outlet />
         </AppProvider>
     );

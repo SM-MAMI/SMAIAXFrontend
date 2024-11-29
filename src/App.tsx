@@ -27,34 +27,36 @@ const applyProtectedRoute = (routes: ProtectedRouteObject[]): ProtectedRouteObje
 
 const protectedRoutes = [
     {
-        path: SmaiaxRoutes.HOME,
-        element: <Navbar />,
+        element: <NavbarNavigation />,
         children: [
             {
                 path: SmaiaxRoutes.HOME,
-                element: <HomePage />,
-            },
-            {
-                path: SmaiaxRoutes.ORDERS,
-                element: <OrdersPage />,
-            },
-            {
-                path: SmaiaxRoutes.SMART_METERS,
-                element: <SmartMetersPage />,
-            },
-            {
-                path: SmaiaxRoutes.SMART_METER_DETAILS,
-                element: <SmartMeterDetailsPage />,
+                element: <Navbar />,
+                children: [
+                    {
+                        path: SmaiaxRoutes.HOME,
+                        element: <HomePage />,
+                    },
+                    {
+                        path: SmaiaxRoutes.ORDERS,
+                        element: <OrdersPage />,
+                    },
+                    {
+                        path: SmaiaxRoutes.SMART_METERS,
+                        element: <SmartMetersPage />,
+                    },
+                    {
+                        path: SmaiaxRoutes.SMART_METER_DETAILS,
+                        element: <SmartMeterDetailsPage />,
+                    },
+                ],
             },
         ],
     },
 ];
 
 const router = createBrowserRouter([
-    {
-        element: <NavbarNavigation />,
-        children: [...applyProtectedRoute(protectedRoutes)],
-    },
+    ...applyProtectedRoute(protectedRoutes),
     {
         path: SmaiaxRoutes.SIGN_IN,
         element: <SignIn />,

@@ -7,15 +7,14 @@ import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Link as RouterLink } from 'react-router-dom';
-import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Card, CardContainer } from '../components/auth/CardContainer.tsx';
 import { RegisterDto } from '../api/openAPI';
 import { useValidation } from '../hooks/useValidation.ts';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
-import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
-import { SmaiaxRoutes } from '../constants/constants.ts';
+import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
 
 export default function SignUp() {
     const {
@@ -91,7 +90,7 @@ export default function SignUp() {
             await register(registerDto);
 
             showSnackbar('success', 'Successfully signed up!');
-            navigate(SmaiaxRoutes.SIGN_IN);
+            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
         } catch (error) {
             showSnackbar('error', 'Registration failed!');
             console.error('Registration failed:', error);
@@ -211,7 +210,7 @@ export default function SignUp() {
                             <Typography>
                                 <Link
                                     component={RouterLink}
-                                    to={'/' + SmaiaxRoutes.SIGN_IN}
+                                    to={SmaiaXAbsoluteRoutes.SIGN_IN}
                                     variant="body2"
                                     sx={{ alignSelf: 'center' }}>
                                     Sign in

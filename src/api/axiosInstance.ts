@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { AuthenticationApi, ProblemDetails, TokenDto } from './openAPI';
 import { BASE_PATH } from './openAPI/base.ts';
-import {SmaiaxRoutes} from "../constants/constants.ts";
+import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
 
 export const createCustomAxiosInstance = (authService: AuthenticationApi): AxiosInstance => {
     const axiosInstance = axios.create({
@@ -25,7 +25,7 @@ export const createCustomAxiosInstance = (authService: AuthenticationApi): Axios
             const refreshToken = localStorage.getItem('refresh_token');
             const accessToken = localStorage.getItem('access_token');
             if (!refreshToken || !accessToken) {
-                window.location.href = SmaiaxRoutes.SIGN_IN;
+                window.location.href = SmaiaXAbsoluteRoutes.SIGN_IN;
                 return Promise.reject(new Error('No token available'));
             }
 
@@ -49,7 +49,7 @@ export const createCustomAxiosInstance = (authService: AuthenticationApi): Axios
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
 
-                window.location.href = SmaiaxRoutes.SIGN_IN;
+                window.location.href = SmaiaXAbsoluteRoutes.SIGN_IN;
                 return Promise.reject(new Error(errorMessage));
             }
         },
