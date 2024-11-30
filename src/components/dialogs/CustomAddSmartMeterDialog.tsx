@@ -40,7 +40,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         (JSON.stringify(location) !== JSON.stringify(INITIAL_LOCATION) ||
             validFrom !== INITIAL_VALID_FROM ||
             householdSize !== INITIAL_HOUSEHOLD_SIZE) &&
-        householdSize;
+        householdSize != undefined;
 
     const areMetadataEmpty =
         JSON.stringify(location) === JSON.stringify(INITIAL_LOCATION) &&
@@ -121,7 +121,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                                     </li>
                                 </ul>
                             </Typography>
-                            {!householdSize && (
+                            {householdSize == undefined && (
                                 <Input
                                     error
                                     fullWidth
