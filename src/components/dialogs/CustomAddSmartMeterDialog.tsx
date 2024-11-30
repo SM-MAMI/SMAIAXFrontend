@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, FormControl, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, FormControl, Input, TextField, Typography, useMediaQuery } from '@mui/material';
 import CustomStepper, { StepItem } from './../CustomStepper';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import { LocationDto, SmartMeterCreateDto } from '../../api/openAPI';
@@ -40,7 +40,12 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         (JSON.stringify(location) !== JSON.stringify(INITIAL_LOCATION) ||
             validFrom !== INITIAL_VALID_FROM ||
             householdSize !== INITIAL_HOUSEHOLD_SIZE) &&
-        householdSize != null;
+        householdSize != undefined;
+
+    const areMetadataEmpty =
+        JSON.stringify(location) === JSON.stringify(INITIAL_LOCATION) &&
+        validFrom === INITIAL_VALID_FROM &&
+        householdSize === INITIAL_HOUSEHOLD_SIZE;
 
     const steps: StepItem[] = [
         {
@@ -88,7 +93,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                         <strong>Smart Meter Name:</strong> {smartMeterName}
                     </Typography>
 
-                    {isValidMetadataState && (
+                    {!areMetadataEmpty && (
                         <>
                             <Typography>
                                 <strong>Household Size:</strong> {householdSize}
@@ -116,6 +121,14 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                                     </li>
                                 </ul>
                             </Typography>
+                            {householdSize == undefined && (
+                                <Input
+                                    error
+                                    fullWidth
+                                    value="Metadata can not be added without a household size."
+                                    readOnly
+                                />
+                            )}
                         </>
                     )}
                 </>

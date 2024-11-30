@@ -63,7 +63,7 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <>
-            {smartMeter == null ? (
+            {smartMeter == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
