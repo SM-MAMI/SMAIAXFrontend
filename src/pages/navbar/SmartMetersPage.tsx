@@ -86,7 +86,7 @@ const SmartMetersPage = () => {
                     alignItems: 'center',
                     marginTop: '3em',
                 }}>
-                {!smartMeters?.length ? (
+                {!smartMeters ? (
                     <CircularProgress size="3em" />
                 ) : (
                     smartMeters.map((sm) => (

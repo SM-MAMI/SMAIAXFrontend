@@ -38,7 +38,7 @@ const CustomEditMetadataForm = ({
                         },
                     }}
                     type="number"
-                    value={householdSize ?? ''}
+                    value={householdSize}
                     id="householdsize"
                     name="householdsize"
                     inputProps={{ min: 0 }}
@@ -59,7 +59,7 @@ const CustomEditMetadataForm = ({
                         name: 'continent',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.continent ?? ''}
+                    value={location.continent}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({
                             ...prevLocation,
@@ -71,7 +71,7 @@ const CustomEditMetadataForm = ({
                             marginTop: '0px',
                         },
                     }}>
-                    <option aria-label="None" value="" />
+                    <option aria-label="None" value={undefined} />
                     <option value={Continent.Africa}>Africa</option>
                     <option value={Continent.Antarctica}>Antarctica</option>
                     <option value={Continent.Asia}>Asia</option>
@@ -88,7 +88,7 @@ const CustomEditMetadataForm = ({
                         name: 'country',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.country ?? ''}
+                    value={location.country}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, country: e.target.value }));
                     }}
@@ -97,7 +97,7 @@ const CustomEditMetadataForm = ({
                             marginTop: '0px',
                         },
                     }}>
-                    <option aria-label="None" value="" />
+                    <option aria-label="None" value={undefined} />
                     {countryOptions.map((co) => (
                         <option key={co.value} value={co.label} label={co.label} />
                     ))}
@@ -109,7 +109,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="state"
                     name="state"
-                    value={location.state ?? ''}
+                    value={location.state}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.country)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, state: e.target.value }));
@@ -122,7 +122,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="city"
                     name="city"
-                    value={location.city ?? ''}
+                    value={location.city}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.state)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, city: e.target.value }));
@@ -135,7 +135,7 @@ const CustomEditMetadataForm = ({
                     variant="standard"
                     id="streetname"
                     name="streetname"
-                    value={location.streetName ?? ''}
+                    value={location.streetName}
                     disabled={isNullOrEmptyOrWhiteSpaces(location.city)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, streetName: e.target.value }));
