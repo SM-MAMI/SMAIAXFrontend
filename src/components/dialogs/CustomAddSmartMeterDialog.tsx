@@ -42,6 +42,11 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
             householdSize !== INITIAL_HOUSEHOLD_SIZE) &&
         householdSize;
 
+    const areMetadataEmpty =
+        JSON.stringify(location) === JSON.stringify(INITIAL_LOCATION) &&
+        validFrom === INITIAL_VALID_FROM &&
+        householdSize === INITIAL_HOUSEHOLD_SIZE;
+
     const steps: StepItem[] = [
         {
             title: 'Step 1: Enter Smart Meter Name',
@@ -88,7 +93,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                         <strong>Smart Meter Name:</strong> {smartMeterName}
                     </Typography>
 
-                    {isValidMetadataState ? (
+                    {!areMetadataEmpty && (
                         <>
                             <Typography>
                                 <strong>Household Size:</strong> {householdSize}
@@ -116,9 +121,15 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
                                     </li>
                                 </ul>
                             </Typography>
+                            {!householdSize && (
+                                <Input
+                                    error
+                                    fullWidth
+                                    value="Metadata can not be added without a household size."
+                                    readOnly
+                                />
+                            )}
                         </>
-                    ) : (
-                        <Input error fullWidth value="Metadata can not be added due to invalid state." readOnly />
                     )}
                 </>
             ),
