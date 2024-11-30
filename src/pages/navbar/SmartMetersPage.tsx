@@ -1,4 +1,4 @@
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
@@ -84,29 +84,34 @@ const SmartMetersPage = () => {
                     flexWrap: isSmallScreen ? 'nowrap' : 'wrap',
                     justifyContent: isSmallScreen ? 'center' : 'space-evenly',
                     alignItems: 'center',
+                    marginTop: '3em',
                 }}>
-                {smartMeters?.map((sm) => (
-                    <div
-                        key={sm.id}
-                        className={recentlyAddedSmartMeter === sm.name ? 'pulse-effect' : ''}
-                        style={{
-                            flex: isSmallScreen ? '1 1 100%' : '1 1 30%',
-                            boxSizing: 'border-box',
-                        }}>
-                        <SmartMeterCard
-                            smartMeterOverview={sm}
-                            navigateToDetails={() => {
-                                navigate(`/smart-meters/${sm.id}`);
-                            }}
-                            kebabItems={[
-                                {
-                                    name: 'Device configuration',
-                                    onClick: () => void openDialogWithDeviceConfigurationDialog(),
-                                },
-                            ]}
-                        />
-                    </div>
-                ))}
+                {!smartMeters?.length ? (
+                    <CircularProgress size="3em" />
+                ) : (
+                    smartMeters.map((sm) => (
+                        <div
+                            key={sm.id}
+                            className={recentlyAddedSmartMeter === sm.name ? 'pulse-effect' : ''}
+                            style={{
+                                flex: isSmallScreen ? '1 1 100%' : '1 1 30%',
+                                boxSizing: 'border-box',
+                            }}>
+                            <SmartMeterCard
+                                smartMeterOverview={sm}
+                                navigateToDetails={() => {
+                                    navigate(`/smart-meters/${sm.id}`);
+                                }}
+                                kebabItems={[
+                                    {
+                                        name: 'Device configuration',
+                                        onClick: () => void openDialogWithDeviceConfigurationDialog(),
+                                    },
+                                ]}
+                            />
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

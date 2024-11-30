@@ -2,10 +2,10 @@ import { useActivePage, useDialogs } from '@toolpad/core';
 import { SmartMeterDto } from '../../api/openAPI';
 import { useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
-import { Button, Typography } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import CustomEditMetadataDialog from '../../components/dialogs/CustomEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
@@ -21,10 +21,6 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
 
     invariant(activePage, 'No navigation match');
-
-    const title = useMemo<string>(() => {
-        return smartMeter?.name ?? 'NOT FOUND';
-    }, [smartMeter]);
 
     useEffect(() => {
         const loadSmartMeter = async () => {
@@ -67,41 +63,49 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <>
-            <Typography variant={'h4'}>{title}</Typography>
-            <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    height: '100%',
-                    width: '100%',
-                    gap: '10px',
-                }}>
-                <Button
-                    variant="contained"
-                    size="large"
-                    onClick={() => {
-                        void openEditMetadataDialog();
-                    }}>
-                    Edit
-                </Button>
-                <Button
-                    variant="contained"
-                    size="large"
-                    onClick={() => {
-                        void openCustomDialogWithDeviceConfiguration();
-                    }}>
-                    Device configuration
-                </Button>
-                <Button
-                    variant="contained"
-                    size="large"
-                    onClick={() => {
-                        void openCreatePolicyDialog();
-                    }}>
-                    Create Policy
-                </Button>
-            </div>
+            {smartMeter == null ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress size="3em" />
+                </div>
+            ) : (
+                <>
+                    <Typography variant={'h4'}>{smartMeter.name}</Typography>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            height: '100%',
+                            width: '100%',
+                            gap: '10px',
+                        }}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openEditMetadataDialog();
+                            }}>
+                            Edit
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openCustomDialogWithDeviceConfiguration();
+                            }}>
+                            Device configuration
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openCreatePolicyDialog();
+                            }}>
+                            Create Policy
+                        </Button>
+                    </div>
+                </>
+            )}
         </>
     );
 };
