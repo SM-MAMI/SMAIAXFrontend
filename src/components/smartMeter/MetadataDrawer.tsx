@@ -24,7 +24,9 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
                     setIsDrawerOpen(false);
                 }}
                 sx={{
-                    '& .MuiDrawer-paper': { width: 600, padding: 2 },
+                    width: 400,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': { width: 400, padding: 2, boxSizing: 'border-box', marginTop: 8 },
                 }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                     <Typography variant="h6">Metadata</Typography>

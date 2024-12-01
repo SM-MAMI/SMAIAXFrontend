@@ -5,7 +5,7 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import CustomEditMetadataDialog from '../../components/dialogs/CustomEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
@@ -71,55 +71,49 @@ const SmartMeterDetailsPage = () => {
                 </div>
             ) : (
                 <>
-                    <Box sx={{ display: 'flex' }}>
-                        <Box sx={{ flex: 1, padding: 3 }}>
-                            <Typography variant="h4" gutterBottom>
-                                {smartMeter.name}
-                            </Typography>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    flexDirection: 'column',
-                                    height: '100%',
-                                    width: '100%',
-                                    gap: '10px',
-                                }}>
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    onClick={() => {
-                                        setIsDrawerOpen(true);
-                                    }}>
-                                    Show Metadata
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    onClick={() => {
-                                        void openEditMetadataDialog();
-                                    }}>
-                                    Edit
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    onClick={() => {
-                                        void openCustomDialogWithDeviceConfiguration();
-                                    }}>
-                                    Device configuration
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    onClick={() => {
-                                        void openCreatePolicyDialog();
-                                    }}>
-                                    Create Policy
-                                </Button>
-                            </div>
-                        </Box>
-                    </Box>
+                    <Typography variant={'h4'}>{smartMeter.name}</Typography>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            height: '100%',
+                            width: '100%',
+                            gap: '10px',
+                        }}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                setIsDrawerOpen(true);
+                            }}>
+                            Show Metadata
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openEditMetadataDialog();
+                            }}>
+                            Edit
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openCustomDialogWithDeviceConfiguration();
+                            }}>
+                            Device configuration
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openCreatePolicyDialog();
+                            }}>
+                            Create Policy
+                        </Button>
+                    </div>
 
                     <MetadataDrawer
                         smartMeter={smartMeter}
