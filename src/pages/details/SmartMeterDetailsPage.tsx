@@ -25,18 +25,6 @@ const SmartMeterDetailsPage = () => {
     invariant(activePage, 'No navigation match');
 
     useEffect(() => {
-        const loadSmartMeter = async () => {
-            if (!params.id) {
-                throw new Error('Smart meter id not submitted.');
-            }
-            try {
-                const sm = await getSmartMeter(params.id);
-                setSmartMeter(sm);
-            } catch (error) {
-                console.error(error);
-                showSnackbar('error', `Failed to load smart meter!`);
-            }
-        };
         void loadSmartMeter();
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -46,10 +34,26 @@ const SmartMeterDetailsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    const loadSmartMeter = async () => {
+        if (!params.id) {
+            throw new Error('Smart meter id not submitted.');
+        }
+        try {
+            const sm = await getSmartMeter(params.id);
+            setSmartMeter(sm);
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', `Failed to load smart meter!`);
+        }
+    };
+
     const openEditMetadataDialog = async () => {
         await dialogs.open(CustomEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
             isNew: true,
+            reloadSmartMeter: () => {
+                void loadSmartMeter();
+            },
         });
     };
 
