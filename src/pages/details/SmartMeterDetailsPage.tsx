@@ -9,9 +9,11 @@ import { Button, CircularProgress, Typography } from '@mui/material';
 import CustomEditMetadataDialog from '../../components/dialogs/CustomEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
+import MetadataDrawer from '../../components/smartMeter/MetadataDrawer.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const params = useParams<{ id: string }>();
     const location = useLocation();
@@ -23,18 +25,6 @@ const SmartMeterDetailsPage = () => {
     invariant(activePage, 'No navigation match');
 
     useEffect(() => {
-        const loadSmartMeter = async () => {
-            if (!params.id) {
-                throw new Error('Smart meter id not submitted.');
-            }
-            try {
-                const sm = await getSmartMeter(params.id);
-                setSmartMeter(sm);
-            } catch (error) {
-                console.error(error);
-                showSnackbar('error', `Failed to load smart meter!`);
-            }
-        };
         void loadSmartMeter();
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -44,10 +34,26 @@ const SmartMeterDetailsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    const loadSmartMeter = async () => {
+        if (!params.id) {
+            throw new Error('Smart meter id not submitted.');
+        }
+        try {
+            const sm = await getSmartMeter(params.id);
+            setSmartMeter(sm);
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', `Failed to load smart meter!`);
+        }
+    };
+
     const openEditMetadataDialog = async () => {
         await dialogs.open(CustomEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
             isNew: true,
+            reloadSmartMeter: () => {
+                void loadSmartMeter();
+            },
         });
     };
 
@@ -83,6 +89,14 @@ const SmartMeterDetailsPage = () => {
                             variant="contained"
                             size="large"
                             onClick={() => {
+                                setIsDrawerOpen(true);
+                            }}>
+                            Show Metadata
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
                                 void openEditMetadataDialog();
                             }}>
                             Edit
@@ -104,6 +118,12 @@ const SmartMeterDetailsPage = () => {
                             Create Policy
                         </Button>
                     </div>
+
+                    <MetadataDrawer
+                        smartMeter={smartMeter}
+                        isDrawerOpen={isDrawerOpen}
+                        setIsDrawerOpen={setIsDrawerOpen}
+                    />
                 </>
             )}
         </>

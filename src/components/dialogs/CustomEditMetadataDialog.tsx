@@ -12,6 +12,7 @@ import { useState } from 'react';
 interface EditMetadataDialogPayload {
     smartMeterId: string;
     isNew: boolean;
+    reloadSmartMeter: () => void;
 }
 
 const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
@@ -37,6 +38,7 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
         try {
             await addMetadata(payload.smartMeterId, metadataCreate);
             showSnackbar('success', 'Successfully added metadata!');
+            payload.reloadSmartMeter();
             void onClose();
         } catch (error) {
             showSnackbar('error', 'Add metadata failed!');
