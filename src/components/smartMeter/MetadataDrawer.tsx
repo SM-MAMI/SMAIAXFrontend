@@ -36,13 +36,13 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
                     <InputLabel id="validFrom-label">Valid From</InputLabel>
                     <Select
                         labelId="validFrom-label"
-                        value={selectedValidFrom ?? ''}
+                        value={selectedValidFrom}
                         onChange={(e) => {
                             setSelectedValidFrom(e.target.value);
                         }}>
-                        {smartMeter.metadata.map((meta) => (
-                            <MenuItem key={meta.validFrom} value={meta.validFrom}>
-                                {meta.validFrom}
+                        {smartMeter.metadata.map((metadata) => (
+                            <MenuItem key={metadata.id} value={metadata.validFrom}>
+                                {metadata.validFrom}
                             </MenuItem>
                         ))}
                     </Select>
