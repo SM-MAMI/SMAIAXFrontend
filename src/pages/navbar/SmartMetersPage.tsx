@@ -1,18 +1,19 @@
-import { Button, CircularProgress, useMediaQuery } from '@mui/material';
+import { CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
 import { useNavigate } from 'react-router-dom';
-import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
 import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
+import Button from '@mui/material/Button';
+import CustomSmartMeterCard from '../../components/smartMeter/CustomSmartMeterCard.tsx';
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
-    const [recentlyAddedSmartMeter, setRecentlyAddedSmartMeter] = useState<string | undefined>(undefined);
+    const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
     const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
@@ -25,18 +26,20 @@ const SmartMetersPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const loadSmartMeters = async (recentlyAddedSmartMeter?: string) => {
+    const loadSmartMeters = async (recentlyAddedSmartMeterName?: string) => {
         try {
             const sms = await getSmartMeters();
             const sortedSms = sms
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .sort((a, b) => (a.name === recentlyAddedSmartMeter ? -1 : b.name === recentlyAddedSmartMeter ? 1 : 0));
+                .sort((a, b) =>
+                    a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
+                );
             setSmartMeters(sortedSms);
-            setRecentlyAddedSmartMeter(recentlyAddedSmartMeter);
+            setRecentlyAddedSmartMeterName(recentlyAddedSmartMeterName);
 
-            if (recentlyAddedSmartMeter) {
+            if (recentlyAddedSmartMeterName) {
                 setTimeout(() => {
-                    setRecentlyAddedSmartMeter(undefined);
+                    setRecentlyAddedSmartMeterName(undefined);
                 }, 2000);
             }
         } catch (error) {
@@ -65,8 +68,41 @@ const SmartMetersPage = () => {
     };
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height: '100%', width: '100%' }}>
-            <div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: isSmallScreen ? 'column' : 'row',
+                    flexWrap: isSmallScreen ? 'nowrap' : 'wrap',
+                    justifyContent: isSmallScreen ? 'center' : 'space-evenly',
+                    alignItems: 'center',
+                    gap: '1em',
+                    padding: '1em',
+                    flexGrow: 1,
+                }}>
+                {!smartMeters ? (
+                    <CircularProgress size="3em" />
+                ) : (
+                    smartMeters.map((smartMeterOverview) => (
+                        <CustomSmartMeterCard
+                            key={smartMeterOverview.id}
+                            smartMeterOverview={smartMeterOverview}
+                            navigateToDetails={() => {
+                                navigate(`/smart-meters/${smartMeterOverview.id}`);
+                            }}
+                            kebabItems={[
+                                {
+                                    name: 'Device configuration',
+                                    onClick: () => void openDialogWithDeviceConfigurationDialog(),
+                                },
+                            ]}
+                            isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
+                        />
+                    ))
+                )}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
                     variant="contained"
                     size="medium"
@@ -75,43 +111,6 @@ const SmartMetersPage = () => {
                     }}>
                     Add Smart Meter
                 </Button>
-            </div>
-
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: isSmallScreen ? 'column' : 'row',
-                    flexWrap: isSmallScreen ? 'nowrap' : 'wrap',
-                    justifyContent: isSmallScreen ? 'center' : 'space-evenly',
-                    alignItems: 'center',
-                    marginTop: '3em',
-                }}>
-                {!smartMeters ? (
-                    <CircularProgress size="3em" />
-                ) : (
-                    smartMeters.map((sm) => (
-                        <div
-                            key={sm.id}
-                            className={recentlyAddedSmartMeter === sm.name ? 'pulse-effect' : ''}
-                            style={{
-                                flex: isSmallScreen ? '1 1 100%' : '1 1 30%',
-                                boxSizing: 'border-box',
-                            }}>
-                            <SmartMeterCard
-                                smartMeterOverview={sm}
-                                navigateToDetails={() => {
-                                    navigate(`/smart-meters/${sm.id}`);
-                                }}
-                                kebabItems={[
-                                    {
-                                        name: 'Device configuration',
-                                        onClick: () => void openDialogWithDeviceConfigurationDialog(),
-                                    },
-                                ]}
-                            />
-                        </div>
-                    ))
-                )}
             </div>
         </div>
     );

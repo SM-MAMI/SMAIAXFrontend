@@ -57,7 +57,10 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
                     aria-controls={open ? 'composition-menu' : undefined}
                     aria-expanded={open ? 'true' : undefined}
                     aria-haspopup="true"
-                    onClick={handleToggle}>
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggle();
+                    }}>
                     <MoreVertIcon />
                 </Button>
                 <Popper
@@ -85,6 +88,7 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
                                             <MenuItem
                                                 key={item.name}
                                                 onClick={(e) => {
+                                                    e.stopPropagation();
                                                     item.onClick();
                                                     handleClose(e);
                                                 }}>
