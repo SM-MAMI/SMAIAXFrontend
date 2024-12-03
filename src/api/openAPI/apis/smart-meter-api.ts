@@ -24,6 +24,8 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { MetadataCreateDto } from '../models';
 // @ts-ignore
+import type { MetadataUpdateDto } from '../models';
+// @ts-ignore
 import type { ProblemDetails } from '../models';
 // @ts-ignore
 import type { SmartMeterCreateDto } from '../models';
@@ -229,6 +231,52 @@ export const SmartMeterApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {MetadataUpdateDto} metadataUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMetadata: async (smartMeterId: string, metadataId: string, metadataUpdateDto: MetadataUpdateDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'smartMeterId' is not null or undefined
+            assertParamExists('updateMetadata', 'smartMeterId', smartMeterId)
+            // verify required parameter 'metadataId' is not null or undefined
+            assertParamExists('updateMetadata', 'metadataId', metadataId)
+            // verify required parameter 'metadataUpdateDto' is not null or undefined
+            assertParamExists('updateMetadata', 'metadataUpdateDto', metadataUpdateDto)
+            const localVarPath = `/api/smartMeters/{smartMeterId}/metadata/{metadataId}`
+                .replace(`{${"smartMeterId"}}`, encodeURIComponent(String(smartMeterId)))
+                .replace(`{${"metadataId"}}`, encodeURIComponent(String(metadataId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(metadataUpdateDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id 
          * @param {SmartMeterUpdateDto} smartMeterUpdateDto 
          * @param {*} [options] Override http request option.
@@ -342,6 +390,20 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {MetadataUpdateDto} metadataUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateMetadata(smartMeterId: string, metadataId: string, metadataUpdateDto: MetadataUpdateDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateMetadata(smartMeterId, metadataId, metadataUpdateDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.updateMetadata']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {string} id 
          * @param {SmartMeterUpdateDto} smartMeterUpdateDto 
          * @param {*} [options] Override http request option.
@@ -408,6 +470,17 @@ export const SmartMeterApiFactory = function (configuration?: Configuration, bas
          */
         removeMetadata(smartMeterId: string, metadataId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.removeMetadata(smartMeterId, metadataId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} smartMeterId 
+         * @param {string} metadataId 
+         * @param {MetadataUpdateDto} metadataUpdateDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMetadata(smartMeterId: string, metadataId: string, metadataUpdateDto: MetadataUpdateDto, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.updateMetadata(smartMeterId, metadataId, metadataUpdateDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -483,6 +556,19 @@ export class SmartMeterApi extends BaseAPI {
      */
     public removeMetadata(smartMeterId: string, metadataId: string, options?: RawAxiosRequestConfig) {
         return SmartMeterApiFp(this.configuration).removeMetadata(smartMeterId, metadataId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} smartMeterId 
+     * @param {string} metadataId 
+     * @param {MetadataUpdateDto} metadataUpdateDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SmartMeterApi
+     */
+    public updateMetadata(smartMeterId: string, metadataId: string, metadataUpdateDto: MetadataUpdateDto, options?: RawAxiosRequestConfig) {
+        return SmartMeterApiFp(this.configuration).updateMetadata(smartMeterId, metadataId, metadataUpdateDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

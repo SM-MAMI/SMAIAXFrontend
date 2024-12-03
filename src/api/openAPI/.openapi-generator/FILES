@@ -18,8 +18,10 @@ models/login-dto.ts
 models/measurement-resolution.ts
 models/metadata-create-dto.ts
 models/metadata-dto.ts
+models/metadata-update-dto.ts
 models/name-dto.ts
 models/policy-create-dto.ts
+models/policy-dto.ts
 models/policy-request-create-dto.ts
 models/problem-details.ts
 models/register-dto.ts
