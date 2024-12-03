@@ -3,10 +3,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import countryList from 'react-select-country-list';
-import { Continent, LocationDto } from '../api/openAPI';
-import { isNullOrEmptyOrWhiteSpaces } from '../hooks/useValidation';
+import { Continent, LocationDto } from '../../api/openAPI';
+import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation.ts';
 
-interface CustomEditMetadataFormProps {
+interface CustomCreateEditMetadataFormProps {
     location: LocationDto;
     setLocation: (location: (prevLocation: LocationDto) => LocationDto) => void;
     householdSize: number | undefined;
@@ -15,14 +15,14 @@ interface CustomEditMetadataFormProps {
     setValidFrom: (date: string) => void;
 }
 
-const CustomEditMetadataForm = ({
+const CustomCreateEditMetadataForm = ({
     location,
     setLocation,
     householdSize,
     setHouseholdSize,
     validFrom,
     setValidFrom,
-}: CustomEditMetadataFormProps) => {
+}: CustomCreateEditMetadataFormProps) => {
     const countryOptions = useMemo(() => {
         return countryList().getData();
     }, []);
@@ -156,4 +156,4 @@ const CustomEditMetadataForm = ({
     );
 };
 
-export default CustomEditMetadataForm;
+export default CustomCreateEditMetadataForm;

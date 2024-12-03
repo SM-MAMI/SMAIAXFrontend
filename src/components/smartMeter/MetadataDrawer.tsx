@@ -1,9 +1,11 @@
 import { SmartMeterDto } from '../../api/openAPI';
-import { Box, Drawer, InputLabel, Select, Typography } from '@mui/material';
+import { Box, Button, Drawer, InputLabel, Select, Typography } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
+import CustomCreateEditMetadataDialog from '../dialogs/CustomCreateEditMetadataDialog.tsx';
+import { useDialogs } from '@toolpad/core';
 
 interface MetadataDrawerProps {
     smartMeter: SmartMeterDto;
@@ -14,6 +16,22 @@ interface MetadataDrawerProps {
 const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataDrawerProps) => {
     const [selectedValidFrom, setSelectedValidFrom] = useState<string | undefined>(undefined);
     const selectedMetadata = smartMeter.metadata.find((meta) => meta.validFrom === selectedValidFrom);
+    const dialogs = useDialogs();
+
+    const openCreateEditMetadataDialog = async () => {
+        await dialogs.open(CustomCreateEditMetadataDialog, {
+            smartMeterId: smartMeter.id,
+            metadata: selectedMetadata,
+            reloadSmartMeter: () => {
+                loadSmartMeter();
+            },
+        });
+    };
+
+    const loadSmartMeter = () => {
+        // TODO: Refresh metadata after update
+        console.log('Refresh metadata!');
+    };
 
     return (
         <div>
@@ -86,6 +104,15 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
                             </Typography>
                             <Typography variant="body1">{selectedMetadata.householdSize}</Typography>
                         </Grid>
+
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => {
+                                void openCreateEditMetadataDialog();
+                            }}>
+                            Edit
+                        </Button>
                     </Grid>
                 ) : (
                     <Typography variant="body1" color="textSecondary" mt={2}>

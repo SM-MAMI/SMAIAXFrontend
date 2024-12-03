@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
-import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
+import CustomCreateEditMetadataForm from '../smartMeter/CustomCreateEditMetadataForm.tsx';
 import dayjs from 'dayjs';
 import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
@@ -70,7 +70,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         {
             title: 'Step 2: Add Metadata',
             content: (
-                <CustomEditMetadataForm
+                <CustomCreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
                     householdSize={householdSize}

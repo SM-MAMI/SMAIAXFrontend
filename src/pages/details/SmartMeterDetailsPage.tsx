@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../tiny-invariant.ts';
 import { Button, CircularProgress, Typography } from '@mui/material';
-import CustomEditMetadataDialog from '../../components/dialogs/CustomEditMetadataDialog.tsx';
+import CustomCreateEditMetadataDialog from '../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import MetadataDrawer from '../../components/smartMeter/MetadataDrawer.tsx';
@@ -29,7 +29,7 @@ const SmartMeterDetailsPage = () => {
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (location.state?.openDialog === true) {
-            void openEditMetadataDialog();
+            void openCreateEditMetadataDialog();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
@@ -47,10 +47,10 @@ const SmartMeterDetailsPage = () => {
         }
     };
 
-    const openEditMetadataDialog = async () => {
-        await dialogs.open(CustomEditMetadataDialog, {
+    const openCreateEditMetadataDialog = async () => {
+        await dialogs.open(CustomCreateEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
-            isNew: true,
+            metadata: undefined,
             reloadSmartMeter: () => {
                 void loadSmartMeter();
             },
@@ -97,9 +97,9 @@ const SmartMeterDetailsPage = () => {
                             variant="contained"
                             size="large"
                             onClick={() => {
-                                void openEditMetadataDialog();
+                                void openCreateEditMetadataDialog();
                             }}>
-                            Edit
+                            Create Metadata
                         </Button>
                         <Button
                             variant="contained"

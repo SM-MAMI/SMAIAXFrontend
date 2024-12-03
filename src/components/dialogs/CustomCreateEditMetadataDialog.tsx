@@ -1,21 +1,26 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { LocationDto, MetadataCreateDto } from '../../api/openAPI';
+import { LocationDto, MetadataCreateDto, MetadataDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
-import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
+import CustomCreateEditMetadataForm from '../smartMeter/CustomCreateEditMetadataForm.tsx';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface EditMetadataDialogPayload {
     smartMeterId: string;
-    isNew: boolean;
+    metadata: MetadataDto | undefined;
     reloadSmartMeter: () => void;
 }
 
-const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
+const CustomCreateEditMetadataDialog = ({
+    payload,
+    open,
+    onClose,
+}: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
+    const [title, setTitle] = useState<string>('Add Metadata');
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
     const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
@@ -23,9 +28,23 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
     const { addMetadata } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
 
+    useEffect(() => {
+        if (payload.metadata !== undefined) {
+            setTitle('Edit Metadata');
+            setLocation(payload.metadata.location);
+            setValidFrom(payload.metadata.validFrom);
+            setHouseholdSize(payload.metadata.householdSize);
+        }
+    }, [payload.metadata]);
+
     const handleSubmit = async () => {
         if (householdSize == null) {
             showSnackbar('error', 'Please add a valid household size');
+            return;
+        }
+
+        if (payload.metadata !== undefined) {
+            alert('Edit metadata not implemented yet');
             return;
         }
 
@@ -48,9 +67,9 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
 
     return (
         <Dialog open={open}>
-            <DialogTitle>{payload.isNew ? 'Add Metadata' : 'Edit Metadata'}</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <CustomEditMetadataForm
+                <CustomCreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
                     householdSize={householdSize}
@@ -75,4 +94,4 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
     );
 };
 
-export default CustomEditMetadataDialog;
+export default CustomCreateEditMetadataDialog;
