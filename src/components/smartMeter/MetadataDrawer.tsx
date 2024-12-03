@@ -11,9 +11,10 @@ interface MetadataDrawerProps {
     smartMeter: SmartMeterDto;
     isDrawerOpen: boolean;
     setIsDrawerOpen: (isDrawerOpen: boolean) => void;
+    reloadSmartMeter: () => void;
 }
 
-const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataDrawerProps) => {
+const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmartMeter }: MetadataDrawerProps) => {
     const [selectedValidFrom, setSelectedValidFrom] = useState<string | undefined>(undefined);
     const selectedMetadata = smartMeter.metadata.find((meta) => meta.validFrom === selectedValidFrom);
     const dialogs = useDialogs();
@@ -23,14 +24,9 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
             smartMeterId: smartMeter.id,
             metadata: selectedMetadata,
             reloadSmartMeter: () => {
-                loadSmartMeter();
+                reloadSmartMeter();
             },
         });
-    };
-
-    const loadSmartMeter = () => {
-        // TODO: Refresh metadata after update
-        console.log('Refresh metadata!');
     };
 
     return (

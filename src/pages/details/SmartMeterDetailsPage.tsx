@@ -123,6 +123,9 @@ const SmartMeterDetailsPage = () => {
                         smartMeter={smartMeter}
                         isDrawerOpen={isDrawerOpen}
                         setIsDrawerOpen={setIsDrawerOpen}
+                        reloadSmartMeter={() => {
+                            void loadSmartMeter();
+                        }}
                     />
                 </>
             )}

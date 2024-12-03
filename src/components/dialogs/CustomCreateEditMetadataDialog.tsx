@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { LocationDto, MetadataCreateDto, MetadataDto } from '../../api/openAPI';
+import { LocationDto, MetadataDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
@@ -25,7 +25,7 @@ const CustomCreateEditMetadataDialog = ({
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
     const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
 
-    const { addMetadata } = useSmartMeterService();
+    const { addMetadata, updateMetadata } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -43,25 +43,28 @@ const CustomCreateEditMetadataDialog = ({
             return;
         }
 
-        if (payload.metadata !== undefined) {
-            alert('Edit metadata not implemented yet');
-            return;
-        }
-
-        const metadataCreate: MetadataCreateDto = {
+        const metadataCreateUpdateDto = {
             householdSize,
             location,
             validFrom,
         };
 
         try {
-            await addMetadata(payload.smartMeterId, metadataCreate);
-            showSnackbar('success', 'Successfully added metadata!');
+            if (payload.metadata) {
+                await updateMetadata(payload.smartMeterId, payload.metadata.id, {
+                    ...metadataCreateUpdateDto,
+                    id: payload.metadata.id,
+                });
+                showSnackbar('success', 'Successfully updated metadata!');
+            } else {
+                await addMetadata(payload.smartMeterId, metadataCreateUpdateDto);
+                showSnackbar('success', 'Successfully added metadata!');
+            }
             payload.reloadSmartMeter();
             void onClose();
         } catch (error) {
-            showSnackbar('error', 'Add metadata failed!');
-            console.error('Add metadata failed:', error);
+            showSnackbar('error', `${payload.metadata ? 'Update' : 'Add'} metadata failed!`);
+            console.error(`${payload.metadata ? 'Update' : 'Add'} metadata failed:`, error);
         }
     };
 
