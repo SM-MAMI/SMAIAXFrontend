@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import {
     MetadataCreateDto,
+    MetadataUpdateDto,
     ProblemDetails,
     SmartMeterCreateDto,
     SmartMeterDto,
@@ -75,10 +76,26 @@ export const useSmartMeterService = () => {
         [smartMeterApi]
     );
 
+    const updateMetadata = useCallback(
+        async (smartMeterId: string, metadataId: string, updateMetadataDto: MetadataUpdateDto): Promise<string> => {
+            try {
+                const response = await smartMeterApi.updateMetadata(smartMeterId, metadataId, updateMetadataDto);
+
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [smartMeterApi]
+    );
+
     return {
         addSmartMeter,
         addMetadata,
         getSmartMeters,
         getSmartMeter,
+        updateMetadata,
     };
 };

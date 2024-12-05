@@ -1,27 +1,41 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { LocationDto, MetadataCreateDto } from '../../api/openAPI';
+import { LocationDto, MetadataDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
-import CustomEditMetadataForm from '../CustomEditMetadataForm.tsx';
+import CustomCreateEditMetadataForm from '../smartMeter/CustomCreateEditMetadataForm.tsx';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface EditMetadataDialogPayload {
     smartMeterId: string;
-    isNew: boolean;
+    metadata: MetadataDto | undefined;
     reloadSmartMeter: () => void;
 }
 
-const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
+const CustomCreateEditMetadataDialog = ({
+    payload,
+    open,
+    onClose,
+}: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
+    const [title, setTitle] = useState<string>('Add Metadata');
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
     const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
 
-    const { addMetadata } = useSmartMeterService();
+    const { addMetadata, updateMetadata } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        if (payload.metadata !== undefined) {
+            setTitle('Edit Metadata');
+            setLocation(payload.metadata.location);
+            setValidFrom(payload.metadata.validFrom);
+            setHouseholdSize(payload.metadata.householdSize);
+        }
+    }, [payload.metadata]);
 
     const handleSubmit = async () => {
         if (householdSize == null) {
@@ -29,28 +43,36 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
             return;
         }
 
-        const metadataCreate: MetadataCreateDto = {
+        const metadataCreateUpdateDto = {
             householdSize,
             location,
             validFrom,
         };
 
         try {
-            await addMetadata(payload.smartMeterId, metadataCreate);
-            showSnackbar('success', 'Successfully added metadata!');
+            if (payload.metadata) {
+                await updateMetadata(payload.smartMeterId, payload.metadata.id, {
+                    ...metadataCreateUpdateDto,
+                    id: payload.metadata.id,
+                });
+                showSnackbar('success', 'Successfully updated metadata!');
+            } else {
+                await addMetadata(payload.smartMeterId, metadataCreateUpdateDto);
+                showSnackbar('success', 'Successfully added metadata!');
+            }
             payload.reloadSmartMeter();
             void onClose();
         } catch (error) {
-            showSnackbar('error', 'Add metadata failed!');
-            console.error('Add metadata failed:', error);
+            showSnackbar('error', `${payload.metadata ? 'Update' : 'Add'} metadata failed!`);
+            console.error(`${payload.metadata ? 'Update' : 'Add'} metadata failed:`, error);
         }
     };
 
     return (
         <Dialog open={open}>
-            <DialogTitle>{payload.isNew ? 'Add Metadata' : 'Edit Metadata'}</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <CustomEditMetadataForm
+                <CustomCreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
                     householdSize={householdSize}
@@ -75,4 +97,4 @@ const CustomEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
     );
 };
 
-export default CustomEditMetadataDialog;
+export default CustomCreateEditMetadataDialog;
