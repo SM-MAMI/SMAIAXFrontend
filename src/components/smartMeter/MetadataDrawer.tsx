@@ -1,9 +1,10 @@
 import { SmartMeterDto } from '../../api/openAPI';
-import { Box, Drawer, InputLabel, Select, Typography } from '@mui/material';
+import { Box, Drawer, InputLabel, Select, Typography, useMediaQuery } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
+import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 
 interface MetadataDrawerProps {
     smartMeter: SmartMeterDto;
@@ -14,6 +15,9 @@ interface MetadataDrawerProps {
 const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataDrawerProps) => {
     const [selectedValidFrom, setSelectedValidFrom] = useState<string | undefined>(undefined);
     const selectedMetadata = smartMeter.metadata.find((meta) => meta.validFrom === selectedValidFrom);
+
+    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const marginTop = isSmallScreen ? 7 : 8;
 
     return (
         <div>
@@ -26,7 +30,7 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
                 sx={{
                     width: 400,
                     flexShrink: 0,
-                    '& .MuiDrawer-paper': { width: 400, padding: 2, boxSizing: 'border-box', marginTop: 8 },
+                    '& .MuiDrawer-paper': { width: 400, padding: 2, boxSizing: 'border-box', marginTop: marginTop },
                 }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                     <Typography variant="h6">Metadata</Typography>
