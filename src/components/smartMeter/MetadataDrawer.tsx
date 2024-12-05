@@ -1,9 +1,10 @@
 import { SmartMeterDto } from '../../api/openAPI';
-import { Box, Button, Drawer, InputLabel, Select, Typography } from '@mui/material';
+import { Box, Button, Drawer, InputLabel, Select, Typography, useMediaQuery } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
+import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
 import CustomCreateEditMetadataDialog from '../dialogs/CustomCreateEditMetadataDialog.tsx';
 import { useDialogs } from '@toolpad/core';
 
@@ -29,6 +30,11 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
         });
     };
 
+    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const marginTop = isSmallScreen ? 7 : 8;
+
+    const validFromLabel = 'Valid From';
+
     return (
         <div>
             <Drawer
@@ -40,20 +46,21 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
                 sx={{
                     width: 400,
                     flexShrink: 0,
-                    '& .MuiDrawer-paper': { width: 400, padding: 2, boxSizing: 'border-box', marginTop: 8 },
+                    '& .MuiDrawer-paper': { width: 400, padding: 2, boxSizing: 'border-box', marginTop: marginTop },
                 }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
                     <Typography variant="h6">Metadata</Typography>
                 </Box>
 
                 <FormControl fullWidth>
-                    <InputLabel id="validFrom-label">Valid From</InputLabel>
+                    <InputLabel id="validFrom-label">{validFromLabel}</InputLabel>
                     <Select
                         labelId="validFrom-label"
                         value={selectedValidFrom}
                         onChange={(e) => {
                             setSelectedValidFrom(e.target.value);
-                        }}>
+                        }}
+                        label={validFromLabel}>
                         {smartMeter.metadata.map((metadata) => (
                             <MenuItem key={metadata.id} value={metadata.validFrom}>
                                 {metadata.validFrom}

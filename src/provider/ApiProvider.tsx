@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { AuthenticationApi, PolicyApi, SmartMeterApi } from '../../api/openAPI';
-import { ApiContext } from '../context/ApiContext.tsx';
-import { createCustomAxiosInstance } from '../../api/axiosInstance.ts';
+import { AuthenticationApi, PolicyApi, SmartMeterApi } from '../api/openAPI';
+import { ApiContext } from './context/ApiContext.tsx';
+import { createCustomAxiosInstance } from '../api/axiosInstance.ts';
 
 interface ApiProviderProps {
     children: ReactNode;

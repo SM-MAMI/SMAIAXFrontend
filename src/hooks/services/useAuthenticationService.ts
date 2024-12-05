@@ -1,5 +1,5 @@
 import { useCallback, useContext } from 'react';
-import { ApiContext } from '../../components/context/ApiContext.tsx';
+import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import { LoginDto, ProblemDetails, RegisterDto, TokenDto } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
