@@ -3,7 +3,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import { SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../constants/constants.ts';
+import { MediaQueryMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../constants/constants.ts';
 import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { createTheme } from '@mui/material/styles';
 import { colorSchemes, shadows, shape, typography } from '../themes/themePrimitives.ts';
+import { useMediaQuery } from '@mui/material';
 
 const NAVIGATION: Navigation = [
     {
@@ -50,6 +51,11 @@ const BRANDING = {
     logo: SmaiaxLogo(),
 };
 
+const BRANDING_SMALL = {
+    title: '',
+    logo: SmaiaxLogo(),
+};
+
 const customTheme = createTheme({
     cssVariables: {
         colorSchemeSelector: 'data-toolpad-color-scheme',
@@ -66,6 +72,8 @@ const NavbarNavigation = () => {
     const { logout } = useAuthenticationService();
 
     const [session, setSession] = React.useState<Session | null>();
+
+    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
 
     React.useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
@@ -121,7 +129,7 @@ const NavbarNavigation = () => {
         <AppProvider
             navigation={NAVIGATION}
             // @ts-expect-error - Needed for custom typography in branding
-            branding={BRANDING}
+            branding={isSmallScreen ? BRANDING_SMALL : BRANDING}
             authentication={authentication}
             theme={customTheme}
             session={session}>
