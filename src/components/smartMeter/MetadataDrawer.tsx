@@ -19,6 +19,8 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
     const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
     const marginTop = isSmallScreen ? 7 : 8;
 
+    const validFromLabel = 'Valid From';
+
     return (
         <div>
             <Drawer
@@ -37,13 +39,14 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen }: MetadataD
                 </Box>
 
                 <FormControl fullWidth>
-                    <InputLabel id="validFrom-label">Valid From</InputLabel>
+                    <InputLabel id="validFrom-label">{validFromLabel}</InputLabel>
                     <Select
                         labelId="validFrom-label"
                         value={selectedValidFrom}
                         onChange={(e) => {
                             setSelectedValidFrom(e.target.value);
-                        }}>
+                        }}
+                        label={validFromLabel}>
                         {smartMeter.metadata.map((metadata) => (
                             <MenuItem key={metadata.id} value={metadata.validFrom}>
                                 {metadata.validFrom}
