@@ -1,4 +1,7 @@
-﻿import { IEncryptionService } from './interfaces/IEncryptionService.ts';
+﻿interface IEncryptionService {
+    encryptData: (data: string) => Promise<string>;
+    decryptData: (encryptedData: string) => Promise<string>;
+}
 
 export class EncryptionService implements IEncryptionService {
     private static readonly TextEncoder: TextEncoder = new TextEncoder();

@@ -4,12 +4,13 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
-import invariant from '../../tiny-invariant.ts';
+import invariant from '../../utils/tiny-invariant.ts';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import CustomCreateEditMetadataDialog from '../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import MetadataDrawer from '../../components/smartMeter/MetadataDrawer.tsx';
+import { PageContainer } from '@toolpad/core/PageContainer';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
@@ -68,14 +69,14 @@ const SmartMeterDetailsPage = () => {
     };
 
     return (
-        <>
+        <PageContainer title={'ADRIANOOOOOOOOOOOO'}>
             {smartMeter == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
             ) : (
                 <>
-                    <Typography variant={'h4'}>{smartMeter.name}</Typography>
+                    <Typography>{smartMeter.name}</Typography>
                     <div
                         style={{
                             display: 'flex',
@@ -129,7 +130,7 @@ const SmartMeterDetailsPage = () => {
                     />
                 </>
             )}
-        </>
+        </PageContainer>
     );
 };
 

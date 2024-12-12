@@ -1,3 +1,5 @@
+import { PageContainer } from '@toolpad/core/PageContainer';
+
 export default function HomePage() {
-    return <></>;
+    return <PageContainer></PageContainer>;
 }
