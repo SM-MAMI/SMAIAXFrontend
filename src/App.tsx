@@ -8,7 +8,6 @@ import SmartMetersPage from './pages/navbar/SmartMetersPage.tsx';
 import NavbarNavigation from './components/toolpad/NavbarNavigation.tsx';
 import Navbar from './components/toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
-import OrdersPage from './pages/navbar/OrdersPage.tsx';
 import { SmaiaxRoutes } from './constants/constants.ts';
 import SmartMeterDetailsPage from './pages/details/SmartMeterDetailsPage.tsx';
 
@@ -36,10 +35,6 @@ const protectedRoutes = [
                     {
                         path: SmaiaxRoutes.HOME,
                         element: <HomePage />,
-                    },
-                    {
-                        path: SmaiaxRoutes.ORDERS,
-                        element: <OrdersPage />,
                     },
                     {
                         path: SmaiaxRoutes.SMART_METERS,

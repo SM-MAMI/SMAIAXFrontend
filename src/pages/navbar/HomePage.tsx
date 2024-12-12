@@ -1,5 +1,5 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
 
 export default function HomePage() {
-    return <PageContainer></PageContainer>;
+    return <PageContainer title={''}>Dashboard</PageContainer>;
 }

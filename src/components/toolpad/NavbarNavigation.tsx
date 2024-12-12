@@ -1,5 +1,4 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
@@ -23,11 +22,6 @@ const NAVIGATION: Navigation = [
     {
         title: 'Home',
         icon: <DashboardIcon />,
-    },
-    {
-        segment: SmaiaxRoutes.ORDERS,
-        title: 'Orders',
-        icon: <ShoppingCartIcon />,
     },
     {
         segment: SmaiaxRoutes.SMART_METERS,

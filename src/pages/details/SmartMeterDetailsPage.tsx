@@ -5,7 +5,7 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../utils/tiny-invariant.ts';
-import { Button, CircularProgress, Typography } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import CustomCreateEditMetadataDialog from '../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
@@ -22,6 +22,17 @@ const SmartMeterDetailsPage = () => {
     const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
+
+    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
+    const breadcrumbs = smartMeter
+        ? [
+              ...previousBreadcrumbs,
+              {
+                  title: smartMeter.name,
+                  path: '/' + smartMeter.id,
+              },
+          ]
+        : previousBreadcrumbs;
 
     invariant(activePage, 'No navigation match');
 
@@ -69,14 +80,13 @@ const SmartMeterDetailsPage = () => {
     };
 
     return (
-        <PageContainer title={'ADRIANOOOOOOOOOOOO'}>
+        <PageContainer title={''} breadcrumbs={breadcrumbs}>
             {smartMeter == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
             ) : (
                 <>
-                    <Typography>{smartMeter.name}</Typography>
                     <div
                         style={{
                             display: 'flex',
