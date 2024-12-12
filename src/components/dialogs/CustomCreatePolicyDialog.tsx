@@ -8,8 +8,9 @@ import {
     FormLabel,
     Input,
     NativeSelect,
+    TextField,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { LocationResolution, MeasurementResolution, PolicyCreateDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
@@ -21,15 +22,37 @@ interface CreatePolicyDialogPayload {
 }
 
 const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
+    const [policyName, setPolicyName] = useState<string>('');
+    const [policyNameError, setPolicyNameError] = useState(false);
+    const [policyNameErrorMessage, setPolicyNameErrorMessage] = useState('');
+
     const { createPolicy } = usePolicyService();
     const { showSnackbar } = useSnackbar();
+
+    const validatePolicyName = (): boolean => {
+        if (!policyName.trim()) {
+            setPolicyNameError(true);
+            setPolicyNameErrorMessage('Smart meter name is required.');
+            return false;
+        }
+
+        setPolicyNameError(false);
+        setPolicyNameErrorMessage('');
+        return true;
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const valid = validatePolicyName();
+        if (!valid) {
+            return;
+        }
+
         const data = new FormData(event.currentTarget);
 
         const policyCreateDto: PolicyCreateDto = {
+            name: policyName,
             measurementResolution: data.get('measurementResolution') as MeasurementResolution,
             locationResolution: data.get('locationResolution') as LocationResolution,
             price: data.get('price') as unknown as number,
@@ -57,6 +80,20 @@ const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogPro
                         void handleSubmit(event);
                     }}
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
+                    <FormControl fullWidth>
+                        <TextField
+                            value={policyName}
+                            onChange={(e) => {
+                                setPolicyName(e.target.value);
+                            }}
+                            id="smartMeterName"
+                            placeholder="Enter Smart Meter Name"
+                            name="smartMeterName"
+                            color={policyNameError ? 'error' : 'primary'}
+                            error={policyNameError}
+                            helperText={policyNameErrorMessage}
+                        />
+                    </FormControl>
                     <FormControl>
                         <FormLabel htmlFor="measurementResolution">Select a Measurement Resolution</FormLabel>
                         <NativeSelect
