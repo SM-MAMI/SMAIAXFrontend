@@ -28,6 +28,12 @@ import type { MeasurementResolution } from './measurement-resolution';
 export interface PolicyCreateDto {
     /**
      * 
+     * @type {string}
+     * @memberof PolicyCreateDto
+     */
+    'name': string;
+    /**
+     * 
      * @type {MeasurementResolution}
      * @memberof PolicyCreateDto
      */

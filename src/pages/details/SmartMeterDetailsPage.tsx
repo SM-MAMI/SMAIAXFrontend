@@ -1,18 +1,22 @@
 import { useActivePage, useDialogs } from '@toolpad/core';
-import { SmartMeterDto } from '../../api/openAPI';
+import { PolicyDto, SmartMeterDto } from '../../api/openAPI';
 import { useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
-import invariant from '../../tiny-invariant.ts';
+import invariant from '../../utils/tiny-invariant.ts';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import CustomCreateEditMetadataDialog from '../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import MetadataDrawer from '../../components/smartMeter/MetadataDrawer.tsx';
+import { PageContainer } from '@toolpad/core/PageContainer';
+import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
+import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesTable.tsx';
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
+    const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const params = useParams<{ id: string }>();
@@ -21,6 +25,18 @@ const SmartMeterDetailsPage = () => {
     const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
+    const { getPoliciesBySmartMeterId } = usePolicyService();
+
+    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
+    const breadcrumbs = smartMeter
+        ? [
+              ...previousBreadcrumbs,
+              {
+                  title: smartMeter.name,
+                  path: '/' + smartMeter.id,
+              },
+          ]
+        : previousBreadcrumbs;
 
     invariant(activePage, 'No navigation match');
 
@@ -34,16 +50,32 @@ const SmartMeterDetailsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    useEffect(() => {
+        if (smartMeter?.id) {
+            void loadSmartMeterPolicies(smartMeter.id);
+        }
+    }, [smartMeter]);
+
     const loadSmartMeter = async () => {
         if (!params.id) {
             throw new Error('Smart meter id not submitted.');
         }
         try {
-            const sm = await getSmartMeter(params.id);
-            setSmartMeter(sm);
+            const smartMeter = await getSmartMeter(params.id);
+            setSmartMeter(smartMeter);
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load smart meter!`);
+        }
+    };
+
+    const loadSmartMeterPolicies = async (smartMeterId: string) => {
+        try {
+            const smartMeterPolicies = await getPoliciesBySmartMeterId(smartMeterId);
+            setSmartMeterPolicies(smartMeterPolicies);
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', `Failed to load smart meter policies!`);
         }
     };
 
@@ -60,6 +92,9 @@ const SmartMeterDetailsPage = () => {
     const openCreatePolicyDialog = async () => {
         await dialogs.open(CustomCreatePolicyDialog, {
             smartMeterId: smartMeter?.id ?? '',
+            reloadPolicies: (smartMeterId: string) => {
+                void loadSmartMeterPolicies(smartMeterId);
+            },
         });
     };
 
@@ -68,20 +103,18 @@ const SmartMeterDetailsPage = () => {
     };
 
     return (
-        <>
+        <PageContainer title={''} breadcrumbs={breadcrumbs}>
             {smartMeter == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
             ) : (
                 <>
-                    <Typography variant={'h4'}>{smartMeter.name}</Typography>
                     <div
                         style={{
                             display: 'flex',
                             alignItems: 'center',
                             flexDirection: 'column',
-                            height: '100%',
                             width: '100%',
                             gap: '10px',
                         }}>
@@ -119,6 +152,13 @@ const SmartMeterDetailsPage = () => {
                         </Button>
                     </div>
 
+                    <div style={{ marginTop: '20px', width: '100%' }}>
+                        <Typography variant="h5" style={{ marginBottom: '10px' }}>
+                            Smart Meter Policies
+                        </Typography>
+                        <SmartMeterPoliciesTable policies={smartMeterPolicies || []} />
+                    </div>
+
                     <MetadataDrawer
                         smartMeter={smartMeter}
                         isDrawerOpen={isDrawerOpen}
@@ -129,7 +169,7 @@ const SmartMeterDetailsPage = () => {
                     />
                 </>
             )}
-        </>
+        </PageContainer>
     );
 };
 

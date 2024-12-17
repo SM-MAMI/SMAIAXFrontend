@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import { Download } from '@mui/icons-material';
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { EncryptionService } from '../../services/EncryptionService.ts';
+import { EncryptionService } from '../../utils/encryptionService.ts';
 import CustomPasswordFormControl from '../CustomPasswordFormControl.tsx';
 
 export default function CustomDialogWithDeviceConfiguration({ open, onClose }: Readonly<DialogProps>) {

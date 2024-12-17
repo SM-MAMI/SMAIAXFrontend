@@ -1,4 +1,4 @@
-import { createTheme, alpha, Shadows } from '@mui/material/styles';
+import { alpha, createTheme, Shadows } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
@@ -116,6 +116,22 @@ export const colorSchemes = {
             },
             baseShadow: 'hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px',
         },
+        components: {
+            MuiTableCell: {
+                styleOverrides: {
+                    stickyHeader: {
+                        backgroundColor: gray[100],
+                    },
+                },
+            },
+            MuiContainer: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: 'hsl(0, 0%, 99%)',
+                    },
+                },
+            },
+        },
     },
     dark: {
         palette: {
@@ -163,6 +179,22 @@ export const colorSchemes = {
                 selected: alpha(gray[600], 0.3),
             },
             baseShadow: 'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px',
+        },
+        components: {
+            MuiTableCell: {
+                styleOverrides: {
+                    stickyHeader: {
+                        backgroundColor: gray[800],
+                    },
+                },
+            },
+            MuiContainer: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: gray[900],
+                    },
+                },
+            },
         },
     },
 };

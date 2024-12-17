@@ -34,6 +34,12 @@ export interface PolicyDto {
     'id'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof PolicyDto
+     */
+    'name'?: string | null;
+    /**
+     * 
      * @type {MeasurementResolution}
      * @memberof PolicyDto
      */
