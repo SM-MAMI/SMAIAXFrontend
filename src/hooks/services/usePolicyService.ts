@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
-import { PolicyCreateDto, ProblemDetails } from '../../api/openAPI';
+import { PolicyCreateDto, PolicyDto, ProblemDetails } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const usePolicyService = () => {
@@ -16,7 +16,20 @@ export const usePolicyService = () => {
         async (policyCreateDto: PolicyCreateDto): Promise<string> => {
             try {
                 const response = await policyApi.createPolicy(policyCreateDto);
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [policyApi]
+    );
 
+    const getPoliciesBySmartMeterId = useCallback(
+        async (smartMeterId: string): Promise<PolicyDto[]> => {
+            try {
+                const response = await policyApi.getPolicies(smartMeterId);
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -29,5 +42,6 @@ export const usePolicyService = () => {
 
     return {
         createPolicy,
+        getPoliciesBySmartMeterId,
     };
 };
