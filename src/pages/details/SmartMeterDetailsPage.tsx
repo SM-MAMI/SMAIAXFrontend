@@ -115,7 +115,6 @@ const SmartMeterDetailsPage = () => {
                             display: 'flex',
                             alignItems: 'center',
                             flexDirection: 'column',
-                            height: '100%',
                             width: '100%',
                             gap: '10px',
                         }}>

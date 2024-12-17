@@ -80,7 +80,6 @@ const SmartMetersPage = () => {
                         alignItems: 'center',
                         gap: '1em',
                         padding: '1em',
-                        flexGrow: 1,
                     }}>
                     {!smartMeters ? (
                         <CircularProgress size="3em" />
