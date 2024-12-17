@@ -19,6 +19,7 @@ import { DialogProps } from '@toolpad/core';
 
 interface CreatePolicyDialogPayload {
     smartMeterId: string;
+    reloadPolicies: (smartMeterId: string) => void;
 }
 
 const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
@@ -62,6 +63,8 @@ const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogPro
         try {
             await createPolicy(policyCreateDto);
             showSnackbar('success', 'Successfully created policy!');
+
+            payload.reloadPolicies(payload.smartMeterId);
 
             void onClose();
         } catch (error) {
