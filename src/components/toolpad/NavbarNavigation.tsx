@@ -78,12 +78,8 @@ const NavbarNavigation = () => {
         }
 
         try {
-            const { sub, unique_name, email } = jwtDecode<
-                JwtPayload & {
-                    unique_name: string;
-                    email: string;
-                }
-            >(accessToken);
+            const decodedAccessToken = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
+            const { sub, unique_name, email } = decodedAccessToken;
 
             setSession({ user: { id: sub, name: unique_name, email } });
         } catch (error) {

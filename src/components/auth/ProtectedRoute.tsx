@@ -1,18 +1,49 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { useAuthenticationService } from '../../hooks/services/useAuthenticationService.ts';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const accessToken = localStorage.getItem('access_token');
-    const refreshToken = localStorage.getItem('refresh_token');
+    const { refresh } = useAuthenticationService();
+    const navigate = useNavigate();
 
-    if (!accessToken || !refreshToken) {
-        return <Navigate to={SmaiaXAbsoluteRoutes.SIGN_IN} replace />;
-    }
+    useEffect(() => {
+        const checkTokens = async () => {
+            const accessToken = localStorage.getItem('access_token');
+            const refreshToken = localStorage.getItem('refresh_token');
+
+            if (!accessToken || !refreshToken) {
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                return;
+            }
+
+            try {
+                const decodedAccessToken = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
+
+                if (!decodedAccessToken.exp) {
+                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                    return;
+                } else if (decodedAccessToken.exp < Date.now()) {
+                    const newTokens = await refresh({ accessToken, refreshToken });
+                    localStorage.setItem('access_token', newTokens.accessToken);
+                    localStorage.setItem('refresh_token', newTokens.refreshToken);
+                }
+            } catch (e) {
+                console.error(e);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                return;
+            }
+        };
+
+        void checkTokens();
+    }, [navigate, refresh]);
 
     return <>{children}</>;
 };
