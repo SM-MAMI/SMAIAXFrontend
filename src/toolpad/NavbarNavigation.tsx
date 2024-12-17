@@ -69,34 +69,57 @@ const customTheme = createTheme({
 const NavbarNavigation = () => {
     const navigate = useNavigate();
 
-    const { logout } = useAuthenticationService();
+    const { logout, refresh } = useAuthenticationService();
 
     const [session, setSession] = React.useState<Session | null>();
 
     const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
 
     React.useEffect(() => {
-        const accessToken = localStorage.getItem('access_token');
+        const fetchSession = async () => {
+            const accessToken = localStorage.getItem('access_token');
+            const refreshToken = localStorage.getItem('refresh_token');
 
-        if (!accessToken) {
-            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
-            return;
-        }
+            if (!accessToken || !refreshToken) {
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                return;
+            }
 
-        try {
-            const { sub, unique_name, email } = jwtDecode<
-                JwtPayload & {
-                    unique_name: string;
-                    email: string;
+            try {
+                const decodedAccessToken = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
+                const { sub, unique_name, email, exp } = decodedAccessToken;
+
+                if (!exp) {
+                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                    return;
+                } else if (exp < Date.now()) {
+                    const newTokens = await refresh({ accessToken, refreshToken });
+                    localStorage.setItem('access_token', newTokens.accessToken);
+                    localStorage.setItem('refresh_token', newTokens.refreshToken);
+
+                    const decodedNewAccessToken = jwtDecode<JwtPayload & { unique_name: string; email: string }>(
+                        newTokens.accessToken
+                    );
+                    setSession({
+                        user: {
+                            id: decodedNewAccessToken.sub,
+                            name: decodedNewAccessToken.unique_name,
+                            email: decodedNewAccessToken.email,
+                        },
+                    });
+                } else {
+                    setSession({ user: { id: sub, name: unique_name, email } });
                 }
-            >(accessToken);
+            } catch (error) {
+                console.error(error);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+            }
+        };
 
-            setSession({ user: { id: sub, name: unique_name, email } });
-        } catch (error) {
-            console.error(error);
-            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
-        }
-    }, [navigate]);
+        void fetchSession();
+    }, [navigate, refresh]);
 
     const authentication = React.useMemo(() => {
         return {
