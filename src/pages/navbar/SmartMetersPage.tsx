@@ -29,13 +29,13 @@ const SmartMetersPage = () => {
 
     const loadSmartMeters = async (recentlyAddedSmartMeterName?: string) => {
         try {
-            const sms = await getSmartMeters();
-            const sortedSms = sms
+            const smartMeter = await getSmartMeters();
+            const sortedSmartMeter = smartMeter
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) =>
                     a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
                 );
-            setSmartMeters(sortedSms);
+            setSmartMeters(sortedSmartMeter);
             setRecentlyAddedSmartMeterName(recentlyAddedSmartMeterName);
 
             if (recentlyAddedSmartMeterName) {
