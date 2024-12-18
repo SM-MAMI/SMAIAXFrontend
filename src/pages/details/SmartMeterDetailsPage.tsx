@@ -1,6 +1,6 @@
 import { useActivePage, useDialogs } from '@toolpad/core';
 import { PolicyDto, SmartMeterDto } from '../../api/openAPI';
-import { useLocation, useParams } from 'react-router-dom';
+import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
@@ -14,13 +14,18 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesTable.tsx';
 
+type LocationState = {
+    openDialog?: boolean;
+};
+
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const params = useParams<{ id: string }>();
-    const location = useLocation();
+    const location = useLocation() as Location<LocationState>;
+
     const activePage = useActivePage();
     const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
@@ -43,8 +48,7 @@ const SmartMeterDetailsPage = () => {
     useEffect(() => {
         void loadSmartMeter();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (location.state?.openDialog === true) {
+        if (location.state.openDialog === true) {
             void openCreateEditMetadataDialog();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,6 +58,7 @@ const SmartMeterDetailsPage = () => {
         if (smartMeter?.id) {
             void loadSmartMeterPolicies(smartMeter.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
 
     const loadSmartMeter = async () => {
