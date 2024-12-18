@@ -1,4 +1,4 @@
-import { CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
@@ -71,52 +71,59 @@ const SmartMetersPage = () => {
 
     return (
         <PageContainer title={''}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-                <div style={{ padding: '1em' }}>
-                    <Grid
-                        container
-                        spacing={2}
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        sx={{ width: '100%' }}
-                        component="div">
-                        {!smartMeters ? (
-                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'center' }} component="div">
-                                <CircularProgress size="3em" />
-                            </Grid>
-                        ) : (
-                            smartMeters.map((smartMeterOverview) => (
+            {!smartMeters ? (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                        width: '100%',
+                    }}>
+                    <CircularProgress size="3em" />
+                </Box>
+            ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+                    <Box sx={{ padding: '1em' }}>
+                        <Grid
+                            container
+                            spacing={2}
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            sx={{ width: '100%' }}
+                            component="div">
+                            {smartMeters.map((smartMeterOverview) => (
                                 <Grid size={isSmallScreen ? 12 : 6} key={smartMeterOverview.id} component="div">
                                     <CustomSmartMeterCard
                                         smartMeterOverview={smartMeterOverview}
                                         navigateToDetails={() => {
-                                            navigate(`/smart-meters/${smartMeterOverview.id}`);
+                                            navigate(smartMeterOverview.id);
                                         }}
                                         kebabItems={[
                                             {
                                                 name: 'Device configuration',
-                                                onClick: () => openDialogWithDeviceConfigurationDialog(),
+                                                onClick: () => void openDialogWithDeviceConfigurationDialog(),
                                             },
                                         ]}
                                         isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
                                     />
                                 </Grid>
-                            ))
-                        )}
-                    </Grid>
-                </div>
+                            ))}
+                        </Grid>
+                    </Box>
 
-                <div style={{ display: 'flex', justifyContent: 'right', paddingRight: '1em' }}>
-                    <Button
-                        variant="contained"
-                        size="medium"
-                        onClick={() => {
-                            void openAddSmartMeterDialog();
-                        }}>
-                        Add Smart Meter
-                    </Button>
-                </div>
-            </div>
+                    <Box sx={{ display: 'flex', justifyContent: 'right', paddingRight: '1em' }}>
+                        <Button
+                            variant="contained"
+                            size="medium"
+                            onClick={() => {
+                                void openAddSmartMeterDialog();
+                            }}>
+                            Add Smart Meter
+                        </Button>
+                    </Box>
+                </Box>
+            )}
         </PageContainer>
     );
 };
