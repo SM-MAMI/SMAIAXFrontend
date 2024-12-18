@@ -28,7 +28,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 if (!decodedAccessToken.exp) {
                     navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                     return;
-                } else if (decodedAccessToken.exp < Date.now()) {
+                }
+
+                const utcNowInMs = Date.now();
+                const utcExpirationDateInMs = decodedAccessToken.exp * 1000;
+                if (utcExpirationDateInMs < utcNowInMs) {
                     const newTokens = await refresh({ accessToken, refreshToken });
                     localStorage.setItem('access_token', newTokens.accessToken);
                     localStorage.setItem('refresh_token', newTokens.refreshToken);
