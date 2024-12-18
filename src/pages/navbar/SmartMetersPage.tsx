@@ -72,14 +72,7 @@ const SmartMetersPage = () => {
     return (
         <PageContainer title={''}>
             {!smartMeters ? (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%',
-                        width: '100%',
-                    }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </Box>
             ) : (
