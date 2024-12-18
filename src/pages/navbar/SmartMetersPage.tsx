@@ -7,17 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
-import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
 import Button from '@mui/material/Button';
 import CustomSmartMeterCard from '../../components/smartMeter/CustomSmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
+import Grid from '@mui/material/Grid2';
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryTabletMaxWidthStr);
     const dialogs = useDialogs();
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
@@ -71,39 +72,41 @@ const SmartMetersPage = () => {
     return (
         <PageContainer title={''}>
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: isSmallScreen ? 'column' : 'row',
-                        flexWrap: isSmallScreen ? 'nowrap' : 'wrap',
-                        justifyContent: isSmallScreen ? 'center' : 'space-evenly',
-                        alignItems: 'center',
-                        gap: '1em',
-                        padding: '1em',
-                    }}>
-                    {!smartMeters ? (
-                        <CircularProgress size="3em" />
-                    ) : (
-                        smartMeters.map((smartMeterOverview) => (
-                            <CustomSmartMeterCard
-                                key={smartMeterOverview.id}
-                                smartMeterOverview={smartMeterOverview}
-                                navigateToDetails={() => {
-                                    navigate(`/smart-meters/${smartMeterOverview.id}`);
-                                }}
-                                kebabItems={[
-                                    {
-                                        name: 'Device configuration',
-                                        onClick: () => void openDialogWithDeviceConfigurationDialog(),
-                                    },
-                                ]}
-                                isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
-                            />
-                        ))
-                    )}
+                <div style={{ padding: '1em' }}>
+                    <Grid
+                        container
+                        spacing={2}
+                        justifyContent="flex-start"
+                        alignItems="center"
+                        sx={{ width: '100%' }}
+                        component="div">
+                        {!smartMeters ? (
+                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'center' }} component="div">
+                                <CircularProgress size="3em" />
+                            </Grid>
+                        ) : (
+                            smartMeters.map((smartMeterOverview) => (
+                                <Grid size={isSmallScreen ? 12 : 6} key={smartMeterOverview.id} component="div">
+                                    <CustomSmartMeterCard
+                                        smartMeterOverview={smartMeterOverview}
+                                        navigateToDetails={() => {
+                                            navigate(`/smart-meters/${smartMeterOverview.id}`);
+                                        }}
+                                        kebabItems={[
+                                            {
+                                                name: 'Device configuration',
+                                                onClick: () => openDialogWithDeviceConfigurationDialog(),
+                                            },
+                                        ]}
+                                        isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
+                                    />
+                                </Grid>
+                            ))
+                        )}
+                    </Grid>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'right', paddingRight: '1em' }}>
                     <Button
                         variant="contained"
                         size="medium"

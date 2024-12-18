@@ -14,6 +14,7 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesTable.tsx';
 import KebabMenu from '../../components/menus/KebabMenu.tsx';
+import Button from '@mui/material/Button';
 
 type LocationState =
     | {
@@ -129,12 +130,6 @@ const SmartMeterDetailsPage = () => {
                 void openCustomDialogWithDeviceConfiguration();
             },
         },
-        {
-            name: 'Create policy',
-            onClick: () => {
-                void openCreatePolicyDialog();
-            },
-        },
     ];
 
     return (
@@ -145,20 +140,32 @@ const SmartMeterDetailsPage = () => {
                 </div>
             ) : (
                 <>
-                    <div style={{ marginTop: '20px', width: '100%' }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: '10px',
-                            }}>
-                            <Typography variant="h5" style={{}}>
-                                Smart Meter Policies
-                            </Typography>
-                            <KebabMenu items={kebabItems} />
+                    <div style={{ padding: '1em', width: '100%' }}>
+                        <Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: '10px',
+                                }}>
+                                <Typography variant="h5" style={{}}>
+                                    Smart Meter Policies
+                                </Typography>
+                                <KebabMenu items={kebabItems} />
+                            </Box>
+                            <SmartMeterPoliciesTable policies={smartMeterPolicies || []} />
                         </Box>
-                        <SmartMeterPoliciesTable policies={smartMeterPolicies || []} />
+                        <div style={{ display: 'flex', justifyContent: 'right', marginTop: '1em' }}>
+                            <Button
+                                variant="contained"
+                                size="medium"
+                                onClick={() => {
+                                    void openCreatePolicyDialog();
+                                }}>
+                                Create policy
+                            </Button>
+                        </div>
                     </div>
 
                     <MetadataDrawer
