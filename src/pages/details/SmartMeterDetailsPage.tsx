@@ -134,7 +134,7 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <PageContainer title={''} breadcrumbs={breadcrumbs}>
-            {smartMeter == undefined ? (
+            {smartMeter == undefined || smartMeterPolicies == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
@@ -154,7 +154,7 @@ const SmartMeterDetailsPage = () => {
                                 </Typography>
                                 <KebabMenu items={kebabItems} />
                             </Box>
-                            <SmartMeterPoliciesTable policies={smartMeterPolicies || []} />
+                            <SmartMeterPoliciesTable policies={smartMeterPolicies} />
                         </Box>
                         <div style={{ display: 'flex', justifyContent: 'right', marginTop: '1em' }}>
                             <Button
