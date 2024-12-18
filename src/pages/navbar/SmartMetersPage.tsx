@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
-import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
 import Button from '@mui/material/Button';
 import CustomSmartMeterCard from '../../components/smartMeter/CustomSmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
@@ -17,7 +17,7 @@ const SmartMetersPage = () => {
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
     const dialogs = useDialogs();
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
@@ -29,13 +29,13 @@ const SmartMetersPage = () => {
 
     const loadSmartMeters = async (recentlyAddedSmartMeterName?: string) => {
         try {
-            const smartMeter = await getSmartMeters();
-            const sortedSmartMeter = smartMeter
+            const smartMeters = await getSmartMeters();
+            const sortedSmartMeters = smartMeters
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) =>
                     a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
                 );
-            setSmartMeters(sortedSmartMeter);
+            setSmartMeters(sortedSmartMeters);
             setRecentlyAddedSmartMeterName(recentlyAddedSmartMeterName);
 
             if (recentlyAddedSmartMeterName) {

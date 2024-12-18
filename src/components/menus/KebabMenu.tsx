@@ -70,7 +70,7 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
                     placement="bottom-start"
                     transition
                     disablePortal
-                    sx={{ zIndex: 1 }}>
+                    sx={{ zIndex: 100 }}>
                     {({ TransitionProps, placement }) => (
                         <Grow
                             {...TransitionProps}

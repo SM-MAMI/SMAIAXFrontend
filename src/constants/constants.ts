@@ -1,7 +1,8 @@
 export const EmailRegex = /^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/;
 export const UsernameRegex = /^[a-zA-Z0-9]+$/;
 export const PasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
-export const MediaQueryMaxWidthStr = '(max-width:600px)';
+export const MediaQueryMobileMaxWidthStr = '(max-width:600px)';
+export const MediaQueryTabletMaxWidthStr = '(max-width:900px)';
 export const SmaiaxRoutes = {
     HOME: '/',
     ORDERS: 'orders',

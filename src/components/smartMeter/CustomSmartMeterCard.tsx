@@ -1,5 +1,5 @@
 import { Card, CardActionArea, CardContent, CardHeader, Typography, useMediaQuery } from '@mui/material';
-import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
 import KebabMenu from '../menus/KebabMenu.tsx';
 
@@ -16,7 +16,7 @@ const CustomSmartMeterCard = ({
     kebabItems,
     isRecentlyAdded,
 }: CustomSmartMeterCardProps) => {
-    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryTabletMaxWidthStr);
 
     return (
         <Card
