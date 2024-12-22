@@ -38,6 +38,7 @@ const BRANDING = {
                 fontFamily: 'Montserrat',
                 fontWeight: 700,
                 fontSize: 18,
+                color: '#33bde4',
             }}>
             S M A I A - X
         </Typography>
