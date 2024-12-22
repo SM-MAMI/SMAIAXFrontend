@@ -2,8 +2,8 @@
 .npmignore
 api.ts
 apis/authentication-api.ts
+apis/measurement-api.ts
 apis/policy-api.ts
-apis/policyrequest-api.ts
 apis/smart-meter-api.ts
 base.ts
 common.ts
@@ -15,6 +15,7 @@ models/index.ts
 models/location-dto.ts
 models/location-resolution.ts
 models/login-dto.ts
+models/measurement-raw-dto.ts
 models/measurement-resolution.ts
 models/metadata-create-dto.ts
 models/metadata-dto.ts
@@ -22,7 +23,6 @@ models/metadata-update-dto.ts
 models/name-dto.ts
 models/policy-create-dto.ts
 models/policy-dto.ts
-models/policy-request-create-dto.ts
 models/problem-details.ts
 models/register-dto.ts
 models/smart-meter-create-dto.ts

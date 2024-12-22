@@ -15,7 +15,7 @@
 
 
 export * from './apis/authentication-api';
+export * from './apis/measurement-api';
 export * from './apis/policy-api';
-export * from './apis/policyrequest-api';
 export * from './apis/smart-meter-api';
 
