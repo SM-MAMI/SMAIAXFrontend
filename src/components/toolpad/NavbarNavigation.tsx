@@ -2,7 +2,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import { MediaQueryMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../constants/constants.ts';
+import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../constants/constants.ts';
 import { ElectricMeter } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../../hooks/services/useAuthenticationService.ts';
@@ -68,7 +68,7 @@ const NavbarNavigation = () => {
 
     const [session, setSession] = React.useState<Session | null>();
 
-    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
 
     React.useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
