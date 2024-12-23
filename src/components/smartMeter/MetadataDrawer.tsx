@@ -75,37 +75,37 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
                             <Typography variant="subtitle2" color="textSecondary">
                                 Street
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.location.streetName ?? 'N/A'}</Typography>
+                            <Typography variant="body1">{selectedMetadata.location?.streetName ?? 'N/A'}</Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="subtitle2" color="textSecondary">
                                 City
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.location.city ?? 'N/A'}</Typography>
+                            <Typography variant="body1">{selectedMetadata.location?.city ?? 'N/A'}</Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="subtitle2" color="textSecondary">
                                 State
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.location.state ?? 'N/A'}</Typography>
+                            <Typography variant="body1">{selectedMetadata.location?.state ?? 'N/A'}</Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="subtitle2" color="textSecondary">
                                 Country
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.location.country ?? 'N/A'}</Typography>
+                            <Typography variant="body1">{selectedMetadata.location?.country ?? 'N/A'}</Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="subtitle2" color="textSecondary">
                                 Continent
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.location.continent ?? 'N/A'}</Typography>
+                            <Typography variant="body1">{selectedMetadata.location?.continent ?? 'N/A'}</Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="subtitle2" color="textSecondary">
                                 Household Size
                             </Typography>
-                            <Typography variant="body1">{selectedMetadata.householdSize}</Typography>
+                            <Typography variant="body1">{selectedMetadata.householdSize ?? 'N/A'}</Typography>
                         </Grid>
 
                         <Button

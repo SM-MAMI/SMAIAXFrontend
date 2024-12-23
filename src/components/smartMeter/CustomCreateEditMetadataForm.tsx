@@ -7,8 +7,8 @@ import { Continent, LocationDto } from '../../api/openAPI';
 import { isNullOrEmptyOrWhiteSpaces } from '../../hooks/useValidation.ts';
 
 interface CustomCreateEditMetadataFormProps {
-    location: LocationDto;
-    setLocation: (location: (prevLocation: LocationDto) => LocationDto) => void;
+    location: LocationDto | undefined;
+    setLocation: (location?: (prevLocation?: LocationDto) => LocationDto) => void;
     householdSize: number | undefined;
     setHouseholdSize: (size?: number) => void;
     validFrom: string;
@@ -59,7 +59,7 @@ const CustomCreateEditMetadataForm = ({
                         name: 'continent',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.continent}
+                    value={location?.continent}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({
                             ...prevLocation,
@@ -81,14 +81,14 @@ const CustomCreateEditMetadataForm = ({
                     <option value={Continent.SouthAmerica}>South America</option>
                 </NativeSelect>
             </FormControl>
-            <FormControl disabled={isNullOrEmptyOrWhiteSpaces(location.continent?.toString())}>
+            <FormControl disabled={isNullOrEmptyOrWhiteSpaces(location?.continent?.toString())}>
                 <FormLabel htmlFor="country">Select a Country</FormLabel>
                 <NativeSelect
                     inputProps={{
                         name: 'country',
                         id: 'uncontrolled-native',
                     }}
-                    value={location.country}
+                    value={location?.country}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, country: e.target.value }));
                     }}
@@ -109,8 +109,8 @@ const CustomCreateEditMetadataForm = ({
                     variant="standard"
                     id="state"
                     name="state"
-                    value={location.state}
-                    disabled={isNullOrEmptyOrWhiteSpaces(location.country)}
+                    value={location?.state}
+                    disabled={isNullOrEmptyOrWhiteSpaces(location?.country)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, state: e.target.value }));
                     }}
@@ -122,8 +122,8 @@ const CustomCreateEditMetadataForm = ({
                     variant="standard"
                     id="city"
                     name="city"
-                    value={location.city}
-                    disabled={isNullOrEmptyOrWhiteSpaces(location.state)}
+                    value={location?.city}
+                    disabled={isNullOrEmptyOrWhiteSpaces(location?.state)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, city: e.target.value }));
                     }}
@@ -135,8 +135,8 @@ const CustomCreateEditMetadataForm = ({
                     variant="standard"
                     id="streetname"
                     name="streetname"
-                    value={location.streetName}
-                    disabled={isNullOrEmptyOrWhiteSpaces(location.city)}
+                    value={location?.streetName}
+                    disabled={isNullOrEmptyOrWhiteSpaces(location?.city)}
                     onChange={(e) => {
                         setLocation((prevLocation) => ({ ...prevLocation, streetName: e.target.value }));
                     }}
