@@ -52,8 +52,7 @@ const PolicySearchPage = () => {
         void loadPolicies(price, measurementResolution);
     };
 
-    const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleReset = () => {
         void loadPolicies();
     };
 
