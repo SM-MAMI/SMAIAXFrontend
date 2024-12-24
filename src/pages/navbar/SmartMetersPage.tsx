@@ -1,4 +1,4 @@
-import { CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
@@ -7,17 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
 import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
-import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
 import Button from '@mui/material/Button';
 import CustomSmartMeterCard from '../../components/smartMeter/CustomSmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
+import Grid from '@mui/material/Grid2';
 
 const SmartMetersPage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryTabletMaxWidthStr);
     const dialogs = useDialogs();
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
@@ -29,13 +30,13 @@ const SmartMetersPage = () => {
 
     const loadSmartMeters = async (recentlyAddedSmartMeterName?: string) => {
         try {
-            const sms = await getSmartMeters();
-            const sortedSms = sms
+            const smartMeters = await getSmartMeters();
+            const sortedSmartMeters = smartMeters
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) =>
                     a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
                 );
-            setSmartMeters(sortedSms);
+            setSmartMeters(sortedSmartMeters);
             setRecentlyAddedSmartMeterName(recentlyAddedSmartMeterName);
 
             if (recentlyAddedSmartMeterName) {
@@ -70,50 +71,52 @@ const SmartMetersPage = () => {
 
     return (
         <PageContainer title={''}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: isSmallScreen ? 'column' : 'row',
-                        flexWrap: isSmallScreen ? 'nowrap' : 'wrap',
-                        justifyContent: isSmallScreen ? 'center' : 'space-evenly',
-                        alignItems: 'center',
-                        gap: '1em',
-                        padding: '1em',
-                    }}>
-                    {!smartMeters ? (
-                        <CircularProgress size="3em" />
-                    ) : (
-                        smartMeters.map((smartMeterOverview) => (
-                            <CustomSmartMeterCard
-                                key={smartMeterOverview.id}
-                                smartMeterOverview={smartMeterOverview}
-                                navigateToDetails={() => {
-                                    navigate(`/smart-meters/${smartMeterOverview.id}`);
-                                }}
-                                kebabItems={[
-                                    {
-                                        name: 'Device configuration',
-                                        onClick: () => void openDialogWithDeviceConfigurationDialog(),
-                                    },
-                                ]}
-                                isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
-                            />
-                        ))
-                    )}
-                </div>
+            {!smartMeters ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress size="3em" />
+                </Box>
+            ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+                    <Box sx={{ padding: '1em' }}>
+                        <Grid
+                            container
+                            spacing={2}
+                            justifyContent="flex-start"
+                            alignItems="center"
+                            sx={{ width: '100%' }}
+                            component="div">
+                            {smartMeters.map((smartMeterOverview) => (
+                                <Grid size={isSmallScreen ? 12 : 6} key={smartMeterOverview.id} component="div">
+                                    <CustomSmartMeterCard
+                                        smartMeterOverview={smartMeterOverview}
+                                        navigateToDetails={() => {
+                                            navigate(smartMeterOverview.id);
+                                        }}
+                                        kebabItems={[
+                                            {
+                                                name: 'Device configuration',
+                                                onClick: () => void openDialogWithDeviceConfigurationDialog(),
+                                            },
+                                        ]}
+                                        isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
 
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                        variant="contained"
-                        size="medium"
-                        onClick={() => {
-                            void openAddSmartMeterDialog();
-                        }}>
-                        Add Smart Meter
-                    </Button>
-                </div>
-            </div>
+                    <Box sx={{ display: 'flex', justifyContent: 'right', paddingRight: '1em' }}>
+                        <Button
+                            variant="contained"
+                            size="medium"
+                            onClick={() => {
+                                void openAddSmartMeterDialog();
+                            }}>
+                            Add Smart Meter
+                        </Button>
+                    </Box>
+                </Box>
+            )}
         </PageContainer>
     );
 };

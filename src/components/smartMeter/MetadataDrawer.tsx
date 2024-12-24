@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
-import { MediaQueryMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
 import CustomCreateEditMetadataDialog from '../dialogs/CustomCreateEditMetadataDialog.tsx';
 import { useDialogs } from '@toolpad/core';
 
@@ -30,7 +30,7 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
         });
     };
 
-    const isSmallScreen = useMediaQuery(MediaQueryMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
     const marginTop = isSmallScreen ? 7 : 8;
 
     const validFromLabel = 'Valid From';

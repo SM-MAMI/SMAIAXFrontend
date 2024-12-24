@@ -33,7 +33,7 @@ const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogPro
     const validatePolicyName = (): boolean => {
         if (!policyName.trim()) {
             setPolicyNameError(true);
-            setPolicyNameErrorMessage('Smart meter name is required.');
+            setPolicyNameErrorMessage('Policy name is required.');
             return false;
         }
 
@@ -89,9 +89,9 @@ const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogPro
                             onChange={(e) => {
                                 setPolicyName(e.target.value);
                             }}
-                            id="smartMeterName"
-                            placeholder="Enter Smart Meter Name"
-                            name="smartMeterName"
+                            id="policyName"
+                            placeholder="Enter Policy Name"
+                            name="policyName"
                             color={policyNameError ? 'error' : 'primary'}
                             error={policyNameError}
                             helperText={policyNameErrorMessage}

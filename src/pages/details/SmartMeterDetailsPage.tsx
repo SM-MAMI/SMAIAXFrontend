@@ -1,11 +1,11 @@
 import { useActivePage, useDialogs } from '@toolpad/core';
 import { PolicyDto, SmartMeterDto } from '../../api/openAPI';
-import { useLocation, useParams } from 'react-router-dom';
+import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import invariant from '../../utils/tiny-invariant.ts';
-import { Button, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import CustomCreateEditMetadataDialog from '../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
 import CustomCreatePolicyDialog from '../../components/dialogs/CustomCreatePolicyDialog.tsx';
 import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
@@ -13,6 +13,14 @@ import MetadataDrawer from '../../components/smartMeter/MetadataDrawer.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesTable.tsx';
+import KebabMenu from '../../components/menus/KebabMenu.tsx';
+import Button from '@mui/material/Button';
+
+type LocationState =
+    | {
+          openDialog?: boolean;
+      }
+    | undefined;
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
@@ -20,7 +28,8 @@ const SmartMeterDetailsPage = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const params = useParams<{ id: string }>();
-    const location = useLocation();
+    const location = useLocation() as Location<LocationState>;
+
     const activePage = useActivePage();
     const dialogs = useDialogs();
     const { showSnackbar } = useSnackbar();
@@ -43,7 +52,6 @@ const SmartMeterDetailsPage = () => {
     useEffect(() => {
         void loadSmartMeter();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (location.state?.openDialog === true) {
             void openCreateEditMetadataDialog();
         }
@@ -54,6 +62,7 @@ const SmartMeterDetailsPage = () => {
         if (smartMeter?.id) {
             void loadSmartMeterPolicies(smartMeter.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
 
     const loadSmartMeter = async () => {
@@ -102,61 +111,61 @@ const SmartMeterDetailsPage = () => {
         await dialogs.open(CustomDialogWithDeviceConfiguration);
     };
 
+    const kebabItems = [
+        {
+            name: 'Show metadata',
+            onClick: () => {
+                setIsDrawerOpen(true);
+            },
+        },
+        {
+            name: 'Create metadata',
+            onClick: () => {
+                void openCreateEditMetadataDialog();
+            },
+        },
+        {
+            name: 'Device configuration',
+            onClick: () => {
+                void openCustomDialogWithDeviceConfiguration();
+            },
+        },
+    ];
+
     return (
         <PageContainer title={''} breadcrumbs={breadcrumbs}>
-            {smartMeter == undefined ? (
+            {smartMeter == undefined || smartMeterPolicies == undefined ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
             ) : (
                 <>
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                            width: '100%',
-                            gap: '10px',
-                        }}>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => {
-                                setIsDrawerOpen(true);
-                            }}>
-                            Show Metadata
-                        </Button>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => {
-                                void openCreateEditMetadataDialog();
-                            }}>
-                            Create Metadata
-                        </Button>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => {
-                                void openCustomDialogWithDeviceConfiguration();
-                            }}>
-                            Device configuration
-                        </Button>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            onClick={() => {
-                                void openCreatePolicyDialog();
-                            }}>
-                            Create Policy
-                        </Button>
-                    </div>
-
-                    <div style={{ marginTop: '20px', width: '100%' }}>
-                        <Typography variant="h5" style={{ marginBottom: '10px' }}>
-                            Smart Meter Policies
-                        </Typography>
-                        <SmartMeterPoliciesTable policies={smartMeterPolicies || []} />
+                    <div style={{ padding: '1em', width: '100%' }}>
+                        <Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: '10px',
+                                }}>
+                                <Typography variant="h5" style={{}}>
+                                    Smart Meter Policies
+                                </Typography>
+                                <KebabMenu items={kebabItems} />
+                            </Box>
+                            <SmartMeterPoliciesTable policies={smartMeterPolicies} />
+                        </Box>
+                        <div style={{ display: 'flex', justifyContent: 'right', marginTop: '1em' }}>
+                            <Button
+                                variant="contained"
+                                size="medium"
+                                onClick={() => {
+                                    void openCreatePolicyDialog();
+                                }}>
+                                Create policy
+                            </Button>
+                        </div>
                     </div>
 
                     <MetadataDrawer
