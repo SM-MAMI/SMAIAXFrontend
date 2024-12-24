@@ -21,7 +21,7 @@ const CustomCreateEditMetadataDialog = ({
     onClose,
 }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
     const [title, setTitle] = useState<string>('Add Metadata');
-    const [location, setLocation] = useState<LocationDto | undefined>({});
+    const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
     const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
 
@@ -29,11 +29,16 @@ const CustomCreateEditMetadataDialog = ({
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
-        if (payload.metadata !== undefined) {
-            setTitle('Edit Metadata');
-            setLocation(payload.metadata.location ?? {});
-            setValidFrom(payload.metadata.validFrom);
-            setHouseholdSize(payload.metadata.householdSize ?? undefined);
+        if (payload.metadata === undefined) {
+            return;
+        }
+
+        setTitle('Edit Metadata');
+
+        setLocation(payload.metadata.location as LocationDto);
+        setValidFrom(payload.metadata.validFrom);
+        if (payload.metadata.householdSize) {
+            setHouseholdSize(payload.metadata.householdSize);
         }
     }, [payload.metadata]);
 
