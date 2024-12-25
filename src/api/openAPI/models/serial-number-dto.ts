@@ -14,10 +14,17 @@
 
 
 
-export * from './apis/authentication-api';
-export * from './apis/device-config-api';
-export * from './apis/measurement-api';
-export * from './apis/order-api';
-export * from './apis/policy-api';
-export * from './apis/smart-meter-api';
+/**
+ * 
+ * @export
+ * @interface SerialNumberDto
+ */
+export interface SerialNumberDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof SerialNumberDto
+     */
+    'serialNumber': string;
+}
 

@@ -1,4 +1,5 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
@@ -34,6 +35,12 @@ const NAVIGATION: Navigation = [
         title: 'Policy Search',
         pattern: 'policy-search',
         icon: <Search />,
+    },
+    {
+        segment: SmaiaxRoutes.ORDERS,
+        title: 'Order Connector',
+        pattern: 'orders',
+        icon: <ShoppingCartIcon />,
     },
 ];
 

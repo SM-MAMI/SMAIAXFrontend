@@ -11,6 +11,7 @@ import HomePage from './pages/navbar/HomePage.tsx';
 import { SmaiaxRoutes } from './constants/constants.ts';
 import SmartMeterDetailsPage from './pages/details/SmartMeterDetailsPage.tsx';
 import PolicySearchPage from './pages/navbar/PolicySearchPage.tsx';
+import OrdersPage from './pages/navbar/OrdersPage.tsx';
 
 type ProtectedRouteObject = Omit<NonIndexRouteObject, 'children'> & {
     element: React.ReactNode;
@@ -48,6 +49,10 @@ const protectedRoutes = [
                     {
                         path: SmaiaxRoutes.POLICY_SEARCH,
                         element: <PolicySearchPage />,
+                    },
+                    {
+                        path: SmaiaxRoutes.ORDERS,
+                        element: <OrdersPage />,
                     },
                 ],
             },
