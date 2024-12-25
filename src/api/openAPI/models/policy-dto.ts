@@ -31,31 +31,31 @@ export interface PolicyDto {
      * @type {string}
      * @memberof PolicyDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof PolicyDto
      */
-    'name'?: string | null;
+    'name': string;
     /**
      * 
      * @type {MeasurementResolution}
      * @memberof PolicyDto
      */
-    'measurementResolution'?: MeasurementResolution;
+    'measurementResolution': MeasurementResolution;
     /**
      * 
      * @type {LocationResolution}
      * @memberof PolicyDto
      */
-    'locationResolution'?: LocationResolution;
+    'locationResolution': LocationResolution;
     /**
      * 
      * @type {number}
      * @memberof PolicyDto
      */
-    'price'?: number;
+    'price': number;
 }
 
 

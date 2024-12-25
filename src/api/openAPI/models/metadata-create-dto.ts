@@ -34,12 +34,12 @@ export interface MetadataCreateDto {
      * @type {LocationDto}
      * @memberof MetadataCreateDto
      */
-    'location': LocationDto;
+    'location'?: LocationDto;
     /**
      * 
      * @type {number}
      * @memberof MetadataCreateDto
      */
-    'householdSize': number;
+    'householdSize'?: number | null;
 }
 

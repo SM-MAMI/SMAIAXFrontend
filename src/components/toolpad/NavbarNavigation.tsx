@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { type Navigation, Session } from '@toolpad/core/AppProvider';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../constants/constants.ts';
-import { ElectricMeter } from '@mui/icons-material';
+import { ElectricMeter, Search } from '@mui/icons-material';
 import React from 'react';
 import { useAuthenticationService } from '../../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../../api/openAPI';
@@ -28,6 +28,12 @@ const NAVIGATION: Navigation = [
         title: 'Smart Meters',
         pattern: 'smart-meters{/:id}*',
         icon: <ElectricMeter />,
+    },
+    {
+        segment: SmaiaxRoutes.POLICY_SEARCH,
+        title: 'Policy Search',
+        pattern: 'policy-search',
+        icon: <Search />,
     },
 ];
 

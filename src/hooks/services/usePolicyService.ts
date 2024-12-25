@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
-import { PolicyCreateDto, PolicyDto, ProblemDetails } from '../../api/openAPI';
+import { MeasurementResolution, PolicyCreateDto, PolicyDto, ProblemDetails } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const usePolicyService = () => {
@@ -40,8 +40,23 @@ export const usePolicyService = () => {
         [policyApi]
     );
 
+    const searchPolicies = useCallback(
+        async (maxPrice?: number, measurementResolution?: MeasurementResolution): Promise<PolicyDto[]> => {
+            try {
+                const response = await policyApi.searchPolicies(maxPrice, measurementResolution);
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [policyApi]
+    );
+
     return {
         createPolicy,
         getPoliciesBySmartMeterId,
+        searchPolicies,
     };
 };

@@ -10,6 +10,7 @@ export const SmaiaxRoutes = {
     SIGN_UP: 'sign-up',
     SMART_METERS: 'smart-meters',
     SMART_METER_DETAILS: 'smart-meters/:id',
+    POLICY_SEARCH: 'policy-search',
     NOT_FOUND: '*',
 };
 export const SmaiaXAbsoluteRoutes = {

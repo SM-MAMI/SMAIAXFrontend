@@ -89,16 +89,16 @@ const SmartMeterPoliciesTable = ({ policies }: { policies: PolicyDto[] }) => {
                     {sortedPolicies.length > 0 ? (
                         sortedPolicies.map((policy) => (
                             <TableRow key={policy.id}>
-                                <TableCell>{policy.name ?? 'N/A'}</TableCell>
-                                <TableCell>{policy.price ?? 'N/A'}</TableCell>
-                                <TableCell>{policy.locationResolution ?? 'N/A'}</TableCell>
-                                <TableCell>{policy.measurementResolution ?? 'N/A'}</TableCell>
+                                <TableCell>{policy.name}</TableCell>
+                                <TableCell>{policy.price}</TableCell>
+                                <TableCell>{policy.locationResolution}</TableCell>
+                                <TableCell>{policy.measurementResolution}</TableCell>
                             </TableRow>
                         ))
                     ) : (
                         <TableRow>
                             <TableCell colSpan={4} align="center">
-                                <Typography variant="body1">No smart meter policies yet.</Typography>
+                                <Typography variant="body1">No policies found.</Typography>
                             </TableCell>
                         </TableRow>
                     )}

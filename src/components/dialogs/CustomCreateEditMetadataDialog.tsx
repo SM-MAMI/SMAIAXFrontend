@@ -29,10 +29,15 @@ const CustomCreateEditMetadataDialog = ({
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
-        if (payload.metadata !== undefined) {
-            setTitle('Edit Metadata');
-            setLocation(payload.metadata.location);
-            setValidFrom(payload.metadata.validFrom);
+        if (payload.metadata === undefined) {
+            return;
+        }
+
+        setTitle('Edit Metadata');
+
+        setLocation(payload.metadata.location as LocationDto);
+        setValidFrom(payload.metadata.validFrom);
+        if (payload.metadata.householdSize) {
             setHouseholdSize(payload.metadata.householdSize);
         }
     }, [payload.metadata]);
