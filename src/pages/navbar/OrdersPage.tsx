@@ -55,7 +55,8 @@ const OrdersPage = () => {
             setOrderPending(true);
             setSerialNumber(await orderSmartMeterConnector());
             setActiveStep(activeStep + 1);
-        } catch (e) {
+        } catch (error) {
+            console.log(error);
             showSnackbar('error', 'Failed to place order');
         } finally {
             setOrderPending(false);
@@ -249,7 +250,7 @@ const OrdersPage = () => {
                                             loading={orderPending}
                                             variant="contained"
                                             endIcon={<ChevronRightRoundedIcon />}
-                                            onClick={handlePlaceOrder}
+                                            onClick={void handlePlaceOrder}
                                             sx={{ width: { xs: '100%', sm: 'fit-content' } }}>
                                             Place order
                                         </LoadingButton>

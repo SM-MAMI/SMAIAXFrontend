@@ -58,7 +58,7 @@ const PaymentContainer = styled('div')(({ theme }) => ({
     width: '100%',
     height: 375,
     padding: theme.spacing(3),
-    borderRadius: `calc(${theme.shape.borderRadius}px + 4px)`,
+    borderRadius: `calc(${String(theme.shape.borderRadius)}px + 4px)`,
     border: '1px solid ',
     borderColor: theme.palette.divider,
     background: 'linear-gradient(to bottom right, hsla(220, 35%, 97%, 0.3) 25%, hsla(220, 20%, 88%, 0.3) 100%)',
@@ -128,7 +128,9 @@ export default function PaymentForm() {
                     }}>
                     <Card selected={paymentType === 'creditCard'}>
                         <CardActionArea
-                            onClick={() => setPaymentType('creditCard')}
+                            onClick={() => {
+                                setPaymentType('creditCard');
+                            }}
                             sx={{
                                 '.MuiCardActionArea-focusHighlight': {
                                     backgroundColor: 'transparent',
@@ -158,7 +160,9 @@ export default function PaymentForm() {
                     </Card>
                     <Card selected={paymentType === 'bankTransfer'}>
                         <CardActionArea
-                            onClick={() => setPaymentType('bankTransfer')}
+                            onClick={() => {
+                                setPaymentType('bankTransfer');
+                            }}
                             sx={{
                                 '.MuiCardActionArea-focusHighlight': {
                                     backgroundColor: 'transparent',
