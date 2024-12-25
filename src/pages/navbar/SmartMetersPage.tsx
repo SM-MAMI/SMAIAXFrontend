@@ -32,6 +32,7 @@ const SmartMetersPage = () => {
         try {
             const smartMeters = await getSmartMeters();
             const sortedSmartMeters = smartMeters
+                .filter((smartMeter) => smartMeter.name != null)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) =>
                     a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
