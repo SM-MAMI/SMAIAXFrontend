@@ -250,7 +250,9 @@ const OrdersPage = () => {
                                             loading={orderPending}
                                             variant="contained"
                                             endIcon={<ChevronRightRoundedIcon />}
-                                            onClick={void handlePlaceOrder}
+                                            onClick={() => {
+                                                void handlePlaceOrder();
+                                            }}
                                             sx={{ width: { xs: '100%', sm: 'fit-content' } }}>
                                             Place order
                                         </LoadingButton>
