@@ -2,7 +2,9 @@
 .npmignore
 api.ts
 apis/authentication-api.ts
+apis/device-config-api.ts
 apis/measurement-api.ts
+apis/order-api.ts
 apis/policy-api.ts
 apis/smart-meter-api.ts
 base.ts
@@ -25,6 +27,7 @@ models/policy-create-dto.ts
 models/policy-dto.ts
 models/problem-details.ts
 models/register-dto.ts
+models/serial-number-dto.ts
 models/smart-meter-create-dto.ts
 models/smart-meter-dto.ts
 models/smart-meter-overview-dto.ts

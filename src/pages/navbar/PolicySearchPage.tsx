@@ -59,11 +59,6 @@ const PolicySearchPage = () => {
     return (
         <PageContainer title="">
             <div style={{ marginTop: '20px', width: '100%' }}>
-                <Typography variant="h5" style={{ marginBottom: '10px' }}>
-                    Policies
-                </Typography>
-            </div>
-            <div style={{ marginTop: '20px', width: '100%' }}>
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
@@ -107,6 +102,10 @@ const PolicySearchPage = () => {
                     </DialogActions>
                 </Box>
             </div>
+
+            <Typography variant="h5" style={{ marginBottom: '10px' }}>
+                Policies
+            </Typography>
 
             {policies ? (
                 <div style={{ marginTop: '20px', width: '100%' }}>
