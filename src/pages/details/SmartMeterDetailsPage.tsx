@@ -17,6 +17,10 @@ import KebabMenu from '../../components/menus/KebabMenu.tsx';
 import Button from '@mui/material/Button';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import MeasurementLineChart from '../../components/smartMeter/MeasurementLineChart.tsx';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 type LocationState =
     | {
@@ -28,7 +32,10 @@ const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [measurements, setMeasurements] = useState<MeasurementRawDto[] | undefined>(undefined);
+    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
+    const [measurements, setMeasurements] = useState<MeasurementRawDto[]>([]);
+    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
+    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const params = useParams<{ id: string }>();
     const location = useLocation() as Location<LocationState>;
@@ -94,13 +101,21 @@ const SmartMeterDetailsPage = () => {
     };
 
     const loadMeasurements = async (smartMeterId: string) => {
+        setIsLoadingMeasurements(true);
+
         try {
-            const measurements = await getMeasurements(smartMeterId, '2024-11-04T00:00:00Z', '2024-11-04T00:10:00Z');
+            const measurements = await getMeasurements(
+                smartMeterId,
+                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
+            );
             setMeasurements(measurements);
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load measurements!`);
         }
+
+        setIsLoadingMeasurements(false);
     };
 
     const openCreateEditMetadataDialog = async () => {
@@ -190,13 +205,52 @@ const SmartMeterDetailsPage = () => {
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    marginBottom: '10px',
+                                    marginBottom: '2em',
                                 }}>
                                 <Typography variant="h5" style={{}}>
                                     Measurements
                                 </Typography>
                             </Box>
-                            <MeasurementLineChart measurements={measurements ?? []} />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    marginBottom: '2em',
+                                }}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Start"
+                                        value={startAt}
+                                        maxDate={endAt}
+                                        onChange={(newValue) => {
+                                            if (newValue) setStartAt(newValue);
+                                        }}
+                                    />
+                                    <DatePicker
+                                        label="End"
+                                        value={endAt}
+                                        minDate={startAt}
+                                        onChange={(newValue) => {
+                                            if (newValue) setEndAt(newValue);
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={() => {
+                                        void loadMeasurements(smartMeter.id);
+                                    }}>
+                                    Load data
+                                </Button>
+                            </Box>
+
+                            {isLoadingMeasurements ? (
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <CircularProgress size="3em" />
+                                </div>
+                            ) : (
+                                <MeasurementLineChart measurements={measurements} />
+                            )}
                         </Box>
                     </div>
 
