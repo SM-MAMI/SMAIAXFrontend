@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { MeasurementRawDto } from '../models';
+import type { MeasurementDto } from '../models';
 // @ts-ignore
 import type { ProblemDetails } from '../models';
 /**
@@ -106,7 +106,7 @@ export const MeasurementApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MeasurementRawDto>>> {
+        async getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MeasurementDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurements(smartMeterId, startAt, endAt, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['MeasurementApi.getMeasurements']?.[localVarOperationServerIndex]?.url;
@@ -130,7 +130,7 @@ export const MeasurementApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<MeasurementRawDto>> {
+        getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<MeasurementDto>> {
             return localVarFp.getMeasurements(smartMeterId, startAt, endAt, options).then((request) => request(axios, basePath));
         },
     };

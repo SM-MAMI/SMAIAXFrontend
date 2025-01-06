@@ -1,5 +1,5 @@
 import { useActivePage, useDialogs } from '@toolpad/core';
-import { MeasurementRawDto, PolicyDto, SmartMeterDto } from '../../api/openAPI';
+import { MeasurementDto, PolicyDto, SmartMeterDto } from '../../api/openAPI';
 import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ const SmartMeterDetailsPage = () => {
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
-    const [measurements, setMeasurements] = useState<MeasurementRawDto[]>([]);
+    const [measurements, setMeasurements] = useState<MeasurementDto[]>([]);
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 

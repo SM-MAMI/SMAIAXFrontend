@@ -2,7 +2,6 @@
 .npmignore
 api.ts
 apis/authentication-api.ts
-apis/device-config-api.ts
 apis/measurement-api.ts
 apis/order-api.ts
 apis/policy-api.ts
@@ -17,7 +16,7 @@ models/index.ts
 models/location-dto.ts
 models/location-resolution.ts
 models/login-dto.ts
-models/measurement-raw-dto.ts
+models/measurement-dto.ts
 models/measurement-resolution.ts
 models/metadata-create-dto.ts
 models/metadata-dto.ts

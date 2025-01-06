@@ -1,10 +1,10 @@
 import React from 'react';
-import { MeasurementRawDto } from '../../api/openAPI';
+import { MeasurementDto } from '../../api/openAPI';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 
 interface MeasurementLineChartProps {
-    measurements: MeasurementRawDto[];
+    measurements: MeasurementDto[];
 }
 
 const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements }) => {

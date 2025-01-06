@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
-import { MeasurementRawDto, ProblemDetails } from '../../api/openAPI';
+import { MeasurementDto, ProblemDetails } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const useMeasurementService = () => {
@@ -13,7 +13,7 @@ export const useMeasurementService = () => {
     const { measurementApi } = context;
 
     const getMeasurements = useCallback(
-        async (smartMeterId: string, startAt: string, endAt: string): Promise<MeasurementRawDto[]> => {
+        async (smartMeterId: string, startAt: string, endAt: string): Promise<MeasurementDto[]> => {
             try {
                 const response = await measurementApi.getMeasurements(smartMeterId, startAt, endAt);
 
