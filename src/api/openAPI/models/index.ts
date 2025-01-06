@@ -2,7 +2,7 @@ export * from './continent';
 export * from './location-dto';
 export * from './location-resolution';
 export * from './login-dto';
-export * from './measurement-raw-dto';
+export * from './measurement-dto';
 export * from './measurement-resolution';
 export * from './metadata-create-dto';
 export * from './metadata-dto';
