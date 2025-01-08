@@ -33,6 +33,8 @@ const SmartMetersPage = () => {
             const smartMeters = await getSmartMeters();
             const sortedSmartMeters = smartMeters
                 .filter((smartMeter) => smartMeter.name !== '')
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                .filter((smartMeter) => smartMeter.name !== undefined)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .sort((a, b) =>
                     a.name === recentlyAddedSmartMeterName ? -1 : b.name === recentlyAddedSmartMeterName ? 1 : 0
