@@ -38,10 +38,10 @@ export default function CustomDialogWithDeviceConfiguration({
         }
 
         const publicKey = deviceConfig.publicKey;
-        const encryptionService = await EncryptionService.Create(publicKey);
+        const encryptionService = EncryptionService.Create(publicKey);
 
-        const encryptedSsid = await encryptionService.encryptData(ssid);
-        const encryptedPassword = await encryptionService.encryptData(password);
+        const encryptedSsid = encryptionService.encryptData(ssid);
+        const encryptedPassword = encryptionService.encryptData(password);
 
         const data = {
             wifiSSID: encryptedSsid,
