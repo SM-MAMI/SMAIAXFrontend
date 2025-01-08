@@ -4,7 +4,7 @@ import {
     MetadataCreateDto,
     MetadataUpdateDto,
     ProblemDetails,
-    SmartMeterCreateDto,
+    SmartMeterAssignDto,
     SmartMeterDto,
     SmartMeterOverviewDto,
 } from '../../api/openAPI';
@@ -20,9 +20,9 @@ export const useSmartMeterService = () => {
     const { smartMeterApi } = context;
 
     const addSmartMeter = useCallback(
-        async (smartMeterCreatedDto: SmartMeterCreateDto): Promise<string> => {
+        async (smartMeterCreatedDto: SmartMeterAssignDto): Promise<string> => {
             try {
-                const response = await smartMeterApi.addSmartMeter(smartMeterCreatedDto);
+                const response = await smartMeterApi.assignSmartMeter(smartMeterCreatedDto);
 
                 return response.data;
             } catch (error) {

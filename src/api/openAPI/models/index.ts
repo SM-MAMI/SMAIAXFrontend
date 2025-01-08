@@ -13,7 +13,7 @@ export * from './policy-dto';
 export * from './problem-details';
 export * from './register-dto';
 export * from './serial-number-dto';
-export * from './smart-meter-create-dto';
+export * from './smart-meter-assign-dto';
 export * from './smart-meter-dto';
 export * from './smart-meter-overview-dto';
 export * from './smart-meter-update-dto';
