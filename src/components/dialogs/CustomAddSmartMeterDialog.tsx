@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, FormControl, Input, TextField, Typography, useMediaQuery } from '@mui/material';
 import CustomStepper, { StepItem } from './../CustomStepper';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
-import { LocationDto, SmartMeterCreateDto } from '../../api/openAPI';
+import { LocationDto, SmartMeterAssignDto } from '../../api/openAPI';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -25,6 +25,9 @@ const INITIAL_HOUSEHOLD_SIZE = undefined;
 
 const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
     const [activeStep, setActiveStep] = useState(0);
+    const [serialNumber, setSerialNumber] = useState<string>('');
+    const [serialNumberError, setSerialNumberError] = useState(false);
+    const [serialNumberErrorMessage, setSerialNumberErrorMessage] = useState('');
     const [smartMeterName, setSmartMeterName] = useState<string>('');
     const [smartMeterNameError, setSmartMeterNameError] = useState(false);
     const [smartMeterNameErrorMessage, setSmartMeterNameErrorMessage] = useState('');
@@ -49,7 +52,26 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
 
     const steps: StepItem[] = [
         {
-            title: 'Step 1: Enter Smart Meter Name',
+            title: 'Step 1: Enter Connector Serial number',
+            content: (
+                <FormControl fullWidth>
+                    <TextField
+                        value={serialNumber}
+                        onChange={(e) => {
+                            setSerialNumber(e.target.value);
+                        }}
+                        id="serialNumber"
+                        placeholder="Enter Connector Serial number"
+                        name="serialNumber"
+                        color={serialNumberError ? 'error' : 'primary'}
+                        error={serialNumberError}
+                        helperText={serialNumberErrorMessage}
+                    />
+                </FormControl>
+            ),
+        },
+        {
+            title: 'Step 2: Enter Smart Meter Name',
             content: (
                 <FormControl fullWidth>
                     <TextField
@@ -68,7 +90,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
             ),
         },
         {
-            title: 'Step 2: Add Metadata',
+            title: 'Step 3: Add Metadata',
             content: (
                 <CustomCreateEditMetadataForm
                     location={location}
@@ -82,7 +104,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
             optional: true,
         },
         {
-            title: 'Step 3: Review & Confirm',
+            title: 'Step 4: Review & Confirm',
             content: (
                 <>
                     <Box marginBottom={2}>
@@ -154,8 +176,27 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         return true;
     };
 
+    const validateSerialNumber = (): boolean => {
+        if (!serialNumber.trim()) {
+            setSerialNumberError(true);
+            setSerialNumberErrorMessage('Serial number is required.');
+            return false;
+        }
+
+        setSerialNumberError(false);
+        setSerialNumberErrorMessage('');
+        return true;
+    };
+
     const handleNext = () => {
         if (activeStep === 0) {
+            const valid = validateSerialNumber();
+            if (!valid) {
+                return;
+            }
+        }
+
+        if (activeStep === 1) {
             const valid = validateSmartMeterName();
             if (!valid) {
                 return;
@@ -170,12 +211,13 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
     };
 
     const handleSubmit = async () => {
-        const valid = validateSmartMeterName();
+        const valid = validateSerialNumber() && validateSmartMeterName();
         if (!valid) {
             return;
         }
 
-        const smartMeterDto: SmartMeterCreateDto = {
+        const smartMeterDto: SmartMeterAssignDto = {
+            serialNumber: serialNumber,
             name: smartMeterName,
         };
 

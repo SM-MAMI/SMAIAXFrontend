@@ -29,7 +29,7 @@ models/policy-dto.ts
 models/problem-details.ts
 models/register-dto.ts
 models/serial-number-dto.ts
-models/smart-meter-create-dto.ts
+models/smart-meter-assign-dto.ts
 models/smart-meter-dto.ts
 models/smart-meter-overview-dto.ts
 models/smart-meter-update-dto.ts
