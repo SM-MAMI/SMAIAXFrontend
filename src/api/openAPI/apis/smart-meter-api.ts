@@ -28,7 +28,7 @@ import type { MetadataUpdateDto } from '../models';
 // @ts-ignore
 import type { ProblemDetails } from '../models';
 // @ts-ignore
-import type { SmartMeterCreateDto } from '../models';
+import type { SmartMeterAssignDto } from '../models';
 // @ts-ignore
 import type { SmartMeterDto } from '../models';
 // @ts-ignore
@@ -85,13 +85,13 @@ export const SmartMeterApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @param {SmartMeterCreateDto} smartMeterCreateDto 
+         * @param {SmartMeterAssignDto} smartMeterAssignDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addSmartMeter: async (smartMeterCreateDto: SmartMeterCreateDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'smartMeterCreateDto' is not null or undefined
-            assertParamExists('addSmartMeter', 'smartMeterCreateDto', smartMeterCreateDto)
+        assignSmartMeter: async (smartMeterAssignDto: SmartMeterAssignDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'smartMeterAssignDto' is not null or undefined
+            assertParamExists('assignSmartMeter', 'smartMeterAssignDto', smartMeterAssignDto)
             const localVarPath = `/api/smartMeters`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -114,7 +114,7 @@ export const SmartMeterApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(smartMeterCreateDto, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(smartMeterAssignDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -342,14 +342,14 @@ export const SmartMeterApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {SmartMeterCreateDto} smartMeterCreateDto 
+         * @param {SmartMeterAssignDto} smartMeterAssignDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addSmartMeter(smartMeterCreateDto: SmartMeterCreateDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addSmartMeter(smartMeterCreateDto, options);
+        async assignSmartMeter(smartMeterAssignDto: SmartMeterAssignDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.assignSmartMeter(smartMeterAssignDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.addSmartMeter']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['SmartMeterApi.assignSmartMeter']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -437,12 +437,12 @@ export const SmartMeterApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
-         * @param {SmartMeterCreateDto} smartMeterCreateDto 
+         * @param {SmartMeterAssignDto} smartMeterAssignDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addSmartMeter(smartMeterCreateDto: SmartMeterCreateDto, options?: RawAxiosRequestConfig): AxiosPromise<string> {
-            return localVarFp.addSmartMeter(smartMeterCreateDto, options).then((request) => request(axios, basePath));
+        assignSmartMeter(smartMeterAssignDto: SmartMeterAssignDto, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.assignSmartMeter(smartMeterAssignDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -516,13 +516,13 @@ export class SmartMeterApi extends BaseAPI {
 
     /**
      * 
-     * @param {SmartMeterCreateDto} smartMeterCreateDto 
+     * @param {SmartMeterAssignDto} smartMeterAssignDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SmartMeterApi
      */
-    public addSmartMeter(smartMeterCreateDto: SmartMeterCreateDto, options?: RawAxiosRequestConfig) {
-        return SmartMeterApiFp(this.configuration).addSmartMeter(smartMeterCreateDto, options).then((request) => request(this.axios, this.basePath));
+    public assignSmartMeter(smartMeterAssignDto: SmartMeterAssignDto, options?: RawAxiosRequestConfig) {
+        return SmartMeterApiFp(this.configuration).assignSmartMeter(smartMeterAssignDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
