@@ -138,7 +138,7 @@ const SmartMeterDetailsPage = () => {
     };
 
     const openCustomDialogWithDeviceConfiguration = async () => {
-        await dialogs.open(CustomDialogWithDeviceConfiguration);
+        await dialogs.open(CustomDialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
     const kebabItems = [

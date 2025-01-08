@@ -1,51 +1,30 @@
 ﻿interface IEncryptionService {
     encryptData: (data: string) => Promise<string>;
-    decryptData: (encryptedData: string) => Promise<string>;
 }
 
 export class EncryptionService implements IEncryptionService {
     private static readonly TextEncoder: TextEncoder = new TextEncoder();
-    private static readonly TextDecoder: TextDecoder = new TextDecoder();
     private readonly publicCryptoKey: CryptoKey;
-    private readonly privateCryptoKey?: CryptoKey;
 
-    private constructor(publicCryptoKey: CryptoKey, privateCryptoKey?: CryptoKey) {
+    private constructor(publicCryptoKey: CryptoKey) {
         this.publicCryptoKey = publicCryptoKey;
-        this.privateCryptoKey = privateCryptoKey;
     }
 
-    public static async Create(publicKey: string, privateKey?: string) {
+    public static async Create(publicKey: string): Promise<EncryptionService> {
         const publicCryptoKey = await this.ImportPublicKey(publicKey);
-        const privateCryptoKey = privateKey ? await this.ImportPrivateKey(privateKey) : undefined;
-        return new EncryptionService(publicCryptoKey, privateCryptoKey);
+        return new EncryptionService(publicCryptoKey);
     }
 
     public async encryptData(data: string): Promise<string> {
         const encodedData = EncryptionService.TextEncoder.encode(data);
         const encryptedData = await window.crypto.subtle.encrypt(
             {
-                name: 'RSA-OAEP',
+                name: 'RSA-OAEP', // Only specify the algorithm name here
             },
             this.publicCryptoKey,
             encodedData
         );
         return EncryptionService.ArrayBufferToBase64(encryptedData);
-    }
-
-    public async decryptData(encryptedData: string): Promise<string> {
-        if (!this.privateCryptoKey) {
-            throw new Error('Private key is required for decryption.');
-        }
-
-        const encryptedArrayBuffer = EncryptionService.Base64ToArrayBuffer(encryptedData);
-        const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
-            {
-                name: 'RSA-OAEP',
-            },
-            this.privateCryptoKey,
-            encryptedArrayBuffer
-        );
-        return EncryptionService.TextDecoder.decode(decryptedArrayBuffer);
     }
 
     private static ArrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
@@ -55,6 +34,20 @@ export class EncryptionService implements IEncryptionService {
             binaryString += String.fromCharCode(uint8Array[i]);
         }
         return window.btoa(binaryString);
+    }
+
+    private static async ImportPublicKey(publicKey: string): Promise<CryptoKey> {
+        const rawKey = EncryptionService.Base64ToArrayBuffer(publicKey); // Decode Base64
+        return await window.crypto.subtle.importKey(
+            'spki', // Raw public key format
+            rawKey,
+            {
+                name: 'RSA-OAEP',
+                hash: 'SHA-256', // Match the back-end's RSA-OAEP configuration
+            },
+            true, // Extractable
+            ['encrypt'] // Key usage
+        );
     }
 
     private static Base64ToArrayBuffer(base64: string): ArrayBuffer {
@@ -67,38 +60,40 @@ export class EncryptionService implements IEncryptionService {
         return bytes.buffer;
     }
 
-    private static async ImportPublicKey(publicKey: string): Promise<CryptoKey> {
-        return await window.crypto.subtle.importKey(
-            'spki',
-            this.StringToArrayBuffer(window.atob(publicKey)),
-            {
-                name: 'RSA-OAEP',
-                hash: 'SHA-256',
-            },
-            false,
-            ['encrypt']
-        );
-    }
+    // private static ParseXmlPublicKey(xmlKey: string): { modulus: string; exponent: string } {
+    //     const parser = new DOMParser();
+    //     const xmlDoc = parser.parseFromString(atob(xmlKey), 'text/xml');
+    //     const modulus = xmlDoc.getElementsByTagName('Modulus')[0].textContent || '';
+    //     const exponent = xmlDoc.getElementsByTagName('Exponent')[0].textContent || '';
+    //     return { modulus, exponent };
+    // }
+    //
+    // private static ConstructSpkiKey({ modulus, exponent }: { modulus: string; exponent: string }): ArrayBuffer {
+    //     // Convert the modulus and exponent into DER-encoded SPKI format
+    //     const mod = this.Base64ToUint8Array(modulus);
+    //     const exp = this.Base64ToUint8Array(exponent);
+    //
+    //     const modLen = mod.length;
+    //     const expLen = exp.length;
+    //
+    //     const totalLen = modLen + expLen + 4;
+    //     const spki = new Uint8Array(totalLen);
+    //
+    //     spki.set([0x30, 0x82, modLen >> 8, modLen & 0xff]); // Sequence header
+    //     spki.set(mod, 4); // Modulus
+    //     spki.set([0x02, expLen], 4 + modLen); // Exponent header
+    //     spki.set(exp, 6 + modLen); // Exponent
+    //
+    //     return spki.buffer;
+    // }
 
-    private static async ImportPrivateKey(privateKey: string): Promise<CryptoKey> {
-        return await window.crypto.subtle.importKey(
-            'pkcs8',
-            this.StringToArrayBuffer(window.atob(privateKey)),
-            {
-                name: 'RSA-OAEP',
-                hash: 'SHA-256',
-            },
-            false,
-            ['decrypt']
-        );
-    }
-
-    private static StringToArrayBuffer(str: string): ArrayBuffer {
-        const buf = new ArrayBuffer(str.length);
-        const bufView = new Uint8Array(buf);
-        for (let i = 0, strLen = str.length; i < strLen; i++) {
-            bufView[i] = str.charCodeAt(i);
-        }
-        return buf;
-    }
+    // private static Base64ToUint8Array(base64: string): Uint8Array {
+    //     const binaryString = window.atob(base64);
+    //     const len = binaryString.length;
+    //     const bytes = new Uint8Array(len);
+    //     for (let i = 0; i < len; i++) {
+    //         bytes[i] = binaryString.charCodeAt(i);
+    //     }
+    //     return bytes;
+    // }
 }
