@@ -50,8 +50,8 @@ const SmartMetersPage = () => {
         }
     };
 
-    const openDialogWithDeviceConfigurationDialog = async () => {
-        await dialogs.open(CustomDialogWithDeviceConfiguration);
+    const openDialogWithDeviceConfigurationDialog = async (smartMeterId: string) => {
+        await dialogs.open(CustomDialogWithDeviceConfiguration, { smartMeterId: smartMeterId });
     };
 
     const openAddSmartMeterDialog = async () => {
@@ -95,7 +95,8 @@ const SmartMetersPage = () => {
                                         kebabItems={[
                                             {
                                                 name: 'Device configuration',
-                                                onClick: () => void openDialogWithDeviceConfigurationDialog(),
+                                                onClick: () =>
+                                                    void openDialogWithDeviceConfigurationDialog(smartMeterOverview.id),
                                             },
                                         ]}
                                         isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}

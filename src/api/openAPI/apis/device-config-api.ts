@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { PolicyDto } from '../models';
+import type { DeviceConfigDto } from '../models';
 // @ts-ignore
 import type { ProblemDetails } from '../models';
 /**
@@ -86,7 +86,7 @@ export const DeviceConfigApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getDeviceConfig(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PolicyDto>>> {
+        async getDeviceConfig(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceConfigDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getDeviceConfig(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DeviceConfigApi.getDeviceConfig']?.[localVarOperationServerIndex]?.url;
@@ -108,7 +108,7 @@ export const DeviceConfigApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDeviceConfig(id: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<PolicyDto>> {
+        getDeviceConfig(id: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceConfigDto> {
             return localVarFp.getDeviceConfig(id, options).then((request) => request(axios, basePath));
         },
     };
