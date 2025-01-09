@@ -6,6 +6,7 @@ import {
     PolicyApi,
     SmartMeterApi,
     MeasurementApi,
+    ContractApi,
 } from '../../api/openAPI';
 
 interface ApiContextType {
@@ -15,6 +16,7 @@ interface ApiContextType {
     orderApi: OrderApi;
     measurementApi: MeasurementApi;
     deviceConfigApi: DeviceConfigApi;
+    contractApi: ContractApi;
 }
 
 export const ApiContext = React.createContext<ApiContextType | null>(null);

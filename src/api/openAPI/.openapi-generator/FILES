@@ -2,6 +2,7 @@
 .npmignore
 api.ts
 apis/authentication-api.ts
+apis/contract-api.ts
 apis/device-config-api.ts
 apis/measurement-api.ts
 apis/order-api.ts
@@ -13,6 +14,7 @@ configuration.ts
 git_push.sh
 index.ts
 models/continent.ts
+models/contract-create-dto.ts
 models/device-config-dto.ts
 models/index.ts
 models/location-dto.ts

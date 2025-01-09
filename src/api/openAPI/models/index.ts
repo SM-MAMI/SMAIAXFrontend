@@ -1,4 +1,5 @@
 export * from './continent';
+export * from './contract-create-dto';
 export * from './device-config-dto';
 export * from './location-dto';
 export * from './location-resolution';
