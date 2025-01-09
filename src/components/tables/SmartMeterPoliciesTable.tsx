@@ -32,7 +32,7 @@ const SmartMeterPoliciesTable = ({
     onPurchase,
 }: {
     policies: PolicyDto[];
-    onPurchase: (policyId: string) => void;
+    onPurchase?: (policyId: string) => void;
 }) => {
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<keyof PolicyDto>('name');
@@ -90,7 +90,7 @@ const SmartMeterPoliciesTable = ({
                                 Measurement Resolution
                             </TableSortLabel>
                         </TableCell>
-                        <TableCell></TableCell>
+                        {onPurchase && <TableCell></TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -101,14 +101,16 @@ const SmartMeterPoliciesTable = ({
                                 <TableCell>{policy.price}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        onClick={() => {
-                                            onPurchase(policy.id);
-                                        }}>
-                                        Purchase
-                                    </Button>
-                                </TableCell>
+                                {onPurchase && (
+                                    <TableCell>
+                                        <Button
+                                            onClick={() => {
+                                                onPurchase(policy.id);
+                                            }}>
+                                            Purchase
+                                        </Button>
+                                    </TableCell>
+                                )}
                             </TableRow>
                         ))
                     ) : (
