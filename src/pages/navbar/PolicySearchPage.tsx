@@ -1,11 +1,6 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
 import React, { useEffect, useState } from 'react';
-import { 
-    ContractCreateDto, 
-    LocationResolution, 
-    MeasurementResolution, 
-    PolicyDto,
-} from '../../api/openAPI';
+import { ContractCreateDto, LocationResolution, MeasurementResolution, PolicyDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import {
     Box,
