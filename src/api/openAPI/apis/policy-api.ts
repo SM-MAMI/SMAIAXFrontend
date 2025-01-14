@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { LocationResolution } from '../models';
+// @ts-ignore
 import type { MeasurementDto } from '../models';
 // @ts-ignore
 import type { MeasurementResolution } from '../models';
@@ -152,10 +154,11 @@ export const PolicyApiAxiosParamCreator = function (configuration?: Configuratio
          * 
          * @param {number} [maxPrice] 
          * @param {MeasurementResolution} [measurementResolution] 
+         * @param {LocationResolution} [locationResolution] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchPolicies: async (maxPrice?: number, measurementResolution?: MeasurementResolution, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        searchPolicies: async (maxPrice?: number, measurementResolution?: MeasurementResolution, locationResolution?: LocationResolution, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/policies/search`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -177,6 +180,10 @@ export const PolicyApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (measurementResolution !== undefined) {
                 localVarQueryParameter['measurementResolution'] = measurementResolution;
+            }
+
+            if (locationResolution !== undefined) {
+                localVarQueryParameter['locationResolution'] = locationResolution;
             }
 
 
@@ -240,11 +247,12 @@ export const PolicyApiFp = function(configuration?: Configuration) {
          * 
          * @param {number} [maxPrice] 
          * @param {MeasurementResolution} [measurementResolution] 
+         * @param {LocationResolution} [locationResolution] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PolicyDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchPolicies(maxPrice, measurementResolution, options);
+        async searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, locationResolution?: LocationResolution, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PolicyDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchPolicies(maxPrice, measurementResolution, locationResolution, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PolicyApi.searchPolicies']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -290,11 +298,12 @@ export const PolicyApiFactory = function (configuration?: Configuration, basePat
          * 
          * @param {number} [maxPrice] 
          * @param {MeasurementResolution} [measurementResolution] 
+         * @param {LocationResolution} [locationResolution] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, options?: RawAxiosRequestConfig): AxiosPromise<Array<PolicyDto>> {
-            return localVarFp.searchPolicies(maxPrice, measurementResolution, options).then((request) => request(axios, basePath));
+        searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, locationResolution?: LocationResolution, options?: RawAxiosRequestConfig): AxiosPromise<Array<PolicyDto>> {
+            return localVarFp.searchPolicies(maxPrice, measurementResolution, locationResolution, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -343,12 +352,13 @@ export class PolicyApi extends BaseAPI {
      * 
      * @param {number} [maxPrice] 
      * @param {MeasurementResolution} [measurementResolution] 
+     * @param {LocationResolution} [locationResolution] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PolicyApi
      */
-    public searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, options?: RawAxiosRequestConfig) {
-        return PolicyApiFp(this.configuration).searchPolicies(maxPrice, measurementResolution, options).then((request) => request(this.axios, this.basePath));
+    public searchPolicies(maxPrice?: number, measurementResolution?: MeasurementResolution, locationResolution?: LocationResolution, options?: RawAxiosRequestConfig) {
+        return PolicyApiFp(this.configuration).searchPolicies(maxPrice, measurementResolution, locationResolution, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

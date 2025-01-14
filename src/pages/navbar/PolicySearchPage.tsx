@@ -1,6 +1,11 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
 import React, { useEffect, useState } from 'react';
-import { ContractCreateDto, MeasurementResolution, PolicyDto } from '../../api/openAPI';
+import { 
+    ContractCreateDto, 
+    LocationResolution, 
+    MeasurementResolution, 
+    PolicyDto,
+} from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import {
     Box,
@@ -29,9 +34,13 @@ const PolicySearchPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const loadPolicies = async (maxPrice?: number, measurementResolution?: MeasurementResolution) => {
+    const loadPolicies = async (
+        maxPrice?: number,
+        measurementResolution?: MeasurementResolution,
+        locationResolution?: LocationResolution
+    ) => {
         try {
-            const policies = await searchPolicies(maxPrice, measurementResolution);
+            const policies = await searchPolicies(maxPrice, measurementResolution, locationResolution);
             setPolicies(policies);
         } catch (error) {
             console.error(error);
@@ -44,6 +53,7 @@ const PolicySearchPage = () => {
         const data = new FormData(event.currentTarget);
         let measurementResolution = data.get('measurementResolution') as MeasurementResolution | undefined;
         let price = data.get('price') as unknown as number | undefined;
+        let locationResolution = data.get('locationResolution') as LocationResolution | undefined;
 
         if (!measurementResolution) {
             measurementResolution = undefined;
@@ -53,7 +63,11 @@ const PolicySearchPage = () => {
             price = undefined;
         }
 
-        void loadPolicies(price, measurementResolution);
+        if (!locationResolution) {
+            locationResolution = undefined;
+        }
+
+        void loadPolicies(price, measurementResolution, locationResolution);
     };
 
     const handleReset = () => {
@@ -103,6 +117,30 @@ const PolicySearchPage = () => {
                             </option>
                             <option aria-label="Week" value={MeasurementResolution.Week}>
                                 Week
+                            </option>
+                        </NativeSelect>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="locationResolution">Location Resolution</FormLabel>
+                        <NativeSelect id="locationResolution" name="locationResolution">
+                            <option></option>
+                            <option aria-label="None" value={LocationResolution.None}>
+                                None
+                            </option>
+                            <option aria-label="Street Name" value={LocationResolution.StreetName}>
+                                Street Name
+                            </option>
+                            <option aria-label="City" value={LocationResolution.City}>
+                                City
+                            </option>
+                            <option aria-label="State" value={LocationResolution.State}>
+                                State
+                            </option>
+                            <option aria-label="Country" value={LocationResolution.Country}>
+                                Country
+                            </option>
+                            <option aria-label="Continent" value={LocationResolution.Continent}>
+                                Continent
                             </option>
                         </NativeSelect>
                     </FormControl>
