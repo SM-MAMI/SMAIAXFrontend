@@ -1,6 +1,6 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
 import React, { useEffect, useState } from 'react';
-import { LocationResolution, MeasurementResolution, PolicyDto } from '../../api/openAPI';
+import { ContractCreateDto, LocationResolution, MeasurementResolution, PolicyDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import {
     Box,
@@ -14,11 +14,15 @@ import {
 } from '@mui/material';
 import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesTable.tsx';
 import FormControl from '@mui/material/FormControl';
+import { useContractService } from '../../hooks/services/useContractService.ts';
+import { useSnackbar } from '../../hooks/useSnackbar.ts';
 
 const PolicySearchPage = () => {
     const [policies, setPolicies] = useState<PolicyDto[] | undefined>(undefined);
 
     const { searchPolicies } = usePolicyService();
+    const { createContract } = useContractService();
+    const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
         void loadPolicies();
@@ -63,6 +67,20 @@ const PolicySearchPage = () => {
 
     const handleReset = () => {
         void loadPolicies();
+    };
+
+    const handlePurchase = (policyId: string) => {
+        try {
+            const contractCreateDto: ContractCreateDto = {
+                policyId: policyId,
+            };
+
+            void createContract(contractCreateDto);
+            showSnackbar('success', 'Successfully purchased data.');
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', 'Failed to purchase data.');
+        }
     };
 
     return (
@@ -142,7 +160,7 @@ const PolicySearchPage = () => {
 
             {policies ? (
                 <div style={{ marginTop: '20px', width: '100%' }}>
-                    <SmartMeterPoliciesTable policies={policies} />
+                    <SmartMeterPoliciesTable policies={policies} onPurchase={handlePurchase} />
                 </div>
             ) : (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

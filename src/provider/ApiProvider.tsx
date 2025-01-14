@@ -1,5 +1,13 @@
 import { ReactNode } from 'react';
-import { AuthenticationApi, DeviceConfigApi, MeasurementApi, OrderApi, PolicyApi, SmartMeterApi } from '../api/openAPI';
+import {
+    AuthenticationApi,
+    ContractApi,
+    DeviceConfigApi,
+    MeasurementApi,
+    OrderApi,
+    PolicyApi,
+    SmartMeterApi,
+} from '../api/openAPI';
 import { ApiContext } from './context/ApiContext.tsx';
 import { createCustomAxiosInstance } from '../api/axiosInstance.ts';
 
@@ -15,10 +23,19 @@ export const ApiProvider = ({ children }: ApiProviderProps) => {
     const orderApi = new OrderApi(undefined, undefined, axiosInstance);
     const measurementApi = new MeasurementApi(undefined, undefined, axiosInstance);
     const deviceConfigApi = new DeviceConfigApi(undefined, undefined, axiosInstance);
+    const contractApi = new ContractApi(undefined, undefined, axiosInstance);
 
     return (
         <ApiContext.Provider
-            value={{ authenticationApi, smartMeterApi, policyApi, orderApi, measurementApi, deviceConfigApi }}>
+            value={{
+                authenticationApi,
+                smartMeterApi,
+                policyApi,
+                orderApi,
+                measurementApi,
+                deviceConfigApi,
+                contractApi,
+            }}>
             {children}
         </ApiContext.Provider>
     );

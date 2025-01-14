@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { PolicyDto } from '../../api/openAPI';
+import Button from '@mui/material/Button';
 
 type Order = 'asc' | 'desc';
 
@@ -26,7 +27,13 @@ function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => numbe
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const SmartMeterPoliciesTable = ({ policies }: { policies: PolicyDto[] }) => {
+const SmartMeterPoliciesTable = ({
+    policies,
+    onPurchase,
+}: {
+    policies: PolicyDto[];
+    onPurchase?: (policyId: string) => void;
+}) => {
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<keyof PolicyDto>('name');
 
@@ -83,6 +90,7 @@ const SmartMeterPoliciesTable = ({ policies }: { policies: PolicyDto[] }) => {
                                 Measurement Resolution
                             </TableSortLabel>
                         </TableCell>
+                        {onPurchase && <TableCell></TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -93,6 +101,16 @@ const SmartMeterPoliciesTable = ({ policies }: { policies: PolicyDto[] }) => {
                                 <TableCell>{policy.price}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
+                                {onPurchase && (
+                                    <TableCell>
+                                        <Button
+                                            onClick={() => {
+                                                onPurchase(policy.id);
+                                            }}>
+                                            Purchase
+                                        </Button>
+                                    </TableCell>
+                                )}
                             </TableRow>
                         ))
                     ) : (
