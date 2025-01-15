@@ -17,6 +17,7 @@ interface MeasurementSectionProps {
     loadMeasurements: (selectedVariables: string[]) => void;
     chartOptions: ChartOptions;
     backgroundColor?: string;
+    padding?: string;
 }
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
@@ -29,6 +30,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     loadMeasurements,
     chartOptions,
     backgroundColor,
+    padding,
 }) => {
     const [selectedVariables, setSelectedVariables] = useState<string[]>(['All']);
 
@@ -50,8 +52,8 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     return (
         <Box
             sx={{
-                padding: '2em',
                 width: '100%',
+                padding: padding ?? '1em',
                 backgroundColor: backgroundColor ?? '',
             }}>
             <Box

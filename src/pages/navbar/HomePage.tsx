@@ -113,7 +113,6 @@ const HomePage = () => {
                             {section.selectedSmartMeter && (
                                 <>
                                     <MeasurementSection
-                                        backgroundColor={theme.palette.background.paper}
                                         startAt={startAt}
                                         endAt={endAt}
                                         setStartAt={setStartAt}
@@ -128,6 +127,8 @@ const HomePage = () => {
                                             void loadMeasurements(section.selectedSmartMeter, selectedVariables);
                                         }}
                                         chartOptions={{ title: '' }}
+                                        backgroundColor={theme.palette.background.paper}
+                                        padding={'2em'}
                                     />
                                     <Divider sx={{ margin: '2em' }} />
                                 </>
