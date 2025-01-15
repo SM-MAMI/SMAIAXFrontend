@@ -51,9 +51,9 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 sx={{
                     display: 'flex',
                     marginBottom: '2em',
-                    justifyContent: 'space-between',
+                    justifyContent: 'right',
                     alignItems: 'center',
-                    gap: '1em',
+                    gap: '10px',
                     flexWrap: 'wrap',
                 }}>
                 <Box>
@@ -104,8 +104,9 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 <Box
                     sx={{
                         display: 'flex',
+                        justifyContent: 'right',
                         alignItems: 'center',
-                        gap: '1em',
+                        gap: '10px',
                         flexWrap: 'wrap',
                     }}>
                     <DatePicker
@@ -115,6 +116,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         onChange={(newValue) => {
                             if (newValue) setStartAt(newValue);
                         }}
+                        sx={{ maxWidth: 145, minWidth: 100 }}
                     />
                     <DatePicker
                         label="End"
@@ -123,6 +125,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         onChange={(newValue) => {
                             if (newValue) setEndAt(newValue);
                         }}
+                        sx={{ maxWidth: 145, minWidth: 100 }}
                     />
                     <Button
                         variant="contained"
