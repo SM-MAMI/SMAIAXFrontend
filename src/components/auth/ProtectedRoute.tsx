@@ -18,7 +18,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
             const refreshToken = localStorage.getItem('refresh_token');
 
             if (!accessToken || !refreshToken) {
-                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                 return;
             }
 
@@ -26,7 +26,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 const decodedAccessToken = jwtDecode<JwtPayload & { unique_name: string; email: string }>(accessToken);
 
                 if (!decodedAccessToken.exp) {
-                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                    void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                     return;
                 }
 
@@ -41,7 +41,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 console.error(e);
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
-                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                 return;
             }
         };

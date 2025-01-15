@@ -200,7 +200,7 @@ const OrdersPage = () => {
                                 </Typography>
                                 <Button
                                     onClick={() => {
-                                        navigate('/smart-meters');
+                                        void navigate('/smart-meters');
                                     }}
                                     variant="contained"
                                     sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}>
