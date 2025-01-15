@@ -5,10 +5,12 @@ import HighchartsReact from 'highcharts-react-official';
 import useCustomHighchartsTheme from '../../../hooks/useCustomHighchartsTheme.ts';
 import { useTheme } from '@mui/material/styles';
 import { VariableLabelMap } from '../../../constants/constants.ts';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export type ChartOptions = {
     title?: string;
+    xAxisTitle?: string;
+    yAxisTitle?: string;
 };
 
 interface MeasurementLineChartProps {
@@ -25,6 +27,16 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     useEffect(() => {
         setChartKey((prevKey) => prevKey + 1);
     }, [theme.palette.mode]);
+
+    if (measurements.length <= 0) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography>
+                    No measurements available.
+                </Typography>
+            </Box>
+        );
+    }
 
     const variableIds = Object.entries(measurements[0]).filter(([key]) => key !== 'timestamp' && key !== 'uptime');
 
@@ -43,13 +55,14 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     const options = {
         chart: {
             type: 'line',
+            height: '500px',
         },
         title: {
             text: chartOptions.title ?? 'Measurement',
         },
         xAxis: {
             title: {
-                text: 'Timestamp',
+                text: chartOptions.xAxisTitle ?? '',
             },
             type: 'datetime',
             dateTimeLabelFormats: {
@@ -58,7 +71,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
         },
         yAxis: {
             title: {
-                text: 'Value',
+                text: chartOptions.yAxisTitle ?? '',
             },
         },
         series: series,
