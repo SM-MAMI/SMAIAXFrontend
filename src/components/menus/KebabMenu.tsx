@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { KeyboardEvent, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
@@ -13,15 +13,15 @@ interface KebabMenuProps {
     items: Array<{ name: string; onClick: () => void }>;
 }
 
-export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLButtonElement>(null);
+const KebabMenu = ({ items }: Readonly<KebabMenuProps>) => {
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLButtonElement>(null);
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = (event: Event | React.SyntheticEvent) => {
+    const handleClose = (event: Event | SyntheticEvent) => {
         if (anchorRef.current?.contains(event.target as HTMLElement)) {
             return;
         }
@@ -29,7 +29,12 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
         setOpen(false);
     };
 
-    function handleListKeyDown(event: React.KeyboardEvent) {
+    const handleMenuItemClick = (onClick: () => void) => {
+        onClick();
+        setOpen(false);
+    };
+
+    function handleListKeyDown(event: KeyboardEvent) {
         if (event.key === 'Tab') {
             event.preventDefault();
             setOpen(false);
@@ -39,8 +44,8 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
     }
 
     // return focus to the button when we transitioned from !open -> open
-    const prevOpen = React.useRef(open);
-    React.useEffect(() => {
+    const prevOpen = useRef(open);
+    useEffect(() => {
         if (prevOpen.current && !open) {
             anchorRef.current?.focus();
         }
@@ -50,58 +55,55 @@ export default function KebabMenu({ items }: Readonly<KebabMenuProps>) {
 
     return (
         <Stack direction="row" spacing={2}>
-            <div>
-                <Button
-                    ref={anchorRef}
-                    id="composition-button"
-                    aria-controls={open ? 'composition-menu' : undefined}
-                    aria-expanded={open ? 'true' : undefined}
-                    aria-haspopup="true"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggle();
-                    }}>
-                    <MoreVertIcon />
-                </Button>
-                <Popper
-                    open={open}
-                    anchorEl={anchorRef.current}
-                    role={undefined}
-                    placement="bottom-start"
-                    transition
-                    disablePortal
-                    sx={{ zIndex: 100 }}>
-                    {({ TransitionProps, placement }) => (
-                        <Grow
-                            {...TransitionProps}
-                            style={{
-                                transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',
-                            }}>
-                            <Paper>
-                                <ClickAwayListener onClickAway={handleClose}>
-                                    <MenuList
-                                        autoFocusItem={open}
-                                        id="composition-menu"
-                                        aria-labelledby="composition-button"
-                                        onKeyDown={handleListKeyDown}>
-                                        {items.map((item) => (
-                                            <MenuItem
-                                                key={item.name}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    item.onClick();
-                                                    handleClose(e);
-                                                }}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))}
-                                    </MenuList>
-                                </ClickAwayListener>
-                            </Paper>
-                        </Grow>
-                    )}
-                </Popper>
-            </div>
+            <Button
+                ref={anchorRef}
+                id="composition-button"
+                aria-controls={open ? 'composition-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={() => {
+                    handleToggle();
+                }}>
+                <MoreVertIcon />
+            </Button>
+            <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement="bottom-start"
+                transition
+                disablePortal
+                sx={{ zIndex: 100 }}>
+                {({ TransitionProps, placement }) => (
+                    <Grow
+                        {...TransitionProps}
+                        style={{
+                            transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom',
+                        }}>
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                                <MenuList
+                                    autoFocusItem={open}
+                                    id="composition-menu"
+                                    aria-labelledby="composition-button"
+                                    onKeyDown={handleListKeyDown}>
+                                    {items.map((item) => (
+                                        <MenuItem
+                                            key={item.name}
+                                            onClick={() => {
+                                                handleMenuItemClick(item.onClick);
+                                            }}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </MenuList>
+                            </ClickAwayListener>
+                        </Paper>
+                    </Grow>
+                )}
+            </Popper>
         </Stack>
     );
-}
+};
+
+export default KebabMenu;

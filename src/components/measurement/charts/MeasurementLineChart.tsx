@@ -51,6 +51,9 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     });
 
     const options = {
+        accessibility: {
+            enabled: false,
+        },
         chart: {
             type: 'line',
             height: '400px',
