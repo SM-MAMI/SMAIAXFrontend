@@ -31,9 +31,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     if (measurements.length <= 0) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography>
-                    No measurements available.
-                </Typography>
+                <Typography>No measurements available.</Typography>
             </Box>
         );
     }
