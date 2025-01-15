@@ -22,7 +22,7 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
     };
 
     return (
-        <SnackbarContext.Provider value={{ showSnackbar }}>
+        <SnackbarContext value={{ showSnackbar }}>
             {children}
             <Snackbar
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -33,6 +33,6 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
                     {message}
                 </Alert>
             </Snackbar>
-        </SnackbarContext.Provider>
+        </SnackbarContext>
     );
 };

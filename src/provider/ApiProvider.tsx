@@ -26,7 +26,7 @@ export const ApiProvider = ({ children }: ApiProviderProps) => {
     const contractApi = new ContractApi(undefined, undefined, axiosInstance);
 
     return (
-        <ApiContext.Provider
+        <ApiContext
             value={{
                 authenticationApi,
                 smartMeterApi,
@@ -37,7 +37,7 @@ export const ApiProvider = ({ children }: ApiProviderProps) => {
                 contractApi,
             }}>
             {children}
-        </ApiContext.Provider>
+        </ApiContext>
     );
 };
 
