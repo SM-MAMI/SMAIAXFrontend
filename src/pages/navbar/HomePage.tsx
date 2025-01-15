@@ -1,26 +1,29 @@
+import { PageContainer } from '@toolpad/core/PageContainer';
 import { useEffect, useState } from 'react';
 import { MeasurementDto, SmartMeterOverviewDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
-import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
+import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
-import { PageContainer } from '@toolpad/core/PageContainer';
-import { Box, CircularProgress } from '@mui/material';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
 import dayjs, { Dayjs } from 'dayjs';
-import Button from '@mui/material/Button';
+import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 
-export default function HomePage() {
+const HomePage = () => {
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
-    const [measurementSections, setMeasurementSections] = useState<string[]>([]);
-    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
+    const [measurementSections, setMeasurementSections] = useState<{ id: string; selectedSmartMeter: string | null }[]>(
+        []
+    );
     const [measurementsPerSmartMeter, setMeasurementsPerSmartMeter] = useState<Record<string, MeasurementDto[]>>({});
+    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const { getSmartMeters } = useSmartMeterService();
     const { getMeasurements } = useMeasurementService();
     const { showSnackbar } = useSnackbar();
+    const theme = useTheme();
 
     useEffect(() => {
         void loadSmartMeters();
@@ -28,9 +31,15 @@ export default function HomePage() {
     }, []);
 
     useEffect(() => {
-        if (smartMeters) {
-            smartMeters.forEach((meter) => {
-                void loadMeasurements(meter.id, ['All']);
+        if (smartMeters && !measurementSections.length) {
+            const initialSections = smartMeters.map((smartMeter) => ({
+                id: smartMeter.id,
+                selectedSmartMeter: smartMeter.id,
+            }));
+            setMeasurementSections(initialSections);
+
+            smartMeters.forEach((smartMeter) => {
+                void loadMeasurements(smartMeter.id, ['All']);
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,7 +50,6 @@ export default function HomePage() {
             const smartMeters = await getSmartMeters();
             const sortedSmartMeters = smartMeters.sort((a, b) => a.name.localeCompare(b.name));
             setSmartMeters(sortedSmartMeters);
-            setMeasurementSections(sortedSmartMeters.map((meter) => meter.id)); // Initialize sections for each smart meter
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load smart meters!`);
@@ -66,6 +74,22 @@ export default function HomePage() {
         setIsLoadingMeasurements(false);
     };
 
+    const addMeasurementSection = () => {
+        setMeasurementSections([...measurementSections, { id: Date.now().toString(), selectedSmartMeter: null }]);
+    };
+
+    const updateSectionSmartMeter = (sectionId: string, smartMeterId: string | null) => {
+        setMeasurementSections((prevSections) =>
+            prevSections.map((section) =>
+                section.id === sectionId ? { ...section, selectedSmartMeter: smartMeterId } : section
+            )
+        );
+    };
+
+    const getSmartMeterName = (smartMeterId: string | null): string => {
+        return smartMeters?.find((smartMeter) => smartMeter.id === smartMeterId)?.name ?? '';
+    };
+
     return (
         <PageContainer title={''}>
             {!smartMeters ? (
@@ -73,34 +97,50 @@ export default function HomePage() {
                     <CircularProgress size="3em" />
                 </Box>
             ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', width: '100%' }}>
-                    {measurementSections.map((smartMeterId) => {
-                        const smartMeter = smartMeters.find((smartMeter) => smartMeter.id === smartMeterId);
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', width: '100%', padding: '1em' }}>
+                    {measurementSections.map((section) => (
+                        <Box key={section.id} sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
+                            <Autocomplete
+                                options={smartMeters.map((smartMeter) => smartMeter.id)}
+                                getOptionLabel={getSmartMeterName}
+                                value={section.selectedSmartMeter}
+                                onChange={(_, newValue) => {
+                                    updateSectionSmartMeter(section.id, newValue);
+                                }}
+                                renderInput={(params) => <TextField {...params} label="Select Smart Meter" />}
+                            />
 
-                        return (
-                            smartMeter && (
+                            {section.selectedSmartMeter && (
                                 <>
                                     <MeasurementSection
-                                        key={smartMeter.id}
+                                        backgroundColor={theme.palette.background.paper}
                                         startAt={startAt}
                                         endAt={endAt}
                                         setStartAt={setStartAt}
                                         setEndAt={setEndAt}
                                         isLoadingMeasurements={isLoadingMeasurements}
-                                        measurements={measurementsPerSmartMeter[smartMeter.id] ?? []}
-                                        loadMeasurements={(selectedVariables) =>
-                                            void loadMeasurements(smartMeter.id, selectedVariables)
-                                        }
-                                        chartOptions={{ title: smartMeter.name }}
+                                        measurements={measurementsPerSmartMeter[section.selectedSmartMeter] ?? []}
+                                        loadMeasurements={(selectedVariables) => {
+                                            if (section.selectedSmartMeter == null) {
+                                                return;
+                                            }
+
+                                            void loadMeasurements(section.selectedSmartMeter, selectedVariables);
+                                        }}
+                                        chartOptions={{ title: '' }}
                                     />
                                     <Divider sx={{ margin: '2em' }} />
                                 </>
-                            )
-                        );
-                    })}
+                            )}
+                        </Box>
+                    ))}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1em', padding: '1em' }}>
-                        <Button sx={{ width: '143px' }} variant="contained" size="medium">
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1em', padding: '2em' }}>
+                        <Button
+                            sx={{ width: '143px' }}
+                            variant="contained"
+                            size="medium"
+                            onClick={addMeasurementSection}>
                             Add Chart
                         </Button>
                     </Box>
@@ -108,4 +148,6 @@ export default function HomePage() {
             )}
         </PageContainer>
     );
-}
+};
+
+export default HomePage;

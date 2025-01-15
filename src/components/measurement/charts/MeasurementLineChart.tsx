@@ -53,7 +53,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     const options = {
         chart: {
             type: 'line',
-            height: '500px',
+            height: '400px',
         },
         title: {
             text: chartOptions.title ?? 'Measurement',
