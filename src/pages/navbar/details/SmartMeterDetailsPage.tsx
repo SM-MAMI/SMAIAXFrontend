@@ -70,7 +70,7 @@ const SmartMeterDetailsPage = () => {
     useEffect(() => {
         if (smartMeter?.id) {
             void loadSmartMeterPolicies(smartMeter.id);
-            void loadMeasurements(smartMeter.id);
+            void loadMeasurements(smartMeter.id, ['All']);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
@@ -98,7 +98,7 @@ const SmartMeterDetailsPage = () => {
         }
     };
 
-    const loadMeasurements = async (smartMeterId: string) => {
+    const loadMeasurements = async (smartMeterId: string, _selectedVariables: string[]) => {
         setIsLoadingMeasurements(true);
 
         try {
@@ -205,7 +205,10 @@ const SmartMeterDetailsPage = () => {
                         setEndAt={setEndAt}
                         isLoadingMeasurements={isLoadingMeasurements}
                         measurements={measurements}
-                        loadMeasurements={() => void loadMeasurements(smartMeter.id)}
+                        loadMeasurements={(selectedVariables) =>
+                            void loadMeasurements(smartMeter.id, selectedVariables)
+                        }
+                        chartOptions={{}}
                     />
 
                     <MetadataDrawer

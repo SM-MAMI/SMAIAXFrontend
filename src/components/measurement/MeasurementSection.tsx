@@ -1,9 +1,11 @@
-import React from 'react';
-import { Box, Button, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import MeasurementLineChart from './charts/MeasurementLineChart.tsx';
+import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
 import { Dayjs } from 'dayjs';
 import { MeasurementDto } from '../../api/openAPI';
+import { VariableLabelMap } from '../../constants/constants.ts';
+import Checkbox from '@mui/material/Checkbox';
 
 interface MeasurementSectionProps {
     startAt: Dayjs;
@@ -12,7 +14,8 @@ interface MeasurementSectionProps {
     setEndAt: (value: Dayjs) => void;
     isLoadingMeasurements: boolean;
     measurements: MeasurementDto[];
-    loadMeasurements: () => void;
+    loadMeasurements: (selectedVariables: string[]) => void;
+    chartOptions: ChartOptions;
 }
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
@@ -23,15 +26,84 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     isLoadingMeasurements,
     measurements,
     loadMeasurements,
+    chartOptions,
 }) => {
+    const [selectedVariables, setSelectedVariables] = useState<string[]>(['All']);
+
+    const availableVariables = Object.keys(VariableLabelMap);
+    const autoCompleteOptions = ['All', ...availableVariables.map((key) => VariableLabelMap[key])];
+
+    const handleVariableChange = (value: string[]): void => {
+        if (value.includes('All')) {
+            setSelectedVariables(['All']);
+        } else {
+            setSelectedVariables(value);
+        }
+    };
+
+    const handleLoadData = (): void => {
+        loadMeasurements(selectedVariables.includes('All') ? availableVariables : selectedVariables);
+    };
+
     return (
-        <div style={{ padding: '1em', width: '100%' }}>
-            <Box>
+        <Box sx={{ padding: '1em', width: '100%' }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    marginBottom: '2em',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '1em',
+                    flexWrap: 'wrap',
+                }}>
+                <Box>
+                    <Autocomplete
+                        multiple
+                        options={autoCompleteOptions}
+                        disableCloseOnSelect
+                        value={selectedVariables.map((key) => (key === 'All' ? 'All' : VariableLabelMap[key]))}
+                        onChange={(_, value) => {
+                            const keys = value.map((label) =>
+                                label === 'All'
+                                    ? 'All'
+                                    : Object.keys(VariableLabelMap).find((key) => VariableLabelMap[key] === label)
+                            );
+                            handleVariableChange(keys as string[]);
+                        }}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    style={{ marginRight: 8 }}
+                                    checked={selected || selectedVariables.includes('All')}
+                                />
+                                {option}
+                            </li>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Variables"
+                                placeholder={
+                                    selectedVariables.includes('All')
+                                        ? 'All Variables Selected'
+                                        : `${String(selectedVariables.length)} Variables Selected`
+                                }
+                            />
+                        )}
+                        slotProps={{
+                            chip: {
+                                sx: {
+                                    display: 'none',
+                                },
+                            },
+                        }}
+                        sx={{ width: 300 }}
+                    />
+                </Box>
+
                 <Box
                     sx={{
                         display: 'flex',
-                        marginBottom: '2em',
-                        justifyContent: 'right',
                         alignItems: 'center',
                         gap: '1em',
                         flexWrap: 'wrap',
@@ -55,7 +127,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                     <Button
                         variant="contained"
                         size="medium"
-                        onClick={loadMeasurements}
+                        onClick={handleLoadData}
                         sx={{
                             height: '36.5px',
                             width: '143px',
@@ -64,16 +136,16 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         Load data
                     </Button>
                 </Box>
-
-                {isLoadingMeasurements ? (
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <CircularProgress size="3em" />
-                    </div>
-                ) : (
-                    <MeasurementLineChart measurements={measurements} />
-                )}
             </Box>
-        </div>
+
+            {isLoadingMeasurements ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress size="3em" />
+                </div>
+            ) : (
+                <MeasurementLineChart measurements={measurements} chartOptions={chartOptions} />
+            )}
+        </Box>
     );
 };
 

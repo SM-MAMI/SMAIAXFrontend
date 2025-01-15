@@ -7,11 +7,16 @@ import { useTheme } from '@mui/material/styles';
 import { VariableLabelMap } from '../../../constants/constants.ts';
 import { Box } from '@mui/material';
 
+export type ChartOptions = {
+    title?: string;
+};
+
 interface MeasurementLineChartProps {
     measurements: MeasurementDto[];
+    chartOptions: ChartOptions;
 }
 
-const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements }) => {
+const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements, chartOptions }) => {
     const theme = useTheme();
     const [chartKey, setChartKey] = useState(0);
 
@@ -40,7 +45,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
             type: 'line',
         },
         title: {
-            text: 'Measurements',
+            text: chartOptions.title ?? 'Measurement',
         },
         xAxis: {
             title: {
