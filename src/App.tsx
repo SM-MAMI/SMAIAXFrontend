@@ -9,7 +9,7 @@ import NavbarNavigation from './components/toolpad/NavbarNavigation.tsx';
 import Navbar from './components/toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
 import { SmaiaxRoutes } from './constants/constants.ts';
-import SmartMeterDetailsPage from './pages/details/SmartMeterDetailsPage.tsx';
+import SmartMeterDetailsPage from './pages/navbar/details/SmartMeterDetailsPage.tsx';
 import PolicySearchPage from './pages/navbar/PolicySearchPage.tsx';
 import OrdersPage from './pages/navbar/OrdersPage.tsx';
 

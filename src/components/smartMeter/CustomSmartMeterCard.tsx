@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardHeader, Typography } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, CardHeader, Typography } from '@mui/material';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
 import KebabMenu from '../menus/KebabMenu.tsx';
 
@@ -21,13 +21,24 @@ const CustomSmartMeterCard = ({
             onClick={navigateToDetails}
             style={{
                 width: '100%',
+                position: 'relative',
             }}>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    paddingTop: '1em',
+                    paddingRight: '0.5em',
+                    top: 0,
+                    right: 0,
+                    zIndex: 1,
+                }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}>
+                <KebabMenu items={kebabItems} />
+            </Box>
             <CardActionArea>
-                <CardHeader
-                    action={<KebabMenu items={kebabItems} />}
-                    title={smartMeterOverview.name}
-                    subheader={`ID: ${smartMeterOverview.id}`}
-                />
+                <CardHeader title={smartMeterOverview.name} subheader={`ID: ${smartMeterOverview.id}`} />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
                         Metadata count: {smartMeterOverview.metadataCount}

@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { CardContainer, Card } from '../components/auth/CardContainer.tsx';
+import { Card, CardContainer } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -43,7 +43,7 @@ export default function SignIn() {
             localStorage.setItem('refresh_token', tokenDto.refreshToken);
 
             showSnackbar('success', 'Successfully signed in!');
-            navigate('/');
+            void navigate('/');
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Signin failed!`);

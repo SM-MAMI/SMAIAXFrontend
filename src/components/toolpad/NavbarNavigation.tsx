@@ -1,8 +1,8 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { type Navigation, Session } from '@toolpad/core/AppProvider';
-import { AppProvider } from '@toolpad/core/react-router-dom';
+import { Navigation, Session } from '@toolpad/core';
+import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../constants/constants.ts';
 import { ElectricMeter, Search } from '@mui/icons-material';
 import React from 'react';
@@ -87,7 +87,7 @@ const NavbarNavigation = () => {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
-            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+            void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             return;
         }
 
@@ -98,11 +98,12 @@ const NavbarNavigation = () => {
             setSession({ user: { id: sub, name: unique_name, email } });
         } catch (error) {
             console.error(error);
-            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+            void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
         }
     }, [navigate]);
 
     const authentication = React.useMemo(() => {
+        // noinspection JSUnusedGlobalSymbols
         return {
             signIn: () => {},
             signOut: () => {
@@ -110,7 +111,7 @@ const NavbarNavigation = () => {
                 const refreshToken = localStorage.getItem('refresh_token');
 
                 if (!accessToken || !refreshToken) {
-                    navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                    void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                     return;
                 }
 
@@ -124,13 +125,13 @@ const NavbarNavigation = () => {
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
 
-                navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+                void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
             },
         };
     }, [logout, navigate]);
 
     return (
-        <AppProvider
+        <ReactRouterAppProvider
             navigation={NAVIGATION}
             // @ts-expect-error - Needed for custom typography in branding
             branding={isSmallScreen ? BRANDING_SMALL : BRANDING}
@@ -138,7 +139,7 @@ const NavbarNavigation = () => {
             theme={customTheme}
             session={session}>
             <Outlet />
-        </AppProvider>
+        </ReactRouterAppProvider>
     );
 };
 

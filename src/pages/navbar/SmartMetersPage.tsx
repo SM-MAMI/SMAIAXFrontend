@@ -90,7 +90,7 @@ const SmartMetersPage = () => {
                                     <CustomSmartMeterCard
                                         smartMeterOverview={smartMeterOverview}
                                         navigateToDetails={() => {
-                                            navigate(smartMeterOverview.id);
+                                            void navigate(smartMeterOverview.id);
                                         }}
                                         kebabItems={[
                                             {

@@ -90,7 +90,7 @@ export default function SignUp() {
             await register(registerDto);
 
             showSnackbar('success', 'Successfully signed up!');
-            navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
+            void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
         } catch (error) {
             showSnackbar('error', 'Registration failed!');
             console.error('Registration failed:', error);
