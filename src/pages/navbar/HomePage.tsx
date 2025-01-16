@@ -1,12 +1,11 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { useEffect, useState } from 'react';
-import { MeasurementDto, SmartMeterOverviewDto } from '../../api/openAPI';
+import { SmartMeterOverviewDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
 import dayjs, { Dayjs } from 'dayjs';
-import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 
@@ -15,13 +14,10 @@ const HomePage = () => {
     const [measurementSections, setMeasurementSections] = useState<{ id: string; selectedSmartMeter: string | null }[]>(
         []
     );
-    const [measurementsPerSmartMeter, setMeasurementsPerSmartMeter] = useState<Record<string, MeasurementDto[]>>({});
-    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const { getSmartMeters } = useSmartMeterService();
-    const { getMeasurements } = useMeasurementService();
     const { showSnackbar } = useSnackbar();
     const theme = useTheme();
 
@@ -37,10 +33,6 @@ const HomePage = () => {
                 selectedSmartMeter: smartMeter.id,
             }));
             setMeasurementSections(initialSections);
-
-            smartMeters.forEach((smartMeter) => {
-                void loadMeasurements(smartMeter.id, ['All']);
-            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeters]);
@@ -54,24 +46,6 @@ const HomePage = () => {
             console.error(error);
             showSnackbar('error', `Failed to load smart meters!`);
         }
-    };
-
-    const loadMeasurements = async (smartMeterId: string, _selectedVariables: string[]) => {
-        setIsLoadingMeasurements(true);
-
-        try {
-            const measurements = await getMeasurements(
-                smartMeterId,
-                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
-            );
-            setMeasurementsPerSmartMeter((prev) => ({ ...prev, [smartMeterId]: measurements }));
-        } catch (error) {
-            console.error(error);
-            showSnackbar('error', `Failed to load measurements!`);
-        }
-
-        setIsLoadingMeasurements(false);
     };
 
     const addMeasurementSection = () => {
@@ -117,15 +91,7 @@ const HomePage = () => {
                                         endAt={endAt}
                                         setStartAt={setStartAt}
                                         setEndAt={setEndAt}
-                                        isLoadingMeasurements={isLoadingMeasurements}
-                                        measurements={measurementsPerSmartMeter[section.selectedSmartMeter] ?? []}
-                                        loadMeasurements={(selectedVariables) => {
-                                            if (section.selectedSmartMeter == null) {
-                                                return;
-                                            }
-
-                                            void loadMeasurements(section.selectedSmartMeter, selectedVariables);
-                                        }}
+                                        smartMeterId={section.selectedSmartMeter}
                                         chartOptions={{ title: '' }}
                                         backgroundColor={theme.palette.background.paper}
                                         padding={'2em'}

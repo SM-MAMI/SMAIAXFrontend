@@ -6,15 +6,15 @@ import { Dayjs } from 'dayjs';
 import { MeasurementDto } from '../../api/openAPI';
 import { VariableLabelMap } from '../../constants/constants.ts';
 import Checkbox from '@mui/material/Checkbox';
+import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 
 interface MeasurementSectionProps {
     startAt: Dayjs;
     endAt: Dayjs;
     setStartAt: (value: Dayjs) => void;
     setEndAt: (value: Dayjs) => void;
-    isLoadingMeasurements: boolean;
-    measurements: MeasurementDto[];
-    loadMeasurements: (selectedVariables: string[]) => void;
+    smartMeterId: string;
     chartOptions: ChartOptions;
     backgroundColor?: string;
     padding?: string;
@@ -25,14 +25,17 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     endAt,
     setStartAt,
     setEndAt,
-    isLoadingMeasurements,
-    measurements,
-    loadMeasurements,
+    smartMeterId,
     chartOptions,
     backgroundColor,
     padding,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [measurements, setMeasurements] = useState<MeasurementDto[]>([]);
     const [selectedVariables, setSelectedVariables] = useState<string[]>(['All']);
+
+    const { showSnackbar } = useSnackbar();
+    const { getMeasurements } = useMeasurementService();
 
     const availableVariables = Object.keys(VariableLabelMap);
     const autoCompleteOptions = ['All', ...availableVariables.map((key) => VariableLabelMap[key])];
@@ -45,8 +48,21 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         }
     };
 
-    const handleLoadData = (): void => {
-        loadMeasurements(selectedVariables.includes('All') ? availableVariables : selectedVariables);
+    const handleLoadData = async (): Promise<void> => {
+        try {
+            setIsLoading(true);
+            const measurements = await getMeasurements(
+                smartMeterId,
+                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
+            );
+            setMeasurements(measurements);
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', `Failed to load measurements!`);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -139,7 +155,9 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                     <Button
                         variant="contained"
                         size="medium"
-                        onClick={handleLoadData}
+                        onClick={() => {
+                            void handleLoadData();
+                        }}
                         sx={{
                             height: '36.5px',
                             width: '143px',
@@ -150,7 +168,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 </Box>
             </Box>
 
-            {isLoadingMeasurements ? (
+            {isLoading ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
