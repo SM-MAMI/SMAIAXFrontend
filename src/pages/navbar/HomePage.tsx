@@ -5,7 +5,6 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
-import dayjs, { Dayjs } from 'dayjs';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 
@@ -14,8 +13,6 @@ const HomePage = () => {
     const [measurementSections, setMeasurementSections] = useState<{ id: string; selectedSmartMeter: string | null }[]>(
         []
     );
-    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
-    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const { getSmartMeters } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
@@ -87,10 +84,6 @@ const HomePage = () => {
                             {section.selectedSmartMeter && (
                                 <>
                                     <MeasurementSection
-                                        startAt={startAt}
-                                        endAt={endAt}
-                                        setStartAt={setStartAt}
-                                        setEndAt={setEndAt}
                                         smartMeterId={section.selectedSmartMeter}
                                         chartOptions={{ title: '' }}
                                         backgroundColor={theme.palette.background.paper}

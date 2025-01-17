@@ -2,50 +2,71 @@ import React, { useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
-import { Dayjs } from 'dayjs';
-import { MeasurementDto } from '../../api/openAPI';
-import { VariableLabelMap } from '../../constants/constants.ts';
+import dayjs, { Dayjs } from 'dayjs';
 import Checkbox from '@mui/material/Checkbox';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
+import { RawVariableLabelMap, RawVariables } from '../../constants/variableConstants.ts';
+import { MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
+import { useTheme } from '@mui/material/styles';
 
 interface MeasurementSectionProps {
-    startAt: Dayjs;
-    endAt: Dayjs;
-    setStartAt: (value: Dayjs) => void;
-    setEndAt: (value: Dayjs) => void;
     smartMeterId: string;
     chartOptions: ChartOptions;
     backgroundColor?: string;
     padding?: string;
 }
 
+type RawVariablesOptionsKeys = keyof RawVariables | 'all';
+// type AggregatedVariablesOptions = keyof AggregatedVariables | 'all';
+
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
-    startAt,
-    endAt,
-    setStartAt,
-    setEndAt,
     smartMeterId,
     chartOptions,
     backgroundColor,
     padding,
 }) => {
+    const theme = useTheme();
+
     const [isLoading, setIsLoading] = useState(false);
-    const [measurements, setMeasurements] = useState<MeasurementDto[]>([]);
-    const [selectedVariables, setSelectedVariables] = useState<string[]>(['All']);
+    const [measurements, setMeasurements] = useState<MeasurementRawDto[]>([]);
+    const [selectedVariables, setSelectedVariables] = useState<RawVariablesOptionsKeys[]>(['all']);
+
+    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
+    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const { showSnackbar } = useSnackbar();
     const { getMeasurements } = useMeasurementService();
 
-    const availableVariables = Object.keys(VariableLabelMap);
-    const autoCompleteOptions = ['All', ...availableVariables.map((key) => VariableLabelMap[key])];
+    const variableOptions = Object.entries(RawVariableLabelMap) as [keyof RawVariables, string][];
+    const allOption: [RawVariablesOptionsKeys, string] = ['all', 'All'];
 
-    const handleVariableChange = (value: string[]): void => {
-        if (value.includes('All')) {
-            setSelectedVariables(['All']);
-        } else {
-            setSelectedVariables(value);
+    const handleVariableChange = (variables: RawVariablesOptionsKeys[]): void => {
+        setSelectedVariables(variables);
+    };
+
+    const filterMeasurements = (measurements: MeasurementRawDto[]): MeasurementRawDto[] => {
+        if (selectedVariables.length <= 0 || selectedVariables.includes('all')) {
+            return measurements;
         }
+
+        return measurements.map((measurement) => {
+            const filteredMeasurement: MeasurementRawDto = {
+                uptime: measurement.uptime,
+                timestamp: measurement.timestamp,
+            };
+
+            selectedVariables.forEach((variable) => {
+                const measurementKey = variable as keyof MeasurementRawDto;
+
+                if (measurementKey in measurement) {
+                    // @ts-expect-error - this will work as intended
+                    filteredMeasurement[measurementKey] = measurement[measurementKey];
+                }
+            });
+
+            return filteredMeasurement;
+        });
     };
 
     const handleLoadData = async (): Promise<void> => {
@@ -53,10 +74,14 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             setIsLoading(true);
             const measurements = await getMeasurements(
                 smartMeterId,
+                MeasurementResolution.Raw,
                 startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
                 endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
             );
-            setMeasurements(measurements);
+
+            if (measurements.measurementRawList != null) {
+                setMeasurements(filterMeasurements(measurements.measurementRawList));
+            }
         } catch (error) {
             console.error(error);
             showSnackbar('error', `Failed to load measurements!`);
@@ -84,32 +109,50 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 <Box>
                     <Autocomplete
                         multiple
-                        options={autoCompleteOptions}
+                        options={[allOption, ...variableOptions]}
+                        getOptionLabel={(option) => (option ? option[1] : '')}
                         disableCloseOnSelect
-                        value={selectedVariables.map((key) => (key === 'All' ? 'All' : VariableLabelMap[key]))}
-                        onChange={(_, value) => {
-                            const keys = value.map((label) =>
-                                label === 'All'
-                                    ? 'All'
-                                    : Object.keys(VariableLabelMap).find((key) => VariableLabelMap[key] === label)
-                            );
-                            handleVariableChange(keys as string[]);
-                        }}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    style={{ marginRight: 8 }}
-                                    checked={selected || selectedVariables.includes('All')}
-                                />
-                                {option}
-                            </li>
+                        value={selectedVariables.map((key) =>
+                            key === 'all' ? allOption : variableOptions.find(([optionKey]) => optionKey === key)
                         )}
+                        onChange={(_, variables) => {
+                            const filteredVariables = variables.filter(
+                                (item): item is [RawVariablesOptionsKeys, string] => item !== undefined
+                            );
+                            const keys: RawVariablesOptionsKeys[] = filteredVariables.map(([key]) => key);
+
+                            handleVariableChange(keys);
+                        }}
+                        renderOption={(
+                            props: React.HTMLAttributes<HTMLLIElement> & {
+                                key: string;
+                            },
+                            option,
+                            { selected }
+                        ) => {
+                            if (!option) {
+                                return null;
+                            }
+
+                            const label = option[1];
+                            const { key: key, ...rest } = props;
+
+                            return (
+                                <li key={key} {...rest}>
+                                    <Checkbox
+                                        style={{ marginRight: 8 }}
+                                        checked={selected || selectedVariables.includes('all')}
+                                    />
+                                    {label}
+                                </li>
+                            );
+                        }}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 label="Variables"
                                 placeholder={
-                                    selectedVariables.includes('All')
+                                    selectedVariables.includes('all')
                                         ? 'All Variables Selected'
                                         : `${String(selectedVariables.length)} Variables Selected`
                                 }
@@ -169,9 +212,16 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             </Box>
 
             {isLoading ? (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <CircularProgress size="3em" />
-                </div>
+                <Box
+                    sx={{
+                        height: chartOptions.height ?? '400px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: theme.palette.background.paper,
+                    }}>
+                    <CircularProgress disableShrink variant="indeterminate" size="3em" />
+                </Box>
             ) : (
                 <MeasurementLineChart measurements={measurements} chartOptions={chartOptions} />
             )}

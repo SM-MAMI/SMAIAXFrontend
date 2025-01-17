@@ -1,5 +1,5 @@
 import { useActivePage, useDialogs } from '@toolpad/core';
-import { MeasurementDto, PolicyDto, SmartMeterDto } from '../../../api/openAPI';
+import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
 import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useState } from 'react';
@@ -15,8 +15,6 @@ import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
 import SmartMeterPoliciesTable from '../../../components/tables/SmartMeterPoliciesTable.tsx';
 import KebabMenu from '../../../components/menus/KebabMenu.tsx';
 import Button from '@mui/material/Button';
-import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
-import dayjs, { Dayjs } from 'dayjs';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
 import Divider from '@mui/material/Divider';
 
@@ -30,10 +28,6 @@ const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
-    const [measurements, setMeasurements] = useState<MeasurementDto[]>([]);
-    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
-    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const params = useParams<{ id: string }>();
     const location = useLocation() as Location<LocationState>;
@@ -43,7 +37,6 @@ const SmartMeterDetailsPage = () => {
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
-    const { getMeasurements } = useMeasurementService();
 
     const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
     const breadcrumbs = smartMeter
@@ -70,7 +63,6 @@ const SmartMeterDetailsPage = () => {
     useEffect(() => {
         if (smartMeter?.id) {
             void loadSmartMeterPolicies(smartMeter.id);
-            void loadMeasurements(smartMeter.id, ['All']);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
@@ -96,24 +88,6 @@ const SmartMeterDetailsPage = () => {
             console.error(error);
             showSnackbar('error', `Failed to load smart meter policies!`);
         }
-    };
-
-    const loadMeasurements = async (smartMeterId: string, _selectedVariables: string[]) => {
-        setIsLoadingMeasurements(true);
-
-        try {
-            const measurements = await getMeasurements(
-                smartMeterId,
-                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
-            );
-            setMeasurements(measurements);
-        } catch (error) {
-            console.error(error);
-            showSnackbar('error', `Failed to load measurements!`);
-        }
-
-        setIsLoadingMeasurements(false);
     };
 
     const openCreateEditMetadataDialog = async () => {
@@ -198,18 +172,7 @@ const SmartMeterDetailsPage = () => {
 
                     <Divider sx={{ margin: '2em' }} />
 
-                    <MeasurementSection
-                        startAt={startAt}
-                        endAt={endAt}
-                        setStartAt={setStartAt}
-                        setEndAt={setEndAt}
-                        isLoadingMeasurements={isLoadingMeasurements}
-                        measurements={measurements}
-                        loadMeasurements={(selectedVariables) =>
-                            void loadMeasurements(smartMeter.id, selectedVariables)
-                        }
-                        chartOptions={{}}
-                    />
+                    <MeasurementSection smartMeterId={smartMeter.id} chartOptions={{}} />
 
                     <MetadataDrawer
                         smartMeter={smartMeter}

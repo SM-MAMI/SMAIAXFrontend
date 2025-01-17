@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { MeasurementDto } from '../../../api/openAPI';
+import { MeasurementRawDto } from '../../../api/openAPI';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import useCustomHighchartsTheme from '../../../hooks/useCustomHighchartsTheme.ts';
 import { useTheme } from '@mui/material/styles';
-import { VariableLabelMap } from '../../../constants/constants.ts';
 import { Box, Typography } from '@mui/material';
+import { RawVariableLabelMap, RawVariables } from '../../../constants/variableConstants.ts';
 
 export type ChartOptions = {
+    height?: string;
     title?: string;
     xAxisTitle?: string;
     yAxisTitle?: string;
 };
 
 interface MeasurementLineChartProps {
-    measurements: MeasurementDto[];
+    measurements: MeasurementRawDto[];
     chartOptions: ChartOptions;
 }
 
@@ -28,9 +29,18 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
         setChartKey((prevKey) => prevKey + 1);
     }, [theme.palette.mode]);
 
+    const chartHeight = chartOptions.height ?? '400px';
+
     if (measurements.length <= 0) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box
+                sx={{
+                    height: chartHeight,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: theme.palette.background.paper,
+                }}>
                 <Typography>No measurements available.</Typography>
             </Box>
         );
@@ -41,11 +51,11 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     const series = variableIds.map(([key]) => {
         const data = measurements.map((measurement) => ({
             x: new Date(measurement.timestamp ?? '').getTime(),
-            y: measurement[key as keyof MeasurementDto] as number,
+            y: measurement[key as keyof MeasurementRawDto] as number,
         }));
 
         return {
-            name: VariableLabelMap[key] ?? key,
+            name: RawVariableLabelMap[key as keyof RawVariables],
             data: data,
         };
     });
@@ -56,7 +66,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
         },
         chart: {
             type: 'line',
-            height: '400px',
+            height: chartHeight,
         },
         title: {
             text: chartOptions.title ?? 'Measurement',
