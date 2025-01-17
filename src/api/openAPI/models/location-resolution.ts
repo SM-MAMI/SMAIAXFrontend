@@ -21,12 +21,12 @@
  */
 
 export const LocationResolution = {
-    None: 'None',
     StreetName: 'StreetName',
     City: 'City',
     State: 'State',
     Country: 'Country',
-    Continent: 'Continent'
+    Continent: 'Continent',
+    None: 'None'
 } as const;
 
 export type LocationResolution = typeof LocationResolution[keyof typeof LocationResolution];

@@ -22,7 +22,9 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { MeasurementDto } from '../models';
+import type { MeasurementListDto } from '../models';
+// @ts-ignore
+import type { MeasurementResolution } from '../models';
 // @ts-ignore
 import type { ProblemDetails } from '../models';
 /**
@@ -34,18 +36,15 @@ export const MeasurementApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @param {string} smartMeterId 
-         * @param {string} startAt 
-         * @param {string} endAt 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurements: async (smartMeterId: string, startAt: string, endAt: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMeasurements: async (smartMeterId: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'smartMeterId' is not null or undefined
             assertParamExists('getMeasurements', 'smartMeterId', smartMeterId)
-            // verify required parameter 'startAt' is not null or undefined
-            assertParamExists('getMeasurements', 'startAt', startAt)
-            // verify required parameter 'endAt' is not null or undefined
-            assertParamExists('getMeasurements', 'endAt', endAt)
             const localVarPath = `/api/measurements`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -63,6 +62,10 @@ export const MeasurementApiAxiosParamCreator = function (configuration?: Configu
 
             if (smartMeterId !== undefined) {
                 localVarQueryParameter['smartMeterId'] = smartMeterId;
+            }
+
+            if (measurementResolution !== undefined) {
+                localVarQueryParameter['measurementResolution'] = measurementResolution;
             }
 
             if (startAt !== undefined) {
@@ -101,13 +104,14 @@ export const MeasurementApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} smartMeterId 
-         * @param {string} startAt 
-         * @param {string} endAt 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MeasurementDto>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurements(smartMeterId, startAt, endAt, options);
+        async getMeasurements(smartMeterId: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementListDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurements(smartMeterId, measurementResolution, startAt, endAt, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['MeasurementApi.getMeasurements']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -125,13 +129,14 @@ export const MeasurementApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @param {string} smartMeterId 
-         * @param {string} startAt 
-         * @param {string} endAt 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<MeasurementDto>> {
-            return localVarFp.getMeasurements(smartMeterId, startAt, endAt, options).then((request) => request(axios, basePath));
+        getMeasurements(smartMeterId: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): AxiosPromise<MeasurementListDto> {
+            return localVarFp.getMeasurements(smartMeterId, measurementResolution, startAt, endAt, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -146,14 +151,15 @@ export class MeasurementApi extends BaseAPI {
     /**
      * 
      * @param {string} smartMeterId 
-     * @param {string} startAt 
-     * @param {string} endAt 
+     * @param {MeasurementResolution} [measurementResolution] 
+     * @param {string} [startAt] 
+     * @param {string} [endAt] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MeasurementApi
      */
-    public getMeasurements(smartMeterId: string, startAt: string, endAt: string, options?: RawAxiosRequestConfig) {
-        return MeasurementApiFp(this.configuration).getMeasurements(smartMeterId, startAt, endAt, options).then((request) => request(this.axios, this.basePath));
+    public getMeasurements(smartMeterId: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig) {
+        return MeasurementApiFp(this.configuration).getMeasurements(smartMeterId, measurementResolution, startAt, endAt, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

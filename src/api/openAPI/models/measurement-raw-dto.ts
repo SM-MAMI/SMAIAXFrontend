@@ -22,6 +22,18 @@
 export interface MeasurementRawDto {
     /**
      * 
+     * @type {string}
+     * @memberof MeasurementRawDto
+     */
+    'timestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MeasurementRawDto
+     */
+    'uptime'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
@@ -98,17 +110,5 @@ export interface MeasurementRawDto {
      * @memberof MeasurementRawDto
      */
     'voltagePhase3'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof MeasurementRawDto
-     */
-    'uptime'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof MeasurementRawDto
-     */
-    'timestamp'?: string;
 }
 

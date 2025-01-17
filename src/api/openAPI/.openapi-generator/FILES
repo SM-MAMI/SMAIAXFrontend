@@ -1,5 +1,6 @@
 .gitignore
 .npmignore
+.openapi-generator-ignore
 api.ts
 apis/authentication-api.ts
 apis/contract-api.ts
@@ -20,7 +21,9 @@ models/index.ts
 models/location-dto.ts
 models/location-resolution.ts
 models/login-dto.ts
-models/measurement-dto.ts
+models/measurement-aggregated-dto.ts
+models/measurement-list-dto.ts
+models/measurement-raw-dto.ts
 models/measurement-resolution.ts
 models/metadata-create-dto.ts
 models/metadata-dto.ts
