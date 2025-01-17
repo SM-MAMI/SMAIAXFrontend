@@ -43,6 +43,6 @@ export interface MeasurementListDto {
      * @type {number}
      * @memberof MeasurementListDto
      */
-    'amountOfMeasurements'?: number;
+    'amountOfMeasurements': number;
 }
 

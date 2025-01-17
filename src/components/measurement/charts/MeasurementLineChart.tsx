@@ -15,7 +15,7 @@ export type ChartOptions = {
 };
 
 interface MeasurementLineChartProps {
-    measurements: MeasurementRawDto[];
+    measurements: Partial<MeasurementRawDto>[];
     chartOptions: ChartOptions;
 }
 

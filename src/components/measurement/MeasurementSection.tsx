@@ -29,7 +29,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const theme = useTheme();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [measurements, setMeasurements] = useState<MeasurementRawDto[]>([]);
+    const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
     const [selectedVariables, setSelectedVariables] = useState<RawVariablesOptionsKeys[]>(['all']);
 
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
@@ -45,23 +45,21 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         setSelectedVariables(variables);
     };
 
-    const filterMeasurements = (measurements: MeasurementRawDto[]): MeasurementRawDto[] => {
+    const filterMeasurements = (measurements: MeasurementRawDto[]): Partial<MeasurementRawDto>[] => {
         if (selectedVariables.length <= 0 || selectedVariables.includes('all')) {
             return measurements;
         }
 
         return measurements.map((measurement) => {
-            const filteredMeasurement: MeasurementRawDto = {
+            const filteredMeasurement: Partial<MeasurementRawDto> = {
                 uptime: measurement.uptime,
                 timestamp: measurement.timestamp,
             };
 
             selectedVariables.forEach((variable) => {
-                const measurementKey = variable as keyof MeasurementRawDto;
-
-                if (measurementKey in measurement) {
-                    // @ts-expect-error - this will work as intended
-                    filteredMeasurement[measurementKey] = measurement[measurementKey];
+                if (variable in measurement) {
+                    const key = variable as keyof MeasurementRawDto;
+                    (filteredMeasurement as Record<string, unknown>)[key] = measurement[key];
                 }
             });
 

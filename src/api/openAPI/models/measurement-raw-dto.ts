@@ -25,90 +25,90 @@ export interface MeasurementRawDto {
      * @type {string}
      * @memberof MeasurementRawDto
      */
-    'timestamp'?: string;
+    'timestamp': string;
     /**
      * 
      * @type {string}
      * @memberof MeasurementRawDto
      */
-    'uptime'?: string | null;
+    'uptime': string;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'positiveActivePower'?: number;
+    'positiveActivePower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'positiveActiveEnergyTotal'?: number;
+    'positiveActiveEnergyTotal': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'negativeActivePower'?: number;
+    'negativeActivePower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'negativeActiveEnergyTotal'?: number;
+    'negativeActiveEnergyTotal': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'reactiveEnergyQuadrant1Total'?: number;
+    'reactiveEnergyQuadrant1Total': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'reactiveEnergyQuadrant3Total'?: number;
+    'reactiveEnergyQuadrant3Total': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'totalPower'?: number;
+    'totalPower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'currentPhase1'?: number;
+    'currentPhase1': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'voltagePhase1'?: number;
+    'voltagePhase1': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'currentPhase2'?: number;
+    'currentPhase2': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'voltagePhase2'?: number;
+    'voltagePhase2': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'currentPhase3'?: number;
+    'currentPhase3': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'voltagePhase3'?: number;
+    'voltagePhase3': number;
 }
 
