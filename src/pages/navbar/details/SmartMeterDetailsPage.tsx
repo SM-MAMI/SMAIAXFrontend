@@ -1,4 +1,4 @@
-import { useActivePage, useDialogs } from '@toolpad/core';
+import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core';
 import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
 import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import invariant from '../../../utils/tiny-invariant.ts';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import CustomCreateEditMetadataDialog from '../../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
-import CustomCreatePolicyDialog from '../../../components/dialogs/CustomCreatePolicyDialog.tsx';
-import CustomDialogWithDeviceConfiguration from '../../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
+import CreateEditMetadataDialog from '../../../components/dialogs/CreateEditMetadataDialog.tsx';
+import CreatePolicyDialog from '../../../components/dialogs/CreatePolicyDialog.tsx';
+import DialogWithDeviceConfiguration from '../../../components/dialogs/DialogWithDeviceConfiguration.tsx';
 import MetadataDrawer from '../../../components/smartMeter/MetadataDrawer.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
@@ -24,6 +24,19 @@ type LocationState =
       }
     | undefined;
 
+const generateBreadcrumbs = (smartMeter: SmartMeterDto | undefined, activePage: ActivePage | null): Breadcrumb[] => {
+    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
+    return smartMeter && activePage
+        ? [
+              ...previousBreadcrumbs,
+              {
+                  title: smartMeter.name,
+                  path: `${activePage.path}/${smartMeter.id}`,
+              },
+          ]
+        : previousBreadcrumbs;
+};
+
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
@@ -38,16 +51,7 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
 
-    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
-    const breadcrumbs = smartMeter
-        ? [
-              ...previousBreadcrumbs,
-              {
-                  title: smartMeter.name,
-                  path: '/' + smartMeter.id,
-              },
-          ]
-        : previousBreadcrumbs;
+    const breadcrumbs = generateBreadcrumbs(smartMeter, activePage);
 
     invariant(activePage, 'No navigation match');
 
@@ -76,7 +80,7 @@ const SmartMeterDetailsPage = () => {
             setSmartMeter(smartMeter);
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meter!`);
+            showSnackbar('error', 'Failed to load smart meter!');
         }
     };
 
@@ -86,12 +90,12 @@ const SmartMeterDetailsPage = () => {
             setSmartMeterPolicies(smartMeterPolicies);
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meter policies!`);
+            showSnackbar('error', 'Failed to load smart meter policies!');
         }
     };
 
     const openCreateEditMetadataDialog = async () => {
-        await dialogs.open(CustomCreateEditMetadataDialog, {
+        await dialogs.open(CreateEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
             metadata: undefined,
             reloadSmartMeter: () => {
@@ -101,7 +105,7 @@ const SmartMeterDetailsPage = () => {
     };
 
     const openCreatePolicyDialog = async () => {
-        await dialogs.open(CustomCreatePolicyDialog, {
+        await dialogs.open(CreatePolicyDialog, {
             smartMeterId: smartMeter?.id ?? '',
             reloadPolicies: (smartMeterId: string) => {
                 void loadSmartMeterPolicies(smartMeterId);
@@ -110,7 +114,7 @@ const SmartMeterDetailsPage = () => {
     };
 
     const openCustomDialogWithDeviceConfiguration = async () => {
-        await dialogs.open(CustomDialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
+        await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
     const kebabItems = [

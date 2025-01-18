@@ -22,7 +22,7 @@ interface CreatePolicyDialogPayload {
     reloadPolicies: (smartMeterId: string) => void;
 }
 
-const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
+const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<CreatePolicyDialogPayload>>) => {
     const [policyName, setPolicyName] = useState<string>('');
     const [policyNameError, setPolicyNameError] = useState(false);
     const [policyNameErrorMessage, setPolicyNameErrorMessage] = useState('');
@@ -173,4 +173,4 @@ const CustomCreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogPro
     );
 };
 
-export default CustomCreatePolicyDialog;
+export default CreatePolicyDialog;

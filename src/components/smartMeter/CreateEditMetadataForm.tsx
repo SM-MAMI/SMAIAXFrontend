@@ -15,7 +15,7 @@ interface CustomCreateEditMetadataFormProps {
     setValidFrom: (date: string) => void;
 }
 
-const CustomCreateEditMetadataForm = ({
+const CreateEditMetadataForm = ({
     location,
     setLocation,
     householdSize,
@@ -156,4 +156,4 @@ const CustomCreateEditMetadataForm = ({
     );
 };
 
-export default CustomCreateEditMetadataForm;
+export default CreateEditMetadataForm;

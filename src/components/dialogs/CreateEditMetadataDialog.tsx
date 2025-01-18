@@ -4,7 +4,7 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService'
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
-import CustomCreateEditMetadataForm from '../smartMeter/CustomCreateEditMetadataForm.tsx';
+import CreateEditMetadataForm from '../smartMeter/CreateEditMetadataForm.tsx';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
@@ -15,11 +15,7 @@ interface EditMetadataDialogPayload {
     reloadSmartMeter: () => void;
 }
 
-const CustomCreateEditMetadataDialog = ({
-    payload,
-    open,
-    onClose,
-}: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
+const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
     const [title, setTitle] = useState<string>('Add Metadata');
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
@@ -77,7 +73,7 @@ const CustomCreateEditMetadataDialog = ({
         <Dialog open={open}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <CustomCreateEditMetadataForm
+                <CreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
                     householdSize={householdSize}
@@ -102,4 +98,4 @@ const CustomCreateEditMetadataDialog = ({
     );
 };
 
-export default CustomCreateEditMetadataDialog;
+export default CreateEditMetadataDialog;

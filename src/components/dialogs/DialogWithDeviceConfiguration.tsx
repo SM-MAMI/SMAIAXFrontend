@@ -15,7 +15,7 @@ import { useDeviceConfigService } from '../../hooks/services/useDeviceConfigServ
 interface CustomDialogWithDeviceConfigurationPayload {
     smartMeterId: string;
 }
-export default function CustomDialogWithDeviceConfiguration({
+export default function DialogWithDeviceConfiguration({
     payload,
     open,
     onClose,

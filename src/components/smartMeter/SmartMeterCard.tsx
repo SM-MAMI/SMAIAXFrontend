@@ -9,7 +9,7 @@ interface CustomSmartMeterCardProps {
     isRecentlyAdded: boolean;
 }
 
-const CustomSmartMeterCard = ({
+const SmartMeterCard = ({
     smartMeterOverview,
     navigateToDetails,
     kebabItems,
@@ -52,4 +52,4 @@ const CustomSmartMeterCard = ({
     );
 };
 
-export default CustomSmartMeterCard;
+export default SmartMeterCard;

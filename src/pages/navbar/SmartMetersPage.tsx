@@ -5,11 +5,11 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.
 import { SmartMeterOverviewDto } from '../../api/openAPI';
 import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
-import CustomDialogWithDeviceConfiguration from '../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
-import CustomAddSmartMeterDialog from '../../components/dialogs/CustomAddSmartMeterDialog.tsx';
+import DialogWithDeviceConfiguration from '../../components/dialogs/DialogWithDeviceConfiguration.tsx';
+import AddSmartMeterDialog from '../../components/dialogs/AddSmartMeterDialog.tsx';
 import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
 import Button from '@mui/material/Button';
-import CustomSmartMeterCard from '../../components/smartMeter/CustomSmartMeterCard.tsx';
+import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
 
@@ -46,16 +46,16 @@ const SmartMetersPage = () => {
             }
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meters!`);
+            showSnackbar('error', 'Failed to load smart meters!');
         }
     };
 
     const openDialogWithDeviceConfigurationDialog = async (smartMeterId: string) => {
-        await dialogs.open(CustomDialogWithDeviceConfiguration, { smartMeterId: smartMeterId });
+        await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeterId });
     };
 
     const openAddSmartMeterDialog = async () => {
-        await dialogs.open(CustomAddSmartMeterDialog, {
+        await dialogs.open(AddSmartMeterDialog, {
             reloadSmartMeters: (smartMeterName) => {
                 void loadSmartMeters(smartMeterName);
             },
@@ -87,7 +87,7 @@ const SmartMetersPage = () => {
                             component="div">
                             {smartMeters.map((smartMeterOverview) => (
                                 <Grid size={isSmallScreen ? 12 : 6} key={smartMeterOverview.id} component="div">
-                                    <CustomSmartMeterCard
+                                    <SmartMeterCard
                                         smartMeterOverview={smartMeterOverview}
                                         navigateToDetails={() => {
                                             void navigate(smartMeterOverview.id);

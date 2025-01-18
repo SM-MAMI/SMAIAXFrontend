@@ -42,12 +42,15 @@ export default tseslint.config({
             },
         ],
         'prettier/prettier': 'error',
-        "@typescript-eslint/no-unused-vars": [
-            "error",
+        '@typescript-eslint/no-unused-vars': [
+            'error',
             {
-                "varsIgnorePattern": "^_",
-                "argsIgnorePattern": "^_"
-            }
+                'varsIgnorePattern': '^_',
+                'argsIgnorePattern': '^_',
+            },
         ],
+        'one-var-declaration-per-line': 'error',
+        'prefer-const': 'warn',
+        'quotes': ['warn', 'single', { 'avoidEscape': true }],
     },
 });

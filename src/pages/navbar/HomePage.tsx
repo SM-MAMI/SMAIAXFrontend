@@ -5,10 +5,11 @@ import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
-import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 
 const HomePage = () => {
+    const theme = useTheme();
+
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
     const [measurementSections, setMeasurementSections] = useState<{ id: string; selectedSmartMeter: string | null }[]>(
         []
@@ -16,7 +17,6 @@ const HomePage = () => {
 
     const { getSmartMeters } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
-    const theme = useTheme();
 
     useEffect(() => {
         void loadSmartMeters();
@@ -41,7 +41,7 @@ const HomePage = () => {
             setSmartMeters(sortedSmartMeters);
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meters!`);
+            showSnackbar('error', 'Failed to load smart meters!');
         }
     };
 
@@ -70,7 +70,7 @@ const HomePage = () => {
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', width: '100%', padding: '1em' }}>
                     {measurementSections.map((section) => (
-                        <Box key={section.id} sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
+                        <Box key={section.id} sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Autocomplete
                                 options={smartMeters.map((smartMeter) => smartMeter.id)}
                                 getOptionLabel={getSmartMeterName}
@@ -78,7 +78,19 @@ const HomePage = () => {
                                 onChange={(_, newValue) => {
                                     updateSectionSmartMeter(section.id, newValue);
                                 }}
-                                renderInput={(params) => <TextField {...params} label="Select Smart Meter" />}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Select Smart Meter"
+                                        variant={'filled'}
+                                        sx={{
+                                            backgroundColor: theme.palette.background.paper,
+                                            '& .MuiFilledInput-root': {
+                                                backgroundColor: theme.palette.background.paper,
+                                            },
+                                        }}
+                                    />
+                                )}
                             />
 
                             {section.selectedSmartMeter && (
@@ -89,7 +101,7 @@ const HomePage = () => {
                                         backgroundColor={theme.palette.background.paper}
                                         padding={'2em'}
                                     />
-                                    <Divider sx={{ margin: '2em' }} />
+                                    {/*<Divider sx={{ margin: '1em' }} />*/}
                                 </>
                             )}
                         </Box>

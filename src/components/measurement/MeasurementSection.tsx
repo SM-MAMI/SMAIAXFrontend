@@ -87,7 +87,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             }
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load measurements!`);
+            showSnackbar('error', 'Failed to load measurements!');
         } finally {
             setIsLoading(false);
         }
