@@ -3,12 +3,12 @@ import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/mat
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
 import dayjs, { Dayjs } from 'dayjs';
-import Checkbox from '@mui/material/Checkbox';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
-import { RawVariableLabelMap, RawVariables } from '../../constants/variableConstants.ts';
+import { RawVariables } from '../../constants/variableConstants.ts';
 import { MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
+import CustomVariableAutoComplete from './CustomVariableAutoComplete.tsx';
 
 interface MeasurementSectionProps {
     smartMeterId: string;
@@ -17,7 +17,7 @@ interface MeasurementSectionProps {
     padding?: string;
 }
 
-type RawVariablesOptionsKeys = keyof RawVariables | 'all';
+export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
 // type AggregatedVariablesOptions = keyof AggregatedVariables | 'all';
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
@@ -31,6 +31,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
     const [selectedVariables, setSelectedVariables] = useState<RawVariablesOptionsKeys[]>(['all']);
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>('Raw');
 
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
@@ -38,8 +39,9 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const { showSnackbar } = useSnackbar();
     const { getMeasurements } = useMeasurementService();
 
-    const variableOptions = Object.entries(RawVariableLabelMap) as [keyof RawVariables, string][];
-    const allOption: [RawVariablesOptionsKeys, string] = ['all', 'All'];
+    const handleResolutionChange = (resolution: MeasurementResolution) => {
+        setSelectedResolution(resolution);
+    };
 
     const handleVariableChange = (variables: RawVariablesOptionsKeys[]): void => {
         setSelectedVariables(variables);
@@ -70,9 +72,12 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const handleLoadData = async (): Promise<void> => {
         try {
             setIsLoading(true);
+
+            setMeasurements([]);
+
             const measurements = await getMeasurements(
                 smartMeterId,
-                MeasurementResolution.Raw,
+                selectedResolution,
                 startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
                 endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
             );
@@ -106,65 +111,23 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 }}>
                 <Box>
                     <Autocomplete
-                        multiple
-                        options={[allOption, ...variableOptions]}
-                        getOptionLabel={(option) => (option ? option[1] : '')}
-                        disableCloseOnSelect
-                        value={selectedVariables.map((key) =>
-                            key === 'all' ? allOption : variableOptions.find(([optionKey]) => optionKey === key)
-                        )}
-                        onChange={(_, variables) => {
-                            const filteredVariables = variables.filter(
-                                (item): item is [RawVariablesOptionsKeys, string] => item !== undefined
-                            );
-                            const keys: RawVariablesOptionsKeys[] = filteredVariables.map(([key]) => key);
-
-                            handleVariableChange(keys);
-                        }}
-                        renderOption={(
-                            props: React.HTMLAttributes<HTMLLIElement> & {
-                                key: string;
-                            },
-                            option,
-                            { selected }
-                        ) => {
-                            if (!option) {
-                                return null;
+                        options={Object.values(MeasurementResolution)}
+                        getOptionLabel={(option) => option}
+                        value={selectedResolution}
+                        onChange={(_event, value) => {
+                            if (value == null) {
+                                value = MeasurementResolution.Raw;
                             }
 
-                            const label = option[1];
-                            const { key: key, ...rest } = props;
-
-                            return (
-                                <li key={key} {...rest}>
-                                    <Checkbox
-                                        style={{ marginRight: 8 }}
-                                        checked={selected || selectedVariables.includes('all')}
-                                    />
-                                    {label}
-                                </li>
-                            );
+                            handleResolutionChange(value);
                         }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Variables"
-                                placeholder={
-                                    selectedVariables.includes('all')
-                                        ? 'All Variables Selected'
-                                        : `${String(selectedVariables.length)} Variables Selected`
-                                }
-                            />
-                        )}
-                        slotProps={{
-                            chip: {
-                                sx: {
-                                    display: 'none',
-                                },
-                            },
-                        }}
-                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Resolution" />}
+                        sx={{ width: 175 }}
                     />
+                </Box>
+
+                <Box>
+                    <CustomVariableAutoComplete selectedVariables={selectedVariables} onChange={handleVariableChange} />
                 </Box>
 
                 <Box

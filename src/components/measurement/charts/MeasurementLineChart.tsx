@@ -41,7 +41,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
                     alignItems: 'center',
                     backgroundColor: theme.palette.background.paper,
                 }}>
-                <Typography>No measurements available.</Typography>
+                <Typography>No data to plot.</Typography>
             </Box>
         );
     }
