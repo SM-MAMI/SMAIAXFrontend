@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
-import { RawVariables } from '../../constants/variableConstants.ts';
-import { MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
+import {
+    AggregatedVariableLabelMap,
+    AggregatedVariables,
+    RawVariableLabelMap,
+    RawVariables,
+} from '../../constants/variableConstants.ts';
+import { MeasurementAggregatedDto, MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
 import CustomVariableAutoComplete from './CustomVariableAutoComplete.tsx';
 
@@ -18,7 +23,7 @@ interface MeasurementSectionProps {
 }
 
 export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
-// type AggregatedVariablesOptions = keyof AggregatedVariables | 'all';
+export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     smartMeterId,
@@ -28,10 +33,16 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
 }) => {
     const theme = useTheme();
 
+    const allVariableSelect = ['all'] as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+
     const [isLoading, setIsLoading] = useState(false);
     const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
-    const [selectedVariables, setSelectedVariables] = useState<RawVariablesOptionsKeys[]>(['all']);
-    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>('Raw');
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(MeasurementResolution.Raw);
+    const [selectedVariables, setSelectedVariables] =
+        useState<(RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]>(allVariableSelect);
+    const [variableOptions, setVariableOptions] = useState<
+        (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
+    >([]);
 
     const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
@@ -39,28 +50,39 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const { showSnackbar } = useSnackbar();
     const { getMeasurements } = useMeasurementService();
 
+    useEffect(() => {
+        if (selectedResolution === MeasurementResolution.Raw) {
+            setVariableOptions(Object.keys(RawVariableLabelMap) as RawVariablesOptionsKeys[]);
+        } else {
+            setVariableOptions(Object.keys(AggregatedVariableLabelMap) as AggregatedVariablesOptionsKeys[]);
+        }
+    }, [selectedResolution]);
+
     const handleResolutionChange = (resolution: MeasurementResolution) => {
         setSelectedResolution(resolution);
+        setSelectedVariables(allVariableSelect);
     };
 
-    const handleVariableChange = (variables: RawVariablesOptionsKeys[]): void => {
+    const handleVariableChange = (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]): void => {
         setSelectedVariables(variables);
     };
 
-    const filterMeasurements = (measurements: MeasurementRawDto[]): Partial<MeasurementRawDto>[] => {
-        if (selectedVariables.length <= 0 || selectedVariables.includes('all')) {
+    const filterMeasurements = (
+        measurements: (MeasurementRawDto | MeasurementAggregatedDto)[]
+    ): Partial<MeasurementRawDto | MeasurementAggregatedDto>[] => {
+        if (selectedVariables.length <= 0 || selectedVariables.includes(allVariableSelect[0])) {
             return measurements;
         }
 
         return measurements.map((measurement) => {
-            const filteredMeasurement: Partial<MeasurementRawDto> = {
+            const filteredMeasurement: Partial<MeasurementRawDto | MeasurementAggregatedDto> = {
                 uptime: measurement.uptime,
                 timestamp: measurement.timestamp,
             };
 
             selectedVariables.forEach((variable) => {
                 if (variable in measurement) {
-                    const key = variable as keyof MeasurementRawDto;
+                    const key = variable as keyof (MeasurementRawDto | MeasurementAggregatedDto);
                     (filteredMeasurement as Record<string, unknown>)[key] = measurement[key];
                 }
             });
@@ -72,7 +94,6 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const handleLoadData = async (): Promise<void> => {
         try {
             setIsLoading(true);
-
             setMeasurements([]);
 
             const measurements = await getMeasurements(
@@ -82,8 +103,20 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
             );
 
-            if (measurements.measurementRawList != null) {
-                setMeasurements(filterMeasurements(measurements.measurementRawList));
+            if (measurements.measurementRawList || measurements.measurementAggregatedList) {
+                const rawList = measurements.measurementRawList || [];
+                const aggregatedList = measurements.measurementAggregatedList || [];
+
+                if (rawList.length === 0 && aggregatedList.length === 0) {
+                    showSnackbar('info', 'No data points for requested time range available!');
+                    return;
+                }
+
+                if (rawList.length > 0) {
+                    setMeasurements(filterMeasurements(rawList));
+                } else if (aggregatedList.length > 0) {
+                    setMeasurements(filterMeasurements(aggregatedList));
+                }
             }
         } catch (error) {
             console.error(error);
@@ -129,7 +162,11 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 </Box>
 
                 <Box>
-                    <CustomVariableAutoComplete selectedVariables={selectedVariables} onChange={handleVariableChange} />
+                    <CustomVariableAutoComplete
+                        selectedVariables={selectedVariables}
+                        onChange={handleVariableChange}
+                        variableOptions={variableOptions}
+                    />
                 </Box>
 
                 <Box

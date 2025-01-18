@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { MeasurementRawDto } from '../../../api/openAPI';
+import { MeasurementAggregatedDto, MeasurementRawDto } from '../../../api/openAPI';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import useCustomHighchartsTheme from '../../../hooks/useCustomHighchartsTheme.ts';
 import { useTheme } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import { RawVariableLabelMap, RawVariables } from '../../../constants/variableConstants.ts';
+import {
+    AggregatedVariableLabelMap,
+    AggregatedVariables,
+    RawVariableLabelMap,
+    RawVariables,
+} from '../../../constants/variableConstants.ts';
 
 export type ChartOptions = {
     height?: string;
@@ -15,7 +20,7 @@ export type ChartOptions = {
 };
 
 interface MeasurementLineChartProps {
-    measurements: Partial<MeasurementRawDto>[];
+    measurements: Partial<MeasurementRawDto | MeasurementAggregatedDto>[];
     chartOptions: ChartOptions;
     useBoxShadow?: boolean;
 }
@@ -53,11 +58,13 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     const series = variableIds.map(([key]) => {
         const data = measurements.map((measurement) => ({
             x: new Date(measurement.timestamp ?? '').getTime(),
-            y: measurement[key as keyof MeasurementRawDto] as number,
+            y: measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
         }));
 
         return {
-            name: RawVariableLabelMap[key as keyof RawVariables],
+            name:
+                RawVariableLabelMap[key as keyof RawVariables] ||
+                AggregatedVariableLabelMap[key as keyof AggregatedVariables],
             data: data,
         };
     });

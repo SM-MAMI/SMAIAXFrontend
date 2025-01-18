@@ -68,7 +68,7 @@ const HomePage = () => {
                     <CircularProgress size="3em" />
                 </Box>
             ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', width: '100%', padding: '1em' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', height: '100%', width: '100%' }}>
                     {measurementSections.map((section) => (
                         <Box key={section.id} sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Autocomplete
@@ -94,20 +94,18 @@ const HomePage = () => {
                             />
 
                             {section.selectedSmartMeter && (
-                                <>
-                                    <MeasurementSection
-                                        smartMeterId={section.selectedSmartMeter}
-                                        chartOptions={{ title: '' }}
-                                        backgroundColor={theme.palette.background.paper}
-                                        padding={'2em'}
-                                    />
-                                    {/*<Divider sx={{ margin: '1em' }} />*/}
-                                </>
+                                <MeasurementSection
+                                    smartMeterId={section.selectedSmartMeter}
+                                    chartOptions={{ title: '' }}
+                                    backgroundColor={theme.palette.background.paper}
+                                    padding={'2em'}
+                                />
                             )}
                         </Box>
                     ))}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingBottom: '1em', paddingRight: '2em' }}>
+                    <Box
+                        sx={{ display: 'flex', justifyContent: 'flex-end', paddingBottom: '1em', paddingRight: '2em' }}>
                         <Button
                             sx={{ width: '143px' }}
                             variant="contained"

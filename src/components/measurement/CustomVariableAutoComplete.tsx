@@ -1,32 +1,48 @@
 import React from 'react';
 import { Autocomplete, Checkbox, TextField } from '@mui/material';
-import { RawVariableLabelMap, RawVariables } from '../../constants/variableConstants.ts';
-import { RawVariablesOptionsKeys } from './MeasurementSection.tsx';
+import { AggregatedVariablesOptionsKeys, RawVariablesOptionsKeys } from './MeasurementSection.tsx';
+import {
+    AggregatedVariableLabelMap,
+    AggregatedVariables,
+    RawVariableLabelMap,
+    RawVariables,
+} from '../../constants/variableConstants.ts';
 
 interface VariableAutoCompleteProps {
-    selectedVariables: RawVariablesOptionsKeys[];
-    onChange: (variables: RawVariablesOptionsKeys[]) => void;
+    selectedVariables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+    onChange: (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]) => void;
+    variableOptions: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
 }
 
-const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({ selectedVariables, onChange }) => {
-    const variableOptions = Object.entries(RawVariableLabelMap) as [keyof RawVariables, string][];
-    const allOption: [RawVariablesOptionsKeys, string] = ['all', 'All'];
+const mapVariableOptions = (variableOptions: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]) => {
+    return variableOptions.map((key) => {
+        const label =
+            RawVariableLabelMap[key as keyof RawVariables] ||
+            AggregatedVariableLabelMap[key as keyof AggregatedVariables] ||
+            '';
+        return [key, label] as [string, string];
+    });
+};
+
+const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({
+    selectedVariables,
+    onChange,
+    variableOptions,
+}) => {
+    const allOptionKey = 'all';
+    const optionsWithLabels = [[allOptionKey, 'All'], ...mapVariableOptions(variableOptions)];
 
     return (
         <Autocomplete
             multiple
-            options={[allOption, ...variableOptions]}
+            options={optionsWithLabels}
             getOptionLabel={(option) => (option ? option[1] : '')}
             disableCloseOnSelect
-            value={selectedVariables.map((key) =>
-                key === 'all' ? allOption : variableOptions.find(([optionKey]) => optionKey === key)
-            )}
+            value={selectedVariables.map((key) => optionsWithLabels.find(([optionKey]) => optionKey === key) || null)}
             onChange={(_, variables) => {
-                const filteredVariables = variables.filter(
-                    (item): item is [RawVariablesOptionsKeys, string] => item !== undefined
-                );
-                const keys: RawVariablesOptionsKeys[] = filteredVariables.map(([key]) => key);
-                onChange(keys);
+                const filteredVariables = variables.filter((item) => item !== null);
+                const keys = filteredVariables.map((item) => item[0]);
+                onChange(keys as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]);
             }}
             renderOption={(
                 props: React.HTMLAttributes<HTMLLIElement> & {
@@ -44,7 +60,10 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({ selec
 
                 return (
                     <li key={key} {...rest}>
-                        <Checkbox style={{ marginRight: 8 }} checked={selected || selectedVariables.includes('all')} />
+                        <Checkbox
+                            style={{ marginRight: 8 }}
+                            checked={selected || selectedVariables.includes(allOptionKey)}
+                        />
                         {label}
                     </li>
                 );
@@ -54,7 +73,7 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({ selec
                     {...params}
                     label="Variables"
                     placeholder={
-                        selectedVariables.includes('all')
+                        selectedVariables.includes(allOptionKey)
                             ? 'All Variables Selected'
                             : `${String(selectedVariables.length)} Variables Selected`
                     }
