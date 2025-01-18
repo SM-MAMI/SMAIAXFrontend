@@ -17,9 +17,10 @@ export type ChartOptions = {
 interface MeasurementLineChartProps {
     measurements: Partial<MeasurementRawDto>[];
     chartOptions: ChartOptions;
+    useBoxShadow?: boolean;
 }
 
-const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements, chartOptions }) => {
+const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements, chartOptions, useBoxShadow }) => {
     const theme = useTheme();
     const [chartKey, setChartKey] = useState(0);
 
@@ -34,6 +35,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     if (measurements.length <= 0) {
         return (
             <Box
+                boxShadow={useBoxShadow ? theme.shadows[1] : ''}
                 sx={{
                     height: chartHeight,
                     display: 'flex',
@@ -89,7 +91,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     };
 
     return (
-        <Box boxShadow={theme.shadows[1]}>
+        <Box boxShadow={useBoxShadow ? theme.shadows[1] : ''}>
             <HighchartsReact key={chartKey} highcharts={Highcharts} options={options} />
         </Box>
     );

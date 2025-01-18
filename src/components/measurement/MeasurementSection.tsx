@@ -93,6 +93,8 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         }
     };
 
+    const useBoxShadow = backgroundColor == null;
+
     return (
         <Box
             sx={{
@@ -174,6 +176,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
 
             {isLoading ? (
                 <Box
+                    boxShadow={useBoxShadow ? theme.shadows[1] : ''}
                     sx={{
                         height: chartOptions.height ?? '400px',
                         display: 'flex',
@@ -184,7 +187,11 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                     <CircularProgress disableShrink variant="indeterminate" size="3em" />
                 </Box>
             ) : (
-                <MeasurementLineChart measurements={measurements} chartOptions={chartOptions} />
+                <MeasurementLineChart
+                    measurements={measurements}
+                    chartOptions={chartOptions}
+                    useBoxShadow={useBoxShadow}
+                />
             )}
         </Box>
     );

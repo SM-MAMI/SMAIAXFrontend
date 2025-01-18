@@ -107,7 +107,7 @@ const HomePage = () => {
                         </Box>
                     ))}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1em', padding: '2em' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingBottom: '1em', paddingRight: '2em' }}>
                         <Button
                             sx={{ width: '143px' }}
                             variant="contained"
