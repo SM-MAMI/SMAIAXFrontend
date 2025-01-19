@@ -1,5 +1,5 @@
 import { Box, CircularProgress, useMediaQuery } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
@@ -23,7 +23,7 @@ const SmartMetersPage = () => {
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
 
-    const hasExecuted = React.useRef(false);
+    const hasExecuted = useRef(false);
     useEffect(() => {
         if (!hasExecuted.current) {
             void loadSmartMeters();

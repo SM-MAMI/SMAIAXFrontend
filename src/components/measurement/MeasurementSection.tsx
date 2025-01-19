@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
@@ -60,8 +60,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         }
     }, [selectedResolution]);
 
-    const hasExecuted = React.useRef(false);
-
+    const hasExecuted = useRef(false);
     useEffect(() => {
         if (!hasExecuted.current && requestOnInitialLoad) {
             void handleLoadData(requestOnInitialLoad);
