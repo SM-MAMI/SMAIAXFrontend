@@ -17,7 +17,8 @@ import CustomVariableAutoComplete from './CustomVariableAutoComplete.tsx';
 
 interface MeasurementSectionProps {
     smartMeterId: string;
-    chartOptions: ChartOptions;
+    requestOnInitialLoad?: boolean;
+    chartOptions?: ChartOptions;
     backgroundColor?: string;
     padding?: string;
 }
@@ -27,9 +28,10 @@ export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     smartMeterId,
-    chartOptions,
-    backgroundColor,
-    padding,
+    requestOnInitialLoad = false,
+    chartOptions = {},
+    backgroundColor = '',
+    padding = '1em',
 }) => {
     const theme = useTheme();
 
@@ -57,6 +59,16 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             setVariableOptions(Object.keys(AggregatedVariableLabelMap) as AggregatedVariablesOptionsKeys[]);
         }
     }, [selectedResolution]);
+
+    const hasExecuted = React.useRef(false);
+
+    useEffect(() => {
+        if (!hasExecuted.current && requestOnInitialLoad) {
+            void handleLoadData(requestOnInitialLoad);
+            hasExecuted.current = true;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestOnInitialLoad]);
 
     const handleResolutionChange = (resolution: MeasurementResolution) => {
         setSelectedResolution(resolution);
@@ -91,7 +103,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         });
     };
 
-    const handleLoadData = async (): Promise<void> => {
+    const handleLoadData = async (isInitialLoad = false): Promise<void> => {
         try {
             setIsLoading(true);
             setMeasurements([]);
@@ -108,7 +120,10 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 const aggregatedList = measurements.measurementAggregatedList || [];
 
                 if (rawList.length === 0 && aggregatedList.length === 0) {
-                    showSnackbar('info', 'No data points for requested time range available!');
+                    if (!isInitialLoad) {
+                        showSnackbar('info', 'No data points for requested time range available!');
+                    }
+
                     return;
                 }
 
@@ -126,14 +141,14 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         }
     };
 
-    const useBoxShadow = backgroundColor == null;
+    const useBoxShadow = backgroundColor === '';
 
     return (
         <Box
             sx={{
                 width: '100%',
-                padding: padding ?? '1em',
-                backgroundColor: backgroundColor ?? '',
+                padding: padding,
+                backgroundColor: backgroundColor,
             }}>
             <Box
                 sx={{

@@ -21,11 +21,15 @@ export type ChartOptions = {
 
 interface MeasurementLineChartProps {
     measurements: Partial<MeasurementRawDto | MeasurementAggregatedDto>[];
-    chartOptions: ChartOptions;
+    chartOptions?: ChartOptions;
     useBoxShadow?: boolean;
 }
 
-const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements, chartOptions, useBoxShadow }) => {
+const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
+    measurements,
+    chartOptions = {},
+    useBoxShadow = true,
+}) => {
     const theme = useTheme();
     const [chartKey, setChartKey] = useState(0);
 

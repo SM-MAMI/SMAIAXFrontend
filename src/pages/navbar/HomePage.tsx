@@ -1,5 +1,5 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
@@ -18,8 +18,12 @@ const HomePage = () => {
     const { getSmartMeters } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
 
+    const hasExecuted = useRef(false);
     useEffect(() => {
-        void loadSmartMeters();
+        if (!hasExecuted.current) {
+            void loadSmartMeters();
+            hasExecuted.current = true;
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -96,6 +100,7 @@ const HomePage = () => {
                             {section.selectedSmartMeter && (
                                 <MeasurementSection
                                     smartMeterId={section.selectedSmartMeter}
+                                    requestOnInitialLoad={true}
                                     chartOptions={{ title: '' }}
                                     backgroundColor={theme.palette.background.paper}
                                     padding={'2em'}

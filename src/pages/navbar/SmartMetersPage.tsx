@@ -1,5 +1,5 @@
 import { Box, CircularProgress, useMediaQuery } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { SmartMeterOverviewDto } from '../../api/openAPI';
@@ -23,8 +23,12 @@ const SmartMetersPage = () => {
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
 
+    const hasExecuted = React.useRef(false);
     useEffect(() => {
-        void loadSmartMeters();
+        if (!hasExecuted.current) {
+            void loadSmartMeters();
+            hasExecuted.current = true;
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

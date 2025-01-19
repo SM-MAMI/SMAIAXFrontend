@@ -176,7 +176,7 @@ const SmartMeterDetailsPage = () => {
 
                     <Divider sx={{ margin: '2em' }} />
 
-                    <MeasurementSection smartMeterId={smartMeter.id} chartOptions={{}} />
+                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
 
                     <MetadataDrawer
                         smartMeter={smartMeter}
