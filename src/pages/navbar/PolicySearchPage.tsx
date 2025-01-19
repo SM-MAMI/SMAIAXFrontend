@@ -24,12 +24,14 @@ const PolicySearchPage = () => {
     const { createContract } = useContractService();
     const { showSnackbar } = useSnackbar();
 
-    const hasExecuted = useRef(false);
+    const hasExecutedInitialLoadPolicies = useRef(false);
     useEffect(() => {
-        if (!hasExecuted.current) {
-            void loadPolicies();
-            hasExecuted.current = true;
+        if (hasExecutedInitialLoadPolicies.current) {
+            return;
         }
+
+        void loadPolicies();
+        hasExecutedInitialLoadPolicies.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

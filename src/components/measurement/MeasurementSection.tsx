@@ -60,12 +60,14 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
         }
     }, [selectedResolution]);
 
-    const hasExecuted = useRef(false);
+    const hasExecutedInitialHandleLoadData = useRef(false);
     useEffect(() => {
-        if (!hasExecuted.current && requestOnInitialLoad) {
-            void handleLoadData(requestOnInitialLoad);
-            hasExecuted.current = true;
+        if (hasExecutedInitialHandleLoadData.current || !requestOnInitialLoad) {
+            return;
         }
+
+        void handleLoadData(requestOnInitialLoad);
+        hasExecutedInitialHandleLoadData.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [requestOnInitialLoad]);
 

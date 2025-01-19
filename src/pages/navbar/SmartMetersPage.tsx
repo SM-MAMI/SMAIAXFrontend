@@ -23,12 +23,14 @@ const SmartMetersPage = () => {
     const navigate = useNavigate();
     const { showSnackbar } = useSnackbar();
 
-    const hasExecuted = useRef(false);
+    const hasExecutedInitialLoadSmartMeters = useRef(false);
     useEffect(() => {
-        if (!hasExecuted.current) {
-            void loadSmartMeters();
-            hasExecuted.current = true;
+        if (hasExecutedInitialLoadSmartMeters.current) {
+            return;
         }
+
+        void loadSmartMeters();
+        hasExecutedInitialLoadSmartMeters.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

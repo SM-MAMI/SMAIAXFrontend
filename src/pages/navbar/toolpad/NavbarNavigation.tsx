@@ -5,7 +5,7 @@ import { Navigation, Session } from '@toolpad/core';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../../constants/constants.ts';
 import { ElectricMeter, Search } from '@mui/icons-material';
-import React from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuthenticationService } from '../../../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../../../api/openAPI';
 import { SmaiaxLogo } from '../../../assets/SmaiaxLogo.tsx';
@@ -73,15 +73,13 @@ const customTheme = createTheme({
 });
 
 const NavbarNavigation = () => {
-    const navigate = useNavigate();
+    const [session, setSession] = useState<Session | null>();
 
+    const navigate = useNavigate();
+    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
     const { logout } = useAuthenticationService();
 
-    const [session, setSession] = React.useState<Session | null>();
-
-    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
-
-    React.useEffect(() => {
+    useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
@@ -100,7 +98,7 @@ const NavbarNavigation = () => {
         }
     }, [navigate]);
 
-    const authentication = React.useMemo(() => {
+    const authentication = useMemo(() => {
         // noinspection JSUnusedGlobalSymbols
         return {
             signIn: () => {},

@@ -2,7 +2,7 @@ import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core
 import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
 import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import invariant from '../../../utils/tiny-invariant.ts';
 import { Box, CircularProgress, Typography } from '@mui/material';
@@ -55,8 +55,12 @@ const SmartMeterDetailsPage = () => {
 
     invariant(activePage, 'No navigation match');
 
+    const hasExecutedInitialLoadSmartMeter = useRef(false);
     useEffect(() => {
-        void loadSmartMeter();
+        if (!hasExecutedInitialLoadSmartMeter.current) {
+            void loadSmartMeter();
+            hasExecutedInitialLoadSmartMeter.current = true;
+        }
 
         if (location.state?.openDialog === true) {
             void openCreateEditMetadataDialog();
@@ -64,10 +68,14 @@ const SmartMeterDetailsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    const hasExecutedInitialLoadSmartMeterPolicies = useRef(false);
     useEffect(() => {
-        if (smartMeter?.id) {
-            void loadSmartMeterPolicies(smartMeter.id);
+        if (hasExecutedInitialLoadSmartMeterPolicies.current || !smartMeter?.id) {
+            return;
         }
+
+        void loadSmartMeterPolicies(smartMeter.id);
+        hasExecutedInitialLoadSmartMeterPolicies.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
 
