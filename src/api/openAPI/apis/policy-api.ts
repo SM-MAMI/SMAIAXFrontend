@@ -24,7 +24,7 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { LocationResolution } from '../models';
 // @ts-ignore
-import type { MeasurementDto } from '../models';
+import type { MeasurementListDto } from '../models';
 // @ts-ignore
 import type { MeasurementResolution } from '../models';
 // @ts-ignore
@@ -225,7 +225,7 @@ export const PolicyApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MeasurementDto>>> {
+        async getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementListDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurementsByPolicy(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PolicyApi.getMeasurementsByPolicy']?.[localVarOperationServerIndex]?.url;
@@ -282,7 +282,7 @@ export const PolicyApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<MeasurementDto>> {
+        getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): AxiosPromise<MeasurementListDto> {
             return localVarFp.getMeasurementsByPolicy(id, options).then((request) => request(axios, basePath));
         },
         /**

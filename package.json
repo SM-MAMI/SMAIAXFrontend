@@ -12,8 +12,6 @@
     "generate-api": "npx @openapitools/openapi-generator-cli generate --input-spec http://localhost:5263/swagger/v1/swagger.json --generator-name typescript-axios --output ./src/api/openAPI --skip-validate-spec --config ./openapi-config.json"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "@mui/x-date-pickers": "^7.23.6",

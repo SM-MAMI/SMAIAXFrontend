@@ -46,7 +46,7 @@ export default function SignIn() {
             void navigate('/');
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Signin failed!`);
+            showSnackbar('error', 'Signin failed!');
         }
     };
 

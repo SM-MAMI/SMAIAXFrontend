@@ -3,16 +3,16 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Navigation, Session } from '@toolpad/core';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
-import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../constants/constants.ts';
+import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../../constants/constants.ts';
 import { ElectricMeter, Search } from '@mui/icons-material';
-import React from 'react';
-import { useAuthenticationService } from '../../hooks/services/useAuthenticationService.ts';
-import { TokenDto } from '../../api/openAPI';
-import { SmaiaxLogo } from '../../assets/SmaiaxLogo.tsx';
+import { useEffect, useMemo, useState } from 'react';
+import { useAuthenticationService } from '../../../hooks/services/useAuthenticationService.ts';
+import { TokenDto } from '../../../api/openAPI';
+import { SmaiaxLogo } from '../../../assets/SmaiaxLogo.tsx';
 import Typography from '@mui/material/Typography';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { createTheme } from '@mui/material/styles';
-import { colorSchemes, shadows, shape, typography } from '../../themes/themePrimitives.ts';
+import { colorSchemes, shadows, shape, typography } from '../../../themes/themePrimitives.ts';
 import { useMediaQuery } from '@mui/material';
 
 const NAVIGATION: Navigation = [
@@ -25,21 +25,19 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
-        segment: SmaiaxRoutes.SMART_METERS,
-        title: 'Smart Meters',
-        pattern: 'smart-meters{/:id}*',
-        icon: <ElectricMeter />,
-    },
-    {
         segment: SmaiaxRoutes.POLICY_SEARCH,
         title: 'Policy Search',
-        pattern: 'policy-search',
         icon: <Search />,
+    },
+    {
+        segment: SmaiaxRoutes.SMART_METERS,
+        title: 'Smart Meters',
+        pattern: `${SmaiaxRoutes.SMART_METERS}{/:id}*`,
+        icon: <ElectricMeter />,
     },
     {
         segment: SmaiaxRoutes.ORDERS,
         title: 'Order Connector',
-        pattern: 'orders',
         icon: <ShoppingCartIcon />,
     },
 ];
@@ -75,15 +73,13 @@ const customTheme = createTheme({
 });
 
 const NavbarNavigation = () => {
-    const navigate = useNavigate();
+    const [session, setSession] = useState<Session | null>();
 
+    const navigate = useNavigate();
+    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
     const { logout } = useAuthenticationService();
 
-    const [session, setSession] = React.useState<Session | null>();
-
-    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
-
-    React.useEffect(() => {
+    useEffect(() => {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
@@ -102,7 +98,7 @@ const NavbarNavigation = () => {
         }
     }, [navigate]);
 
-    const authentication = React.useMemo(() => {
+    const authentication = useMemo(() => {
         // noinspection JSUnusedGlobalSymbols
         return {
             signIn: () => {},

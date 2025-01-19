@@ -5,8 +5,8 @@ import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
 import SmartMetersPage from './pages/navbar/SmartMetersPage.tsx';
-import NavbarNavigation from './components/toolpad/NavbarNavigation.tsx';
-import Navbar from './components/toolpad/Navbar.tsx';
+import NavbarNavigation from './pages/navbar/toolpad/NavbarNavigation.tsx';
+import Navbar from './pages/navbar/toolpad/Navbar.tsx';
 import HomePage from './pages/navbar/HomePage.tsx';
 import { SmaiaxRoutes } from './constants/constants.ts';
 import SmartMeterDetailsPage from './pages/navbar/details/SmartMeterDetailsPage.tsx';
@@ -39,16 +39,16 @@ const protectedRoutes = [
                         element: <HomePage />,
                     },
                     {
+                        path: SmaiaxRoutes.POLICY_SEARCH,
+                        element: <PolicySearchPage />,
+                    },
+                    {
                         path: SmaiaxRoutes.SMART_METERS,
                         element: <SmartMetersPage />,
                     },
                     {
                         path: SmaiaxRoutes.SMART_METER_DETAILS,
                         element: <SmartMeterDetailsPage />,
-                    },
-                    {
-                        path: SmaiaxRoutes.POLICY_SEARCH,
-                        element: <PolicySearchPage />,
                     },
                     {
                         path: SmaiaxRoutes.ORDERS,

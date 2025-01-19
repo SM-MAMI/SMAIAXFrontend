@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
-import CustomCreateEditMetadataForm from '../smartMeter/CustomCreateEditMetadataForm.tsx';
+import CreateEditMetadataForm from '../smartMeter/CreateEditMetadataForm.tsx';
 import dayjs from 'dayjs';
 import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
 
@@ -23,7 +23,7 @@ const INITIAL_LOCATION = {};
 const INITIAL_VALID_FROM = dayjs().toISOString();
 const INITIAL_HOUSEHOLD_SIZE = undefined;
 
-const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
+const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<AddSmartMeterDialogPayload>>) => {
     const [activeStep, setActiveStep] = useState(0);
     const [serialNumber, setSerialNumber] = useState<string>('');
     const [serialNumberError, setSerialNumberError] = useState(false);
@@ -92,7 +92,7 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
         {
             title: 'Step 3: Add Metadata',
             content: (
-                <CustomCreateEditMetadataForm
+                <CreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
                     householdSize={householdSize}
@@ -300,4 +300,4 @@ const CustomAddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogPr
     );
 };
 
-export default CustomAddSmartMeterDialog;
+export default AddSmartMeterDialog;

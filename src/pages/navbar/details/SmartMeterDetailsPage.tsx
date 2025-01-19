@@ -1,22 +1,20 @@
-import { useActivePage, useDialogs } from '@toolpad/core';
-import { MeasurementDto, PolicyDto, SmartMeterDto } from '../../../api/openAPI';
+import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core';
+import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
 import { Location, useLocation, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import invariant from '../../../utils/tiny-invariant.ts';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import CustomCreateEditMetadataDialog from '../../../components/dialogs/CustomCreateEditMetadataDialog.tsx';
-import CustomCreatePolicyDialog from '../../../components/dialogs/CustomCreatePolicyDialog.tsx';
-import CustomDialogWithDeviceConfiguration from '../../../components/dialogs/CustomDialogWithDeviceConfiguration.tsx';
+import CreateEditMetadataDialog from '../../../components/dialogs/CreateEditMetadataDialog.tsx';
+import CreatePolicyDialog from '../../../components/dialogs/CreatePolicyDialog.tsx';
+import DialogWithDeviceConfiguration from '../../../components/dialogs/DialogWithDeviceConfiguration.tsx';
 import MetadataDrawer from '../../../components/smartMeter/MetadataDrawer.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
 import SmartMeterPoliciesTable from '../../../components/tables/SmartMeterPoliciesTable.tsx';
 import KebabMenu from '../../../components/menus/KebabMenu.tsx';
 import Button from '@mui/material/Button';
-import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
-import dayjs, { Dayjs } from 'dayjs';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
 import Divider from '@mui/material/Divider';
 
@@ -26,14 +24,23 @@ type LocationState =
       }
     | undefined;
 
+const generateBreadcrumbs = (smartMeter: SmartMeterDto | undefined, activePage: ActivePage | null): Breadcrumb[] => {
+    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
+    return smartMeter && activePage
+        ? [
+              ...previousBreadcrumbs,
+              {
+                  title: smartMeter.name,
+                  path: `${activePage.path}/${smartMeter.id}`,
+              },
+          ]
+        : previousBreadcrumbs;
+};
+
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [isLoadingMeasurements, setIsLoadingMeasurements] = useState<boolean>(false);
-    const [measurements, setMeasurements] = useState<MeasurementDto[]>([]);
-    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
-    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const params = useParams<{ id: string }>();
     const location = useLocation() as Location<LocationState>;
@@ -43,23 +50,17 @@ const SmartMeterDetailsPage = () => {
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
-    const { getMeasurements } = useMeasurementService();
 
-    const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
-    const breadcrumbs = smartMeter
-        ? [
-              ...previousBreadcrumbs,
-              {
-                  title: smartMeter.name,
-                  path: '/' + smartMeter.id,
-              },
-          ]
-        : previousBreadcrumbs;
+    const breadcrumbs = generateBreadcrumbs(smartMeter, activePage);
 
     invariant(activePage, 'No navigation match');
 
+    const hasExecutedInitialLoadSmartMeter = useRef(false);
     useEffect(() => {
-        void loadSmartMeter();
+        if (!hasExecutedInitialLoadSmartMeter.current) {
+            void loadSmartMeter();
+            hasExecutedInitialLoadSmartMeter.current = true;
+        }
 
         if (location.state?.openDialog === true) {
             void openCreateEditMetadataDialog();
@@ -67,11 +68,14 @@ const SmartMeterDetailsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id]);
 
+    const hasExecutedInitialLoadSmartMeterPolicies = useRef(false);
     useEffect(() => {
-        if (smartMeter?.id) {
-            void loadSmartMeterPolicies(smartMeter.id);
-            void loadMeasurements(smartMeter.id, ['All']);
+        if (hasExecutedInitialLoadSmartMeterPolicies.current || !smartMeter?.id) {
+            return;
         }
+
+        void loadSmartMeterPolicies(smartMeter.id);
+        hasExecutedInitialLoadSmartMeterPolicies.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [smartMeter]);
 
@@ -84,7 +88,7 @@ const SmartMeterDetailsPage = () => {
             setSmartMeter(smartMeter);
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meter!`);
+            showSnackbar('error', 'Failed to load smart meter!');
         }
     };
 
@@ -94,30 +98,12 @@ const SmartMeterDetailsPage = () => {
             setSmartMeterPolicies(smartMeterPolicies);
         } catch (error) {
             console.error(error);
-            showSnackbar('error', `Failed to load smart meter policies!`);
+            showSnackbar('error', 'Failed to load smart meter policies!');
         }
-    };
-
-    const loadMeasurements = async (smartMeterId: string, _selectedVariables: string[]) => {
-        setIsLoadingMeasurements(true);
-
-        try {
-            const measurements = await getMeasurements(
-                smartMeterId,
-                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
-            );
-            setMeasurements(measurements);
-        } catch (error) {
-            console.error(error);
-            showSnackbar('error', `Failed to load measurements!`);
-        }
-
-        setIsLoadingMeasurements(false);
     };
 
     const openCreateEditMetadataDialog = async () => {
-        await dialogs.open(CustomCreateEditMetadataDialog, {
+        await dialogs.open(CreateEditMetadataDialog, {
             smartMeterId: smartMeter?.id ?? '',
             metadata: undefined,
             reloadSmartMeter: () => {
@@ -127,7 +113,7 @@ const SmartMeterDetailsPage = () => {
     };
 
     const openCreatePolicyDialog = async () => {
-        await dialogs.open(CustomCreatePolicyDialog, {
+        await dialogs.open(CreatePolicyDialog, {
             smartMeterId: smartMeter?.id ?? '',
             reloadPolicies: (smartMeterId: string) => {
                 void loadSmartMeterPolicies(smartMeterId);
@@ -136,7 +122,7 @@ const SmartMeterDetailsPage = () => {
     };
 
     const openCustomDialogWithDeviceConfiguration = async () => {
-        await dialogs.open(CustomDialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
+        await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
     const kebabItems = [
@@ -198,18 +184,7 @@ const SmartMeterDetailsPage = () => {
 
                     <Divider sx={{ margin: '2em' }} />
 
-                    <MeasurementSection
-                        startAt={startAt}
-                        endAt={endAt}
-                        setStartAt={setStartAt}
-                        setEndAt={setEndAt}
-                        isLoadingMeasurements={isLoadingMeasurements}
-                        measurements={measurements}
-                        loadMeasurements={(selectedVariables) =>
-                            void loadMeasurements(smartMeter.id, selectedVariables)
-                        }
-                        chartOptions={{}}
-                    />
+                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
 
                     <MetadataDrawer
                         smartMeter={smartMeter}

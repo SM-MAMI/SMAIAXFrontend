@@ -1,5 +1,5 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ContractCreateDto, LocationResolution, MeasurementResolution, PolicyDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import {
@@ -24,8 +24,14 @@ const PolicySearchPage = () => {
     const { createContract } = useContractService();
     const { showSnackbar } = useSnackbar();
 
+    const hasExecutedInitialLoadPolicies = useRef(false);
     useEffect(() => {
+        if (hasExecutedInitialLoadPolicies.current) {
+            return;
+        }
+
         void loadPolicies();
+        hasExecutedInitialLoadPolicies.current = true;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

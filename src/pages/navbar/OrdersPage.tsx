@@ -135,7 +135,7 @@ const OrdersPage = () => {
                             }}>
                             <Stepper id="desktop-stepper" activeStep={activeStep} sx={{ width: '100%', height: 40 }}>
                                 {steps.map((label) => (
-                                    <Step sx={{ ':first-child': { pl: 0 }, ':last-child': { pr: 0 } }} key={label}>
+                                    <Step sx={{ ':first-of-type': { pl: 0 }, ':last-of-type': { pr: 0 } }} key={label}>
                                         <StepLabel>{label}</StepLabel>
                                     </Step>
                                 ))}
@@ -177,8 +177,8 @@ const OrdersPage = () => {
                             {steps.map((label) => (
                                 <Step
                                     sx={{
-                                        ':first-child': { pl: 0 },
-                                        ':last-child': { pr: 0 },
+                                        ':first-of-type': { pl: 0 },
+                                        ':last-of-type': { pr: 0 },
                                         '& .MuiStepConnector-root': { top: { xs: 6, sm: 12 } },
                                     }}
                                     key={label}>

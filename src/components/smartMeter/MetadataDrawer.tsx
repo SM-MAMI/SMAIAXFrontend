@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
 import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
-import CustomCreateEditMetadataDialog from '../dialogs/CustomCreateEditMetadataDialog.tsx';
+import CreateEditMetadataDialog from '../dialogs/CreateEditMetadataDialog.tsx';
 import { useDialogs } from '@toolpad/core';
 
 interface MetadataDrawerProps {
@@ -21,7 +21,7 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
     const dialogs = useDialogs();
 
     const openCreateEditMetadataDialog = async () => {
-        await dialogs.open(CustomCreateEditMetadataDialog, {
+        await dialogs.open(CreateEditMetadataDialog, {
             smartMeterId: smartMeter.id,
             metadata: selectedMetadata,
             reloadSmartMeter: () => {

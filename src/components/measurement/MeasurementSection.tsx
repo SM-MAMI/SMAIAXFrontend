@@ -1,60 +1,155 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
-import { Dayjs } from 'dayjs';
-import { MeasurementDto } from '../../api/openAPI';
-import { VariableLabelMap } from '../../constants/constants.ts';
-import Checkbox from '@mui/material/Checkbox';
+import dayjs, { Dayjs } from 'dayjs';
+import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
+import {
+    AggregatedVariableLabelMap,
+    AggregatedVariables,
+    RawVariableLabelMap,
+    RawVariables,
+} from '../../constants/variableConstants.ts';
+import { MeasurementAggregatedDto, MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
+import { useTheme } from '@mui/material/styles';
+import CustomVariableAutoComplete from './CustomVariableAutoComplete.tsx';
 
 interface MeasurementSectionProps {
-    startAt: Dayjs;
-    endAt: Dayjs;
-    setStartAt: (value: Dayjs) => void;
-    setEndAt: (value: Dayjs) => void;
-    isLoadingMeasurements: boolean;
-    measurements: MeasurementDto[];
-    loadMeasurements: (selectedVariables: string[]) => void;
-    chartOptions: ChartOptions;
+    smartMeterId: string;
+    requestOnInitialLoad?: boolean;
+    chartOptions?: ChartOptions;
     backgroundColor?: string;
     padding?: string;
 }
 
+export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
+export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
+
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
-    startAt,
-    endAt,
-    setStartAt,
-    setEndAt,
-    isLoadingMeasurements,
-    measurements,
-    loadMeasurements,
-    chartOptions,
-    backgroundColor,
-    padding,
+    smartMeterId,
+    requestOnInitialLoad = false,
+    chartOptions = {},
+    backgroundColor = '',
+    padding = '1em',
 }) => {
-    const [selectedVariables, setSelectedVariables] = useState<string[]>(['All']);
+    const theme = useTheme();
 
-    const availableVariables = Object.keys(VariableLabelMap);
-    const autoCompleteOptions = ['All', ...availableVariables.map((key) => VariableLabelMap[key])];
+    const allVariableSelect = ['all'] as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
 
-    const handleVariableChange = (value: string[]): void => {
-        if (value.includes('All')) {
-            setSelectedVariables(['All']);
+    const [isLoading, setIsLoading] = useState(false);
+    const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(MeasurementResolution.Raw);
+    const [selectedVariables, setSelectedVariables] =
+        useState<(RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]>(allVariableSelect);
+    const [variableOptions, setVariableOptions] = useState<
+        (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
+    >([]);
+
+    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
+    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
+
+    const { showSnackbar } = useSnackbar();
+    const { getMeasurements } = useMeasurementService();
+
+    useEffect(() => {
+        if (selectedResolution === MeasurementResolution.Raw) {
+            setVariableOptions(Object.keys(RawVariableLabelMap) as RawVariablesOptionsKeys[]);
         } else {
-            setSelectedVariables(value);
+            setVariableOptions(Object.keys(AggregatedVariableLabelMap) as AggregatedVariablesOptionsKeys[]);
+        }
+    }, [selectedResolution]);
+
+    const hasExecutedInitialHandleLoadData = useRef(false);
+    useEffect(() => {
+        if (hasExecutedInitialHandleLoadData.current || !requestOnInitialLoad) {
+            return;
+        }
+
+        void handleLoadData(requestOnInitialLoad);
+        hasExecutedInitialHandleLoadData.current = true;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestOnInitialLoad]);
+
+    const handleResolutionChange = (resolution: MeasurementResolution) => {
+        setSelectedResolution(resolution);
+        setSelectedVariables(allVariableSelect);
+    };
+
+    const handleVariableChange = (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]): void => {
+        setSelectedVariables(variables);
+    };
+
+    const filterMeasurements = (
+        measurements: (MeasurementRawDto | MeasurementAggregatedDto)[]
+    ): Partial<MeasurementRawDto | MeasurementAggregatedDto>[] => {
+        if (selectedVariables.length <= 0 || selectedVariables.includes(allVariableSelect[0])) {
+            return measurements;
+        }
+
+        return measurements.map((measurement) => {
+            const filteredMeasurement: Partial<MeasurementRawDto | MeasurementAggregatedDto> = {
+                uptime: measurement.uptime,
+                timestamp: measurement.timestamp,
+            };
+
+            selectedVariables.forEach((variable) => {
+                if (variable in measurement) {
+                    const key = variable as keyof (MeasurementRawDto | MeasurementAggregatedDto);
+                    (filteredMeasurement as Record<string, unknown>)[key] = measurement[key];
+                }
+            });
+
+            return filteredMeasurement;
+        });
+    };
+
+    const handleLoadData = async (isInitialLoad = false): Promise<void> => {
+        try {
+            setIsLoading(true);
+            setMeasurements([]);
+
+            const measurements = await getMeasurements(
+                smartMeterId,
+                selectedResolution,
+                startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+                endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
+            );
+
+            if (measurements.measurementRawList || measurements.measurementAggregatedList) {
+                const rawList = measurements.measurementRawList || [];
+                const aggregatedList = measurements.measurementAggregatedList || [];
+
+                if (rawList.length === 0 && aggregatedList.length === 0) {
+                    if (!isInitialLoad) {
+                        showSnackbar('info', 'No data points for requested time range available!');
+                    }
+
+                    return;
+                }
+
+                if (rawList.length > 0) {
+                    setMeasurements(filterMeasurements(rawList));
+                } else if (aggregatedList.length > 0) {
+                    setMeasurements(filterMeasurements(aggregatedList));
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            showSnackbar('error', 'Failed to load measurements!');
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleLoadData = (): void => {
-        loadMeasurements(selectedVariables.includes('All') ? availableVariables : selectedVariables);
-    };
+    const useBoxShadow = backgroundColor === '';
 
     return (
         <Box
             sx={{
                 width: '100%',
-                padding: padding ?? '1em',
-                backgroundColor: backgroundColor ?? '',
+                padding: padding,
+                backgroundColor: backgroundColor,
             }}>
             <Box
                 sx={{
@@ -67,46 +162,26 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 }}>
                 <Box>
                     <Autocomplete
-                        multiple
-                        options={autoCompleteOptions}
-                        disableCloseOnSelect
-                        value={selectedVariables.map((key) => (key === 'All' ? 'All' : VariableLabelMap[key]))}
-                        onChange={(_, value) => {
-                            const keys = value.map((label) =>
-                                label === 'All'
-                                    ? 'All'
-                                    : Object.keys(VariableLabelMap).find((key) => VariableLabelMap[key] === label)
-                            );
-                            handleVariableChange(keys as string[]);
+                        options={Object.values(MeasurementResolution)}
+                        getOptionLabel={(option) => option}
+                        value={selectedResolution}
+                        onChange={(_event, value) => {
+                            if (value == null) {
+                                value = MeasurementResolution.Raw;
+                            }
+
+                            handleResolutionChange(value);
                         }}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    style={{ marginRight: 8 }}
-                                    checked={selected || selectedVariables.includes('All')}
-                                />
-                                {option}
-                            </li>
-                        )}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Variables"
-                                placeholder={
-                                    selectedVariables.includes('All')
-                                        ? 'All Variables Selected'
-                                        : `${String(selectedVariables.length)} Variables Selected`
-                                }
-                            />
-                        )}
-                        slotProps={{
-                            chip: {
-                                sx: {
-                                    display: 'none',
-                                },
-                            },
-                        }}
-                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Resolution" />}
+                        sx={{ width: 175 }}
+                    />
+                </Box>
+
+                <Box>
+                    <CustomVariableAutoComplete
+                        selectedVariables={selectedVariables}
+                        onChange={handleVariableChange}
+                        variableOptions={variableOptions}
                     />
                 </Box>
 
@@ -139,7 +214,9 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                     <Button
                         variant="contained"
                         size="medium"
-                        onClick={handleLoadData}
+                        onClick={() => {
+                            void handleLoadData();
+                        }}
                         sx={{
                             height: '36.5px',
                             width: '143px',
@@ -150,12 +227,24 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 </Box>
             </Box>
 
-            {isLoadingMeasurements ? (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <CircularProgress size="3em" />
-                </div>
+            {isLoading ? (
+                <Box
+                    boxShadow={useBoxShadow ? theme.shadows[1] : ''}
+                    sx={{
+                        height: chartOptions.height ?? '400px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: theme.palette.background.paper,
+                    }}>
+                    <CircularProgress disableShrink variant="indeterminate" size="3em" />
+                </Box>
             ) : (
-                <MeasurementLineChart measurements={measurements} chartOptions={chartOptions} />
+                <MeasurementLineChart
+                    measurements={measurements}
+                    chartOptions={chartOptions}
+                    useBoxShadow={useBoxShadow}
+                />
             )}
         </Box>
     );

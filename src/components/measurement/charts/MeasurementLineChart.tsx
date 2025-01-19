@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { MeasurementDto } from '../../../api/openAPI';
+import { MeasurementAggregatedDto, MeasurementRawDto } from '../../../api/openAPI';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import useCustomHighchartsTheme from '../../../hooks/useCustomHighchartsTheme.ts';
 import { useTheme } from '@mui/material/styles';
-import { VariableLabelMap } from '../../../constants/constants.ts';
 import { Box, Typography } from '@mui/material';
+import {
+    AggregatedVariableLabelMap,
+    AggregatedVariables,
+    RawVariableLabelMap,
+    RawVariables,
+} from '../../../constants/variableConstants.ts';
 
 export type ChartOptions = {
+    height?: string;
     title?: string;
     xAxisTitle?: string;
     yAxisTitle?: string;
 };
 
 interface MeasurementLineChartProps {
-    measurements: MeasurementDto[];
-    chartOptions: ChartOptions;
+    measurements: Partial<MeasurementRawDto | MeasurementAggregatedDto>[];
+    chartOptions?: ChartOptions;
+    useBoxShadow?: boolean;
 }
 
-const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurements, chartOptions }) => {
+const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
+    measurements,
+    chartOptions = {},
+    useBoxShadow = true,
+}) => {
     const theme = useTheme();
     const [chartKey, setChartKey] = useState(0);
 
@@ -28,10 +39,20 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
         setChartKey((prevKey) => prevKey + 1);
     }, [theme.palette.mode]);
 
+    const chartHeight = chartOptions.height ?? '400px';
+
     if (measurements.length <= 0) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography>No measurements available.</Typography>
+            <Box
+                boxShadow={useBoxShadow ? theme.shadows[1] : ''}
+                sx={{
+                    height: chartHeight,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: theme.palette.background.paper,
+                }}>
+                <Typography>No data to plot.</Typography>
             </Box>
         );
     }
@@ -41,11 +62,13 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     const series = variableIds.map(([key]) => {
         const data = measurements.map((measurement) => ({
             x: new Date(measurement.timestamp ?? '').getTime(),
-            y: measurement[key as keyof MeasurementDto] as number,
+            y: measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
         }));
 
         return {
-            name: VariableLabelMap[key] ?? key,
+            name:
+                RawVariableLabelMap[key as keyof RawVariables] ||
+                AggregatedVariableLabelMap[key as keyof AggregatedVariables],
             data: data,
         };
     });
@@ -56,7 +79,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
         },
         chart: {
             type: 'line',
-            height: '400px',
+            height: chartHeight,
         },
         title: {
             text: chartOptions.title ?? 'Measurement',
@@ -79,7 +102,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({ measurement
     };
 
     return (
-        <Box boxShadow={theme.shadows[1]}>
+        <Box boxShadow={useBoxShadow ? theme.shadows[1] : ''}>
             <HighchartsReact key={chartKey} highcharts={Highcharts} options={options} />
         </Box>
     );

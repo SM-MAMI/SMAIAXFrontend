@@ -56,6 +56,12 @@ export interface PolicyDto {
      * @memberof PolicyDto
      */
     'price': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PolicyDto
+     */
+    'measurementCount'?: number;
 }
 
 
