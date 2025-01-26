@@ -1,13 +1,15 @@
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { DialogTitle } from '@mui/material';
 import { LocationDto, MetadataDto } from '../../api/openAPI';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import dayjs from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
 import CreateEditMetadataForm from '../smartMeter/CreateEditMetadataForm.tsx';
-import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
+import CustomDialog from '../pure/CustomDialog.tsx';
+import CustomDialogActions from '../pure/CustomDialogActions.tsx';
+import CustomDialogContent from '../pure/CustomDialogContent.tsx';
 
 interface EditMetadataDialogPayload {
     smartMeterId: string;
@@ -70,9 +72,9 @@ const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
     };
 
     return (
-        <Dialog open={open}>
+        <CustomDialog open={open}>
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent>
+            <CustomDialogContent>
                 <CreateEditMetadataForm
                     location={location}
                     setLocation={setLocation}
@@ -81,8 +83,8 @@ const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
                     validFrom={validFrom}
                     setValidFrom={setValidFrom}
                 />
-            </DialogContent>
-            <DialogActions>
+            </CustomDialogContent>
+            <CustomDialogActions>
                 <Button
                     onClick={() => {
                         void handleSubmit();
@@ -93,8 +95,8 @@ const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
                 <Button onClick={() => void onClose()} variant="outlined">
                     Cancel
                 </Button>
-            </DialogActions>
-        </Dialog>
+            </CustomDialogActions>
+        </CustomDialog>
     );
 };
 

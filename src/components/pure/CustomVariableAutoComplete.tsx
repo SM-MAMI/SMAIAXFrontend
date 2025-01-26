@@ -1,6 +1,6 @@
 import React from 'react';
 import { Autocomplete, Checkbox, TextField } from '@mui/material';
-import { AggregatedVariablesOptionsKeys, RawVariablesOptionsKeys } from './MeasurementSection.tsx';
+import { AggregatedVariablesOptionsKeys, RawVariablesOptionsKeys } from '../measurement/MeasurementSection.tsx';
 import {
     AggregatedVariableLabelMap,
     AggregatedVariables,

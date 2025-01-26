@@ -1,20 +1,21 @@
 ﻿import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import { DialogProps } from '@toolpad/core';
 import TextField from '@mui/material/TextField';
 import { Download } from '@mui/icons-material';
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { EncryptionService } from '../../utils/encryptionService.ts';
-import CustomPasswordFormControl from '../CustomPasswordFormControl.tsx';
+import CustomPasswordFormControl from '../pure/CustomPasswordFormControl.tsx';
 import { useDeviceConfigService } from '../../hooks/services/useDeviceConfigService.ts';
+import CustomDialog from '../pure/CustomDialog.tsx';
+import CustomDialogActions from '../pure/CustomDialogActions.tsx';
+import CustomDialogContent from '../pure/CustomDialogContent.tsx';
 
 interface CustomDialogWithDeviceConfigurationPayload {
     smartMeterId: string;
 }
+
 export default function DialogWithDeviceConfiguration({
     payload,
     open,
@@ -68,9 +69,9 @@ export default function DialogWithDeviceConfiguration({
     }
 
     return (
-        <Dialog fullWidth open={open}>
+        <CustomDialog open={open}>
             <DialogTitle>Device Configuration</DialogTitle>
-            <DialogContent>
+            <CustomDialogContent>
                 <Typography variant="body2" component="p">
                     Please enter your home WIFI network information to configure the connector.
                 </Typography>
@@ -87,8 +88,8 @@ export default function DialogWithDeviceConfiguration({
                     onPasswordChange={onPasswordChange}
                     label="WIFI Password"
                 />
-            </DialogContent>
-            <DialogActions>
+            </CustomDialogContent>
+            <CustomDialogActions>
                 <Button
                     onClick={() => {
                         void onClose();
@@ -104,7 +105,7 @@ export default function DialogWithDeviceConfiguration({
                     endIcon={<Download />}>
                     Download
                 </Button>
-            </DialogActions>
-        </Dialog>
+            </CustomDialogActions>
+        </CustomDialog>
     );
 }

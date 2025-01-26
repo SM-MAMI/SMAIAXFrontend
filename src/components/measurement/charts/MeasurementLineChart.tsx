@@ -73,6 +73,10 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         };
     });
 
+    const chartTitleText = chartOptions.title ?? 'Measurement';
+    const xAxisTitleText = chartOptions.xAxisTitle ?? '';
+    const yAxisTitleText = chartOptions.yAxisTitle ?? '';
+
     const options = {
         accessibility: {
             enabled: false,
@@ -82,11 +86,11 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             height: chartHeight,
         },
         title: {
-            text: chartOptions.title ?? 'Measurement',
+            text: chartTitleText,
         },
         xAxis: {
             title: {
-                text: chartOptions.xAxisTitle ?? '',
+                text: xAxisTitleText,
             },
             type: 'datetime',
             dateTimeLabelFormats: {
@@ -95,7 +99,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         },
         yAxis: {
             title: {
-                text: chartOptions.yAxisTitle ?? '',
+                text: yAxisTitleText,
             },
         },
         series: series,

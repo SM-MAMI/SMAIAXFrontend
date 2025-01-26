@@ -1,21 +1,13 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormLabel,
-    Input,
-    NativeSelect,
-    TextField,
-} from '@mui/material';
+import { Box, Button, DialogTitle, FormLabel, Input, NativeSelect, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { LocationResolution, MeasurementResolution, PolicyCreateDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { DialogProps } from '@toolpad/core';
+import CustomDialog from '../pure/CustomDialog.tsx';
+import CustomDialogActions from '../pure/CustomDialogActions.tsx';
+import CustomDialogContent from '../pure/CustomDialogContent.tsx';
 
 interface CreatePolicyDialogPayload {
     smartMeterId: string;
@@ -74,9 +66,9 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     };
 
     return (
-        <Dialog open={open}>
+        <CustomDialog open={open}>
             <DialogTitle>Create Policy</DialogTitle>
-            <DialogContent>
+            <CustomDialogContent>
                 <Box
                     component="form"
                     onSubmit={(event) => {
@@ -155,21 +147,21 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                         <FormLabel htmlFor="price">Enter a price</FormLabel>
                         <Input type="number" defaultValue={0} id="price" name="price" inputProps={{ min: 0 }} />
                     </FormControl>
-                    <DialogActions>
-                        <Button type="submit" variant="outlined">
-                            Ok
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                void onClose();
-                            }}
-                            variant="outlined">
-                            Cancel
-                        </Button>
-                    </DialogActions>
                 </Box>
-            </DialogContent>
-        </Dialog>
+            </CustomDialogContent>
+            <CustomDialogActions>
+                <Button type="submit" variant="outlined">
+                    Ok
+                </Button>
+                <Button
+                    onClick={() => {
+                        void onClose();
+                    }}
+                    variant="outlined">
+                    Cancel
+                </Button>
+            </CustomDialogActions>
+        </CustomDialog>
     );
 };
 
