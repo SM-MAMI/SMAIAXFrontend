@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Box, FormControl, Input, TextField, Typography, useMediaQuery } from '@mui/material';
-import CustomStepper, { StepItem } from './../CustomStepper';
+import CustomStepper, { StepItem } from '../pure/CustomStepper.tsx';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService';
 import { LocationDto, SmartMeterAssignDto } from '../../api/openAPI';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { DialogProps } from '@toolpad/core';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
 import CreateEditMetadataForm from '../smartMeter/CreateEditMetadataForm.tsx';
 import dayjs from 'dayjs';
-import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
+import CustomDialog from '../pure/CustomDialog.tsx';
+import CustomDialogActions from '../pure/CustomDialogActions.tsx';
+import CustomDialogContent from '../pure/CustomDialogContent.tsx';
 
 interface AddSmartMeterDialogPayload {
     reloadSmartMeters: (smartMeterName: string) => void;
@@ -37,7 +37,7 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
 
     const { showSnackbar } = useSnackbar();
     const { addSmartMeter } = useSmartMeterService();
-    const isSmallScreen = useMediaQuery(MediaQueryMobileMaxWidthStr);
+    const isSmallScreen = useMediaQuery(MediaQueryTabletMaxWidthStr);
 
     const isValidMetadataState =
         (JSON.stringify(location) !== JSON.stringify(INITIAL_LOCATION) ||
@@ -244,32 +244,17 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
         }
     };
 
-    const minWidth = isSmallScreen ? '100%' : '600px';
     return (
-        <Dialog
-            fullWidth
-            open={open}
-            sx={{
-                '& .MuiDialog-paper': {
-                    width: '50%',
-                    maxWidth: '1000px',
-                    minWidth: minWidth,
-                    height: '30%',
-                    maxHeight: '90vh',
-                    minHeight: '500px',
-                },
-            }}>
+        <CustomDialog open={open}>
             <DialogTitle>Add Smart Meter</DialogTitle>
-            <DialogContent>
-                <Box sx={{ width: '100%', p: 2 }}>
-                    <CustomStepper
-                        steps={steps}
-                        orientation={isSmallScreen ? 'vertical' : 'horizontal'}
-                        activeStep={activeStep}
-                    />
-                </Box>
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: 'space-between', p: 3 }}>
+            <CustomDialogContent>
+                <CustomStepper
+                    steps={steps}
+                    orientation={isSmallScreen ? 'vertical' : 'horizontal'}
+                    activeStep={activeStep}
+                />
+            </CustomDialogContent>
+            <CustomDialogActions justifyContent={'space-between'}>
                 <Box>
                     <Button onClick={handleBack} disabled={activeStep === 0} variant="outlined" sx={{ mr: 2 }}>
                         Back
@@ -295,8 +280,8 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
                     variant="outlined">
                     Cancel
                 </Button>
-            </DialogActions>
-        </Dialog>
+            </CustomDialogActions>
+        </CustomDialog>
     );
 };
 

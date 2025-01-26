@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MeasurementAggregatedDto, MeasurementRawDto } from '../../../api/openAPI';
-import Highcharts from 'highcharts';
+import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import useCustomHighchartsTheme from '../../../hooks/useCustomHighchartsTheme.ts';
 import { useTheme } from '@mui/material/styles';
@@ -11,6 +11,8 @@ import {
     RawVariableLabelMap,
     RawVariables,
 } from '../../../constants/variableConstants.ts';
+import 'highcharts/modules/exporting';
+import 'highcharts/modules/export-data';
 
 export type ChartOptions = {
     height?: string;
@@ -59,21 +61,26 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
 
     const variableIds = Object.entries(measurements[0]).filter(([key]) => key !== 'timestamp' && key !== 'uptime');
 
-    const series = variableIds.map(([key]) => {
+    const series: SeriesOptionsType[] = variableIds.map(([key]) => {
         const data = measurements.map((measurement) => ({
             x: new Date(measurement.timestamp ?? '').getTime(),
             y: measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
         }));
 
         return {
+            type: 'line',
             name:
                 RawVariableLabelMap[key as keyof RawVariables] ||
                 AggregatedVariableLabelMap[key as keyof AggregatedVariables],
             data: data,
-        };
+        } as SeriesOptionsType;
     });
 
-    const options = {
+    const chartTitleText = chartOptions.title ?? 'Measurement';
+    const xAxisTitleText = chartOptions.xAxisTitle ?? '';
+    const yAxisTitleText = chartOptions.yAxisTitle ?? '';
+
+    const options: Options = {
         accessibility: {
             enabled: false,
         },
@@ -82,11 +89,11 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             height: chartHeight,
         },
         title: {
-            text: chartOptions.title ?? 'Measurement',
+            text: chartTitleText,
         },
         xAxis: {
             title: {
-                text: chartOptions.xAxisTitle ?? '',
+                text: xAxisTitleText,
             },
             type: 'datetime',
             dateTimeLabelFormats: {
@@ -95,7 +102,36 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         },
         yAxis: {
             title: {
-                text: chartOptions.yAxisTitle ?? '',
+                text: yAxisTitleText,
+            },
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+        },
+        responsive: {
+            rules: [
+                {
+                    condition: {
+                        maxWidth: 800,
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom',
+                        },
+                    },
+                },
+            ],
+        },
+        exporting: {
+            enabled: true,
+            buttons: {
+                contextButton: {
+                    menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadCSV', 'downloadXLS', 'viewData'],
+                },
             },
         },
         series: series,

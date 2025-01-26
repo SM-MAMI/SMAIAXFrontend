@@ -13,7 +13,7 @@ import {
 } from '../../constants/variableConstants.ts';
 import { MeasurementAggregatedDto, MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
-import CustomVariableAutoComplete from './CustomVariableAutoComplete.tsx';
+import CustomVariableAutoComplete from '../pure/CustomVariableAutoComplete.tsx';
 
 interface MeasurementSectionProps {
     smartMeterId: string;
@@ -117,8 +117,8 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             );
 
             if (measurements.measurementRawList || measurements.measurementAggregatedList) {
-                const rawList = measurements.measurementRawList || [];
-                const aggregatedList = measurements.measurementAggregatedList || [];
+                const rawList = measurements.measurementRawList ?? [];
+                const aggregatedList = measurements.measurementAggregatedList ?? [];
 
                 if (rawList.length === 0 && aggregatedList.length === 0) {
                     if (!isInitialLoad) {
@@ -154,7 +154,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             <Box
                 sx={{
                     display: 'flex',
-                    marginBottom: '2em',
+                    marginBottom: '1em',
                     justifyContent: 'right',
                     alignItems: 'center',
                     gap: '10px',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Autocomplete, Checkbox, TextField } from '@mui/material';
-import { AggregatedVariablesOptionsKeys, RawVariablesOptionsKeys } from './MeasurementSection.tsx';
+import { AggregatedVariablesOptionsKeys, RawVariablesOptionsKeys } from '../measurement/MeasurementSection.tsx';
 import {
     AggregatedVariableLabelMap,
     AggregatedVariables,
@@ -38,9 +38,9 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({
             options={optionsWithLabels}
             getOptionLabel={(option) => (option ? option[1] : '')}
             disableCloseOnSelect
-            value={selectedVariables.map((key) => optionsWithLabels.find(([optionKey]) => optionKey === key) || null)}
+            value={selectedVariables.map((key) => optionsWithLabels.find(([optionKey]) => optionKey === key))}
             onChange={(_, variables) => {
-                const filteredVariables = variables.filter((item) => item !== null);
+                const filteredVariables = variables.filter((item) => item != undefined);
                 const keys = filteredVariables.map((item) => item[0]);
                 onChange(keys as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]);
             }}
@@ -52,7 +52,7 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({
                 { selected }
             ) => {
                 if (!option) {
-                    return null;
+                    return;
                 }
 
                 const label = option[1];
