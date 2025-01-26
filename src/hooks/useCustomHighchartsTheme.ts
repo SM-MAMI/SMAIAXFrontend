@@ -147,6 +147,16 @@ const useCustomHighchartsTheme = () => {
                     color: theme.palette.text.secondary,
                 },
             },
+            loading: {
+                labelStyle: {
+                    color: theme.palette.text.primary,
+                    fontSize: String(theme.typography.body1.fontSize),
+                },
+                style: {
+                    backgroundColor: theme.palette.action.hover,
+                    opacity: 0.9,
+                },
+            },
         });
 
         const style = document.createElement('style');
