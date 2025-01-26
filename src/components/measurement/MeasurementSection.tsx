@@ -117,8 +117,8 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             );
 
             if (measurements.measurementRawList || measurements.measurementAggregatedList) {
-                const rawList = measurements.measurementRawList || [];
-                const aggregatedList = measurements.measurementAggregatedList || [];
+                const rawList = measurements.measurementRawList ?? [];
+                const aggregatedList = measurements.measurementAggregatedList ?? [];
 
                 if (rawList.length === 0 && aggregatedList.length === 0) {
                     if (!isInitialLoad) {
