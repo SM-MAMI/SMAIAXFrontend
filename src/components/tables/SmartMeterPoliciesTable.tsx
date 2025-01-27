@@ -12,20 +12,7 @@ import {
 import { useState } from 'react';
 import { PolicyDto } from '../../api/openAPI';
 import Button from '@mui/material/Button';
-
-type Order = 'asc' | 'desc';
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
-    if (b[orderBy] < a[orderBy]) return -1;
-    if (b[orderBy] > a[orderBy]) return 1;
-    return 0;
-}
-
-function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import { getComparator, Order } from '../../utils/helper.ts';
 
 const SmartMeterPoliciesTable = ({
     policies,

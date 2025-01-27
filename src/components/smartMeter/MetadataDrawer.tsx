@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
 import CreateEditMetadataDialog from '../dialogs/CreateEditMetadataDialog.tsx';
 import { useDialogs } from '@toolpad/core';
+import { formatToLocalDateTime } from '../../utils/helper.ts';
 
 interface MetadataDrawerProps {
     smartMeter: SmartMeterDto;
@@ -14,11 +15,6 @@ interface MetadataDrawerProps {
     setIsDrawerOpen: (isDrawerOpen: boolean) => void;
     reloadSmartMeter: () => void;
 }
-
-const formatToLocalDateTime = (isoTimestamp: string) => {
-    const localDate = new Date(isoTimestamp);
-    return localDate.toLocaleString();
-};
 
 const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmartMeter }: MetadataDrawerProps) => {
     const [selectedValidFrom, setSelectedValidFrom] = useState<string | undefined>(undefined);
