@@ -14,7 +14,7 @@ const ContractsPage = () => {
 
     const { getContracts } = useContractService();
     const { showSnackbar } = useSnackbar();
-    const isSmallScreen = useMediaQuery(MediaQueryTabletMaxWidthStr);
+    useMediaQuery(MediaQueryTabletMaxWidthStr);
 
     const hasExecutedInitialLoadContracts = useRef(false);
     useEffect(() => {

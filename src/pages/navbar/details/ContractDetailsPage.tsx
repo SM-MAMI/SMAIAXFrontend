@@ -13,7 +13,7 @@ const generateBreadcrumbs = (contract: ContractDto | undefined, activePage: Acti
         ? [
               ...previousBreadcrumbs,
               {
-                  title: contract.id,
+                  title: contract.policy.name,
                   path: `${activePage.path}/${contract.id}`,
               },
           ]
@@ -29,7 +29,7 @@ const ContractDetailsPage = () => {
     const { showSnackbar } = useSnackbar();
     const { getContract } = useContractService();
 
-    const breadcrumbs = generateBreadcrumbs(undefined, activePage);
+    const breadcrumbs = generateBreadcrumbs(contract, activePage);
 
     const hasExecutedInitialLoadContract = useRef(false);
     useEffect(() => {

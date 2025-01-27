@@ -1,136 +1,119 @@
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TableSortLabel,
-    Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import { ContractOverviewDto } from '../../api/openAPI';
-import { formatToLocalDateTime, getComparator, Order } from '../../utils/helper.ts';
+    DataGrid,
+    getGridNumericOperators,
+    GridColDef,
+    GridFilterInputValue,
+    GridFilterItem,
+    GridRowParams,
+} from '@mui/x-data-grid';
+import { formatToLocalDateTime } from '../../utils/helper.ts';
+import { ContractOverviewDto, LocationResolution, MeasurementResolution } from '../../api/openAPI';
+import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => {
-    const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<string>('createdAt');
+interface ContractRow {
+    id: string;
+    name: string;
+    createdAt: string;
+    locationResolution: LocationResolution;
+    measurementResolution: MeasurementResolution;
+    price: number;
+    measurementCount: number;
+}
 
+const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => {
     const navigate = useNavigate();
 
-    const handleRequestSort = (property: string) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
+    const rows: ContractRow[] = contracts.map((contract) => {
+        return {
+            id: contract.id,
+            name: contract.policy.name,
+            createdAt: formatToLocalDateTime(contract.createdAt),
+            locationResolution: contract.policy.locationResolution,
+            measurementResolution: contract.policy.measurementResolution,
+            price: contract.policy.price,
+            measurementCount: contract.policy.measurementCount,
+        } as ContractRow;
+    });
 
-    const handleRowClick = (contract: ContractOverviewDto) => {
-        void navigate(contract.id);
-    };
-
-    // noinspection TypeScriptValidateTypes
-    // @ts-expect-error doesnt matter
-    const sortedContracts = contracts.slice().sort(getComparator(order, orderBy));
+    const columns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', flex: 1, sortable: true, filterable: true },
+        { field: 'createdAt', headerName: 'Created At', flex: 1, sortable: true, filterable: true },
+        {
+            field: 'locationResolution',
+            headerName: 'Location Resolution',
+            flex: 1,
+            sortable: true,
+            filterable: true,
+        },
+        {
+            field: 'measurementResolution',
+            headerName: 'Measurement Resolution',
+            flex: 1,
+            sortable: true,
+            filterable: true,
+        },
+        {
+            field: 'price',
+            headerName: 'Price (€)',
+            flex: 1,
+            sortable: true,
+            filterable: true,
+            type: 'number',
+            filterOperators: [
+                ...getGridNumericOperators(),
+                {
+                    label: 'Smaller than',
+                    value: 'smallerThan',
+                    getApplyFilterFn: (filterItem: GridFilterItem) => {
+                        if (!filterItem.value) {
+                            return null;
+                        }
+                        return (row: { price?: number }) =>
+                            row.price !== undefined && row.price < Number(filterItem.value);
+                    },
+                    InputComponent: GridFilterInputValue,
+                },
+                {
+                    label: 'Greater than',
+                    value: 'greaterThan',
+                    getApplyFilterFn: (filterItem: GridFilterItem) => {
+                        if (!filterItem.value) {
+                            return null;
+                        }
+                        return (row: { price?: number }) =>
+                            row.price !== undefined && row.price > Number(filterItem.value);
+                    },
+                    InputComponent: GridFilterInputValue,
+                },
+            ],
+        },
+        {
+            field: 'measurementCount',
+            headerName: 'Measurement Count',
+            flex: 1,
+            sortable: true,
+            filterable: true,
+            type: 'number',
+        },
+    ];
 
     return (
-        <TableContainer component={Paper} sx={{ height: 'calc(100vh - 165px)', overflow: 'auto' }}>
-            <Table stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'name'}
-                                direction={orderBy === 'name' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('name');
-                                }}>
-                                Name
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'createdAt'}
-                                direction={orderBy === 'createdAt' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('createdAt');
-                                }}>
-                                Created at
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'locationResolution'}
-                                direction={orderBy === 'locationResolution' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('locationResolution');
-                                }}>
-                                Location Resolution
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'measurementResolution'}
-                                direction={orderBy === 'measurementResolution' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('measurementResolution');
-                                }}>
-                                Measurement Resolution
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'price'}
-                                direction={orderBy === 'price' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('price');
-                                }}>
-                                Price
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'measurementCount'}
-                                direction={orderBy === 'measurementCount' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('measurementCount');
-                                }}>
-                                Measurmemt Count
-                            </TableSortLabel>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {sortedContracts.length > 0 ? (
-                        sortedContracts.map((contract) => (
-                            <TableRow
-                                key={contract.id}
-                                hover
-                                onClick={() => {
-                                    handleRowClick(contract);
-                                }}
-                                sx={{
-                                    cursor: 'pointer',
-                                }}>
-                                <TableCell>{contract.policy.name}</TableCell>
-                                <TableCell>{formatToLocalDateTime(contract.createdAt)}</TableCell>
-                                <TableCell>{contract.policy.locationResolution}</TableCell>
-                                <TableCell>{contract.policy.measurementResolution}</TableCell>
-                                <TableCell>{contract.policy.price}</TableCell>
-                                <TableCell>{contract.policy.measurementCount}</TableCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={4} align="center">
-                                <Typography variant="body1">No contract found.</Typography>
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Box style={{ height: 'calc(100vh - 165px)', width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                disableColumnSelector
+                onRowClick={(params: GridRowParams<ContractRow>) => {
+                    void navigate(params.row.id);
+                }}
+                sx={{
+                    '& .MuiDataGrid-root': {
+                        border: 'none',
+                    },
+                }}
+            />
+        </Box>
     );
 };
 

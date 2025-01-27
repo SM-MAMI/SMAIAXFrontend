@@ -34,7 +34,7 @@ const SmartMeterPoliciesTable = ({
 
     return (
         <TableContainer component={Paper} style={{ maxHeight: '400px' }}>
-            <Table stickyHeader>
+            <Table stickyHeader size="medium">
                 <TableHead>
                     <TableRow>
                         <TableCell>
@@ -93,7 +93,8 @@ const SmartMeterPoliciesTable = ({
                                         <Button
                                             onClick={() => {
                                                 onPurchase(policy.id);
-                                            }}>
+                                            }}
+                                            sx={{ padding: '0' }}>
                                             Purchase
                                         </Button>
                                     </TableCell>

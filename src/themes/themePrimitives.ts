@@ -133,6 +133,23 @@ export const colorSchemes = {
                     },
                 },
             },
+            MuiDataGrid: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: 'hsl(0, 0%, 99%)',
+                        color: gray[800],
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: 'var(--mui-palette-baseShadow)',
+                    },
+                    columnHeaderRow: {
+                        backgroundColor: gray[100] + ' !important',
+                    },
+                    cell: {
+                        borderBottom: `1px solid ${alpha(gray[300], 0.6)}`,
+                    },
+                },
+            },
         },
     },
     dark: {
@@ -198,14 +215,23 @@ export const colorSchemes = {
                     },
                 },
             },
-            // MuiButton: {
-            //     styleOverrides: {
-            //         outlined: {
-            //             color: brand[400],
-            //             borderColor: brand[500],
-            //         },
-            //     },
-            // },
+            MuiDataGrid: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: '#191c23',
+                        color: 'hsl(0, 0%, 90%)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: 'var(--mui-palette-baseShadow)',
+                    },
+                    columnHeaderRow: {
+                        backgroundColor: gray[800] + ' !important',
+                    },
+                    cell: {
+                        borderBottom: `1px solid ${alpha(gray[700], 0.5)}`,
+                    },
+                },
+            },
         },
     },
 };
