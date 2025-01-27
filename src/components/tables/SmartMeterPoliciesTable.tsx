@@ -49,16 +49,6 @@ const SmartMeterPoliciesTable = ({
                         </TableCell>
                         <TableCell>
                             <TableSortLabel
-                                active={orderBy === 'price'}
-                                direction={orderBy === 'price' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('price');
-                                }}>
-                                Price
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
                                 active={orderBy === 'locationResolution'}
                                 direction={orderBy === 'locationResolution' ? order : 'asc'}
                                 onClick={() => {
@@ -77,6 +67,16 @@ const SmartMeterPoliciesTable = ({
                                 Measurement Resolution
                             </TableSortLabel>
                         </TableCell>
+                        <TableCell>
+                            <TableSortLabel
+                                active={orderBy === 'price'}
+                                direction={orderBy === 'price' ? order : 'asc'}
+                                onClick={() => {
+                                    handleRequestSort('price');
+                                }}>
+                                Price (€)
+                            </TableSortLabel>
+                        </TableCell>
                         {onPurchase && <TableCell></TableCell>}
                     </TableRow>
                 </TableHead>
@@ -85,9 +85,9 @@ const SmartMeterPoliciesTable = ({
                         sortedPolicies.map((policy) => (
                             <TableRow key={policy.id}>
                                 <TableCell>{policy.name}</TableCell>
-                                <TableCell>{`${String(policy.price)} €`}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
+                                <TableCell>{policy.price}</TableCell>
                                 {onPurchase && (
                                     <TableCell>
                                         <Button
