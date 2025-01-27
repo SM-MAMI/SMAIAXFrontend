@@ -128,6 +128,7 @@ export const colorSchemes = {
                 styleOverrides: {
                     root: {
                         backgroundColor: 'hsl(0, 0%, 99%)',
+                        maxWidth: '1600px !important',
                     },
                 },
             },
@@ -192,6 +193,7 @@ export const colorSchemes = {
                 styleOverrides: {
                     root: {
                         backgroundColor: gray[900],
+                        maxWidth: '1600px !important',
                     },
                 },
             },

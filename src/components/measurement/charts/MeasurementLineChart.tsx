@@ -11,6 +11,7 @@ import {
     RawVariableLabelMap,
     RawVariables,
 } from '../../../constants/variableConstants.ts';
+import { TabletMaxWidth } from '../../../constants/constants.ts';
 import 'highcharts/modules/exporting';
 import 'highcharts/modules/export-data';
 
@@ -114,7 +115,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             rules: [
                 {
                     condition: {
-                        maxWidth: 800,
+                        maxWidth: TabletMaxWidth,
                     },
                     chartOptions: {
                         legend: {
