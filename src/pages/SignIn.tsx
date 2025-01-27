@@ -1,9 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -16,15 +13,19 @@ import { useAuthenticationService } from '../hooks/services/useAuthenticationSer
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
+import CustomPasswordFormControl from '../components/pure/CustomPasswordFormControl.tsx';
 
 export default function SignIn() {
+    const [password, setPassword] = React.useState('');
+
     const { emailError, emailErrorMessage, passwordError, passwordErrorMessage } = useValidation();
-
     const { login } = useAuthenticationService();
-
     const navigate = useNavigate();
-
     const { showSnackbar } = useSnackbar();
+
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -33,7 +34,7 @@ export default function SignIn() {
 
         const loginDto: LoginDto = {
             username: data.get('email') as string,
-            password: data.get('password') as string,
+            password: password,
         };
 
         try {
@@ -80,14 +81,9 @@ export default function SignIn() {
                             gap: 2,
                         }}>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="email">Email / Username</FormLabel>
-                            </Box>
                             <TextField
-                                required
                                 fullWidth
                                 id="email"
-                                placeholder="your@email.com"
                                 name="email"
                                 autoComplete="email"
                                 variant="outlined"
@@ -97,28 +93,19 @@ export default function SignIn() {
                                 helperText={emailErrorMessage}
                                 color={emailError ? 'error' : 'primary'}
                                 sx={{ ariaLabel: 'email' }}
+                                label={'Email / Username'}
                             />
                         </FormControl>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="password">Password</FormLabel>
-                            </Box>
-                            <TextField
-                                required
-                                fullWidth
-                                id="password"
-                                placeholder="••••••"
-                                name="password"
-                                autoComplete="current-password"
-                                variant="outlined"
-                                type="password"
-                                autoFocus
+                            <CustomPasswordFormControl
+                                password={password}
                                 error={passwordError}
                                 helperText={passwordErrorMessage}
                                 color={passwordError ? 'error' : 'primary'}
+                                onPasswordChange={handlePasswordChange}
+                                label="Password"
                             />
                         </FormControl>
-                        <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
                         <Button type="submit" fullWidth variant="contained">
                             Sign in
                         </Button>

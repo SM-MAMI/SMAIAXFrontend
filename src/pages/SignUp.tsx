@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -15,13 +14,18 @@ import { useAuthenticationService } from '../hooks/services/useAuthenticationSer
 import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
+import CustomPasswordFormControl from '../components/pure/CustomPasswordFormControl.tsx';
 
 export default function SignUp() {
+    const [password, setPassword] = React.useState('');
+    const [confirmPassword, setConfirmPassword] = React.useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = React.useState(false);
+    const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = React.useState('');
+
     const {
         emailError,
         emailErrorMessage,
         passwordError,
-        passwordErrorMessage,
         firstnameError,
         firstnameErrorMessage,
         lastnameError,
@@ -36,10 +40,20 @@ export default function SignUp() {
     } = useValidation();
 
     const { register } = useAuthenticationService();
-
     const navigate = useNavigate();
-
     const { showSnackbar } = useSnackbar();
+
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
+
+    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setConfirmPassword(value);
+
+        setConfirmPasswordError(false);
+        setConfirmPasswordErrorMessage('');
+    };
 
     const validateInputs = (registerDto: RegisterDto) => {
         let isValid = true;
@@ -64,6 +78,12 @@ export default function SignUp() {
             isValid = false;
         }
 
+        if (registerDto.password !== confirmPassword) {
+            setConfirmPasswordError(true);
+            setConfirmPasswordErrorMessage('Passwords do not match.');
+            isValid = false;
+        }
+
         return isValid;
     };
 
@@ -74,7 +94,7 @@ export default function SignUp() {
 
         const registerDto: RegisterDto = {
             email: data.get('email') as string,
-            password: data.get('password') as string,
+            password: password,
             username: data.get('username') as string,
             name: {
                 firstName: data.get('firstname') as string,
@@ -121,83 +141,78 @@ export default function SignUp() {
                         }}
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="firstname">First name</FormLabel>
-                            </Box>
                             <TextField
+                                required
                                 fullWidth
                                 id="firstname"
-                                placeholder="Jon"
                                 name="firstname"
                                 autoComplete="firstname"
                                 error={firstnameError}
                                 helperText={firstnameErrorMessage}
                                 color={firstnameError ? 'error' : 'primary'}
+                                label={'First name'}
                             />
                         </FormControl>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="lastname">Last name</FormLabel>
-                            </Box>
                             <TextField
+                                required
                                 fullWidth
                                 id="lastname"
-                                placeholder="Snow"
                                 name="lastname"
                                 autoComplete="lastname"
                                 error={lastnameError}
                                 helperText={lastnameErrorMessage}
                                 color={lastnameError ? 'error' : 'primary'}
+                                label={'Last name'}
                             />
                         </FormControl>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="username">Username</FormLabel>
-                            </Box>
                             <TextField
+                                required
                                 fullWidth
                                 id="username"
-                                placeholder="JohnSnow42"
                                 name="username"
                                 autoComplete="username"
                                 error={usernameError}
                                 helperText={usernameErrorMessage}
                                 color={usernameError ? 'error' : 'primary'}
+                                label={'Username'}
                             />
                         </FormControl>
                         <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="email">Email</FormLabel>
-                            </Box>
                             <TextField
+                                required
                                 fullWidth
                                 id="email"
-                                placeholder="your@email.com"
                                 name="email"
                                 autoComplete="email"
                                 variant="outlined"
                                 error={emailError}
                                 helperText={emailErrorMessage}
                                 color={passwordError ? 'error' : 'primary'}
+                                label={'Email'}
                             />
                         </FormControl>
-                        <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="password">Password</FormLabel>
-                            </Box>
-                            <TextField
-                                fullWidth
-                                id="password"
-                                placeholder="••••••"
-                                name="password"
-                                autoComplete="new-password"
-                                variant="outlined"
-                                type="password"
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
-                                color={passwordError ? 'error' : 'primary'}
-                            />
-                        </FormControl>
+                        <CustomPasswordFormControl
+                            isRequired={true}
+                            password={password}
+                            error={passwordError}
+                            helperText={
+                                'Password must be at least 8 characters long and contain one uppercase letter, one lowercase letter, one number, and one special character.'
+                            }
+                            color={passwordError ? 'error' : 'primary'}
+                            onPasswordChange={handlePasswordChange}
+                            label="Password"
+                        />
+                        <CustomPasswordFormControl
+                            isRequired={true}
+                            password={confirmPassword}
+                            error={confirmPasswordError}
+                            helperText={confirmPasswordErrorMessage}
+                            color={confirmPasswordError ? 'error' : 'primary'}
+                            onPasswordChange={handleConfirmPasswordChange}
+                            label="Confirm Password"
+                        />
                         <Divider />
                         <Button type="submit" fullWidth variant="contained">
                             Sign up
