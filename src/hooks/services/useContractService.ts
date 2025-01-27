@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
-import { ContractCreateDto, ProblemDetails } from '../../api/openAPI';
+import { ContractCreateDto, ContractDto, ContractOverviewDto, ProblemDetails } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
 export const useContractService = () => {
@@ -26,7 +26,34 @@ export const useContractService = () => {
         [contractApi]
     );
 
+    const getContracts = useCallback(async (): Promise<ContractOverviewDto[]> => {
+        try {
+            const response = await contractApi.getContracts();
+            return response.data;
+        } catch (error) {
+            const axiosError = error as AxiosError<ProblemDetails>;
+            const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+            throw new Error(errorMessage);
+        }
+    }, [contractApi]);
+
+    const getContract = useCallback(
+        async (id: string): Promise<ContractDto> => {
+            try {
+                const response = await contractApi.getContractById(id);
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [contractApi]
+    );
+
     return {
         createContract,
+        getContracts,
+        getContract,
     };
 };
