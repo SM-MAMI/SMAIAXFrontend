@@ -197,8 +197,11 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         label="Start"
                         value={startAt}
                         maxDate={endAt}
+                        format="DD/MM/YYYY"
                         onChange={(newValue) => {
-                            if (newValue) setStartAt(newValue);
+                            if (newValue) {
+                                setStartAt(newValue);
+                            }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
                     />
@@ -206,8 +209,11 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         label="End"
                         value={endAt}
                         minDate={startAt}
+                        format="DD/MM/YYYY"
                         onChange={(newValue) => {
-                            if (newValue) setEndAt(newValue);
+                            if (newValue) {
+                                setEndAt(newValue);
+                            }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
                     />
@@ -215,6 +221,11 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         variant="contained"
                         size="medium"
                         onClick={() => {
+                            if (selectedVariables.length <= 0) {
+                                setMeasurements([]);
+                                return;
+                            }
+
                             void handleLoadData();
                         }}
                         sx={{

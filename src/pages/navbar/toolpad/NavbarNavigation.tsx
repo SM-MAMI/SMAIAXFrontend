@@ -25,8 +25,11 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
+        kind: 'divider',
+    },
+    {
         segment: SmaiaxRoutes.POLICY_SEARCH,
-        title: 'Policy Search',
+        title: 'Data Search',
         icon: <Search />,
     },
     {
@@ -34,6 +37,9 @@ const NAVIGATION: Navigation = [
         title: 'Contracts',
         pattern: `${SmaiaxRoutes.CONTRACTS}{/:id}*`,
         icon: <Description />,
+    },
+    {
+        kind: 'divider',
     },
     {
         segment: SmaiaxRoutes.SMART_METERS,

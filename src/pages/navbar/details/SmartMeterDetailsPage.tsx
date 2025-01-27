@@ -166,6 +166,23 @@ const SmartMeterDetailsPage = () => {
                 </div>
             ) : (
                 <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '10px',
+                        }}>
+                        <Typography variant="h5" style={{}}>
+                            {smartMeter.name}
+                        </Typography>
+                        <KebabMenu items={kebabItems} />
+                    </Box>
+
+                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
+
+                    <Divider sx={{ margin: '2em' }} />
+
                     <div style={{ padding: '1em', width: '100%' }}>
                         <Box>
                             <Box
@@ -178,7 +195,6 @@ const SmartMeterDetailsPage = () => {
                                 <Typography variant="h5" style={{}}>
                                     Smart Meter Policies
                                 </Typography>
-                                <KebabMenu items={kebabItems} />
                             </Box>
                             <SmartMeterPoliciesTable policies={smartMeterPolicies} />
                         </Box>
@@ -193,10 +209,6 @@ const SmartMeterDetailsPage = () => {
                             </Button>
                         </div>
                     </div>
-
-                    <Divider sx={{ margin: '2em' }} />
-
-                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
 
                     <MetadataDrawer
                         smartMeter={smartMeter}

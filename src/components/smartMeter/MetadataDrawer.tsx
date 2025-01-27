@@ -15,6 +15,11 @@ interface MetadataDrawerProps {
     reloadSmartMeter: () => void;
 }
 
+const formatToLocalDateTime = (isoTimestamp: string) => {
+    const localDate = new Date(isoTimestamp);
+    return localDate.toLocaleString();
+};
+
 const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmartMeter }: MetadataDrawerProps) => {
     const [selectedValidFrom, setSelectedValidFrom] = useState<string | undefined>(undefined);
     const selectedMetadata = smartMeter.metadata.find((meta) => meta.validFrom === selectedValidFrom);
@@ -63,7 +68,7 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
                         label={validFromLabel}>
                         {smartMeter.metadata.map((metadata) => (
                             <MenuItem key={metadata.id} value={metadata.validFrom}>
-                                {metadata.validFrom}
+                                {formatToLocalDateTime(metadata.validFrom)}
                             </MenuItem>
                         ))}
                     </Select>

@@ -98,7 +98,7 @@ const SmartMeterPoliciesTable = ({
                         sortedPolicies.map((policy) => (
                             <TableRow key={policy.id}>
                                 <TableCell>{policy.name}</TableCell>
-                                <TableCell>{policy.price}</TableCell>
+                                <TableCell>{`${String(policy.price)} €`}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
                                 {onPurchase && (

@@ -1,5 +1,5 @@
 import { PageContainer } from '@toolpad/core/PageContainer';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { ContractCreateDto, LocationResolution, MeasurementResolution, PolicyDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
 import {
@@ -18,7 +18,8 @@ import { useContractService } from '../../hooks/services/useContractService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 
 const PolicySearchPage = () => {
-    const [policies, setPolicies] = useState<PolicyDto[] | undefined>(undefined);
+    const [policies, setPolicies] = useState<PolicyDto[]>([]);
+    const [isPoliciesCallPending, setIsPoliciesCallPending] = useState(true);
 
     const { searchPolicies } = usePolicyService();
     const { createContract } = useContractService();
@@ -41,14 +42,18 @@ const PolicySearchPage = () => {
         locationResolution?: LocationResolution
     ) => {
         try {
+            setIsPoliciesCallPending(true);
             const policies = await searchPolicies(maxPrice, measurementResolution, locationResolution);
             setPolicies(policies);
         } catch (error) {
             console.error(error);
+            showSnackbar('error', 'Failed to load policies!');
+        } finally {
+            setIsPoliciesCallPending(false);
         }
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
@@ -150,10 +155,10 @@ const PolicySearchPage = () => {
                         <Input type="number" id="price" name="price" inputProps={{ min: 0 }} />
                     </FormControl>
                     <DialogActions>
-                        <Button type="submit" variant="outlined">
+                        <Button type="submit" variant="contained">
                             Search
                         </Button>
-                        <Button type="reset" variant="outlined">
+                        <Button type="reset" variant="contained">
                             Clear Filters
                         </Button>
                     </DialogActions>
@@ -164,13 +169,13 @@ const PolicySearchPage = () => {
                 Policies
             </Typography>
 
-            {policies ? (
-                <div style={{ marginTop: '20px', width: '100%' }}>
-                    <SmartMeterPoliciesTable policies={policies} onPurchase={handlePurchase} />
-                </div>
-            ) : (
+            {isPoliciesCallPending ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
+                </div>
+            ) : (
+                <div style={{ marginTop: '20px', width: '100%' }}>
+                    <SmartMeterPoliciesTable policies={policies} onPurchase={handlePurchase} />
                 </div>
             )}
         </PageContainer>
