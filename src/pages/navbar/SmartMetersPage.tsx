@@ -14,7 +14,8 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
 
 const SmartMetersPage = () => {
-    const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
+    const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[]>([]);
+    const [isSmartMetersCallPending, setIsSmartMetersCallPending] = useState(true);
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
 
     const { getSmartMeters } = useSmartMeterService();
@@ -36,6 +37,7 @@ const SmartMetersPage = () => {
 
     const loadSmartMeters = async (recentlyAddedSmartMeterName?: string) => {
         try {
+            setIsSmartMetersCallPending(true);
             const smartMeters = await getSmartMeters();
             const sortedSmartMeters = smartMeters
                 .sort((a, b) => a.name.localeCompare(b.name))
@@ -53,6 +55,8 @@ const SmartMetersPage = () => {
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to load smart meters!');
+        } finally {
+            setIsSmartMetersCallPending(false);
         }
     };
 
@@ -66,10 +70,6 @@ const SmartMetersPage = () => {
                 void loadSmartMeters(smartMeterName);
             },
             isSmartMeterNameUnique: (smartMeterName) => {
-                if (smartMeters == null) {
-                    return false;
-                }
-
                 return !smartMeters.map((smartMeter) => smartMeter.name).includes(smartMeterName);
             },
         });
@@ -77,9 +77,13 @@ const SmartMetersPage = () => {
 
     return (
         <PageContainer title={''}>
-            {!smartMeters ? (
+            {isSmartMetersCallPending ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
+                </Box>
+            ) : smartMeters.length <= 0 ? (
+                <Box style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div>No smart meter available</div>
                 </Box>
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>

@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Navigation, Session } from '@toolpad/core';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { MediaQueryMobileMaxWidthStr, SmaiaXAbsoluteRoutes, SmaiaxRoutes } from '../../../constants/constants.ts';
-import { ElectricMeter, Search } from '@mui/icons-material';
+import { Description, ElectricMeter, Search } from '@mui/icons-material';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuthenticationService } from '../../../hooks/services/useAuthenticationService.ts';
 import { TokenDto } from '../../../api/openAPI';
@@ -25,9 +25,21 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
+        kind: 'divider',
+    },
+    {
         segment: SmaiaxRoutes.POLICY_SEARCH,
-        title: 'Policy Search',
+        title: 'Data Search',
         icon: <Search />,
+    },
+    {
+        segment: SmaiaxRoutes.CONTRACTS,
+        title: 'Contracts',
+        pattern: `${SmaiaxRoutes.CONTRACTS}{/:id}*`,
+        icon: <Description />,
+    },
+    {
+        kind: 'divider',
     },
     {
         segment: SmaiaxRoutes.SMART_METERS,

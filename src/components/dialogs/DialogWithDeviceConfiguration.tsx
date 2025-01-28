@@ -92,18 +92,18 @@ export default function DialogWithDeviceConfiguration({
             <CustomDialogActions>
                 <Button
                     onClick={() => {
+                        void handleDownload();
+                    }}
+                    variant="contained"
+                    endIcon={<Download />}>
+                    Download
+                </Button>
+                <Button
+                    onClick={() => {
                         void onClose();
                     }}
                     variant="outlined">
                     Cancel
-                </Button>
-                <Button
-                    onClick={() => {
-                        void handleDownload();
-                    }}
-                    variant="outlined"
-                    endIcon={<Download />}>
-                    Download
                 </Button>
             </CustomDialogActions>
         </CustomDialog>

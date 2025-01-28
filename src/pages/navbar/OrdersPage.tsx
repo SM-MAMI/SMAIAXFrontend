@@ -21,6 +21,7 @@ import Review from '../../components/checkout/Review.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useOrderService } from '../../hooks/services/useOrderService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { TabletMaxWidth } from '../../constants/constants.ts';
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
@@ -123,7 +124,7 @@ const OrdersPage = () => {
                             justifyContent: { sm: 'space-between', md: 'flex-end' },
                             alignItems: 'center',
                             width: '100%',
-                            maxWidth: { sm: '100%', md: 600 },
+                            maxWidth: { sm: '100%', md: TabletMaxWidth },
                         }}>
                         <Box
                             sx={{
@@ -165,7 +166,7 @@ const OrdersPage = () => {
                             flexDirection: 'column',
                             flexGrow: 1,
                             width: '100%',
-                            maxWidth: { sm: '100%', md: 600 },
+                            maxWidth: { sm: '100%', md: TabletMaxWidth },
                             maxHeight: '720px',
                             gap: { xs: 5, md: 'none' },
                         }}>

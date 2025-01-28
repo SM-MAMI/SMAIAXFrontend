@@ -10,7 +10,8 @@ import { useTheme } from '@mui/material/styles';
 const HomePage = () => {
     const theme = useTheme();
 
-    const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[] | undefined>(undefined);
+    const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[]>([]);
+    const [isSmartMetersCallPending, setIsSmartMetersCallPending] = useState(true);
     const [measurementSections, setMeasurementSections] = useState<{ id: string; selectedSmartMeter: string | null }[]>(
         []
     );
@@ -30,7 +31,7 @@ const HomePage = () => {
     }, []);
 
     useEffect(() => {
-        if (smartMeters && !measurementSections.length) {
+        if (!measurementSections.length) {
             const initialSections = smartMeters.map((smartMeter) => ({
                 id: smartMeter.id,
                 selectedSmartMeter: smartMeter.id,
@@ -42,12 +43,15 @@ const HomePage = () => {
 
     const loadSmartMeters = async () => {
         try {
+            setIsSmartMetersCallPending(true);
             const smartMeters = await getSmartMeters();
             const sortedSmartMeters = smartMeters.sort((a, b) => a.name.localeCompare(b.name));
             setSmartMeters(sortedSmartMeters);
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to load smart meters!');
+        } finally {
+            setIsSmartMetersCallPending(false);
         }
     };
 
@@ -64,14 +68,18 @@ const HomePage = () => {
     };
 
     const getSmartMeterName = (smartMeterId: string | null): string => {
-        return smartMeters?.find((smartMeter) => smartMeter.id === smartMeterId)?.name ?? '';
+        return smartMeters.find((smartMeter) => smartMeter.id === smartMeterId)?.name ?? '';
     };
 
     return (
         <PageContainer title={''}>
-            {!smartMeters ? (
+            {isSmartMetersCallPending ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
+                </Box>
+            ) : smartMeters.length <= 0 ? (
+                <Box style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div>No smart meter data available</div>
                 </Box>
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', height: '100%', width: '100%' }}>

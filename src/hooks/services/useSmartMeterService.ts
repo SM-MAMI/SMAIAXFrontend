@@ -23,7 +23,6 @@ export const useSmartMeterService = () => {
         async (smartMeterCreatedDto: SmartMeterAssignDto): Promise<string> => {
             try {
                 const response = await smartMeterApi.assignSmartMeter(smartMeterCreatedDto);
-
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -38,7 +37,6 @@ export const useSmartMeterService = () => {
         async (smartMeterId: string, metadataCreateDto: MetadataCreateDto): Promise<string> => {
             try {
                 const response = await smartMeterApi.addMetadata(smartMeterId, metadataCreateDto);
-
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -52,7 +50,6 @@ export const useSmartMeterService = () => {
     const getSmartMeters = useCallback(async (): Promise<SmartMeterOverviewDto[]> => {
         try {
             const response = await smartMeterApi.getSmartMeters();
-
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError<ProblemDetails>;
@@ -65,7 +62,6 @@ export const useSmartMeterService = () => {
         async (id: string): Promise<SmartMeterDto> => {
             try {
                 const response = await smartMeterApi.getSmartMeterById(id);
-
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
@@ -80,7 +76,6 @@ export const useSmartMeterService = () => {
         async (smartMeterId: string, metadataId: string, updateMetadataDto: MetadataUpdateDto): Promise<string> => {
             try {
                 const response = await smartMeterApi.updateMetadata(smartMeterId, metadataId, updateMetadataDto);
-
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;

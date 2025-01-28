@@ -39,8 +39,10 @@ const generateBreadcrumbs = (smartMeter: SmartMeterDto | undefined, activePage: 
 
 const SmartMeterDetailsPage = () => {
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
-    const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[] | undefined>(undefined);
+    const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isSmartMeterCallPending, setIsSmartMeterCallPending] = useState(true);
+    const [isSmartMeterPoliciesCallPending, setIsSmartMeterPoliciesCallPending] = useState(true);
 
     const params = useParams<{ id: string }>();
     const location = useLocation() as Location<LocationState>;
@@ -84,21 +86,27 @@ const SmartMeterDetailsPage = () => {
             throw new Error('Smart meter id not submitted.');
         }
         try {
+            setIsSmartMeterCallPending(true);
             const smartMeter = await getSmartMeter(params.id);
             setSmartMeter(smartMeter);
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to load smart meter!');
+        } finally {
+            setIsSmartMeterCallPending(false);
         }
     };
 
     const loadSmartMeterPolicies = async (smartMeterId: string) => {
         try {
+            setIsSmartMeterPoliciesCallPending(true);
             const smartMeterPolicies = await getPoliciesBySmartMeterId(smartMeterId);
             setSmartMeterPolicies(smartMeterPolicies);
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to load smart meter policies!');
+        } finally {
+            setIsSmartMeterPoliciesCallPending(false);
         }
     };
 
@@ -148,12 +156,33 @@ const SmartMeterDetailsPage = () => {
 
     return (
         <PageContainer title={''} breadcrumbs={breadcrumbs}>
-            {smartMeter == undefined || smartMeterPolicies == undefined ? (
+            {isSmartMeterCallPending || isSmartMeterPoliciesCallPending ? (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <CircularProgress size="3em" />
                 </div>
+            ) : smartMeter === undefined ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div>No smart meter details available</div>
+                </div>
             ) : (
                 <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '10px',
+                        }}>
+                        <Typography variant="h5" style={{}}>
+                            {smartMeter.name}
+                        </Typography>
+                        <KebabMenu items={kebabItems} />
+                    </Box>
+
+                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
+
+                    <Divider sx={{ margin: '2em' }} />
+
                     <div style={{ padding: '1em', width: '100%' }}>
                         <Box>
                             <Box
@@ -166,7 +195,6 @@ const SmartMeterDetailsPage = () => {
                                 <Typography variant="h5" style={{}}>
                                     Smart Meter Policies
                                 </Typography>
-                                <KebabMenu items={kebabItems} />
                             </Box>
                             <SmartMeterPoliciesTable policies={smartMeterPolicies} />
                         </Box>
@@ -181,10 +209,6 @@ const SmartMeterDetailsPage = () => {
                             </Button>
                         </div>
                     </div>
-
-                    <Divider sx={{ margin: '2em' }} />
-
-                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
 
                     <MetadataDrawer
                         smartMeter={smartMeter}

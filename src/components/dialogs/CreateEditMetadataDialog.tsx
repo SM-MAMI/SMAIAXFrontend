@@ -18,7 +18,8 @@ interface EditMetadataDialogPayload {
 }
 
 const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogProps<EditMetadataDialogPayload>>) => {
-    const [title, setTitle] = useState<string>('Add Metadata');
+    const [title, setTitle] = useState<string>('Create Metadata');
+    const [submitButtonName, setSubmitButtonName] = useState<string>('Create');
     const [location, setLocation] = useState<LocationDto>({});
     const [validFrom, setValidFrom] = useState(dayjs().toISOString());
     const [householdSize, setHouseholdSize] = useState<number | undefined>(undefined);
@@ -32,6 +33,7 @@ const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
         }
 
         setTitle('Edit Metadata');
+        setSubmitButtonName('Save');
 
         setLocation(payload.metadata.location as LocationDto);
         setValidFrom(payload.metadata.validFrom);
@@ -89,8 +91,8 @@ const CreateEditMetadataDialog = ({ payload, open, onClose }: Readonly<DialogPro
                     onClick={() => {
                         void handleSubmit();
                     }}
-                    variant="outlined">
-                    Ok
+                    variant="contained">
+                    {submitButtonName}
                 </Button>
                 <Button onClick={() => void onClose()} variant="outlined">
                     Cancel

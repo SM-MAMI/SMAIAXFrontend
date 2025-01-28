@@ -42,22 +42,23 @@ export const green = {
 };
 
 export const orange = {
-    50: 'hsl(45, 100%, 97%)',
-    100: 'hsl(45, 92%, 90%)',
-    200: 'hsl(45, 94%, 80%)',
-    300: 'hsl(45, 90%, 65%)',
-    400: 'hsl(45, 90%, 40%)',
-    500: 'hsl(45, 90%, 35%)',
-    600: 'hsl(45, 91%, 25%)',
-    700: 'hsl(45, 94%, 20%)',
-    800: 'hsl(45, 95%, 16%)',
-    900: 'hsl(45, 93%, 12%)',
+    50: 'hsl(30, 100%, 97%)',
+    100: 'hsl(30, 94%, 90%)',
+    200: 'hsl(30, 95%, 80%)',
+    300: 'hsl(30, 92%, 65%)',
+    400: 'hsl(30, 87%, 50%)',
+    500: 'hsl(30, 83%, 45%)',
+    600: 'hsl(30, 80%, 35%)',
+    700: 'hsl(30, 75%, 30%)',
+    800: 'hsl(30, 72%, 25%)',
+    900: 'hsl(30, 70%, 20%)',
 };
 
 export const red = {
     50: 'hsl(0, 100%, 97%)',
     100: 'hsl(0, 92%, 90%)',
     200: 'hsl(0, 94%, 80%)',
+    250: 'hsl(0, 90%, 73%)',
     300: 'hsl(0, 90%, 65%)',
     400: 'hsl(0, 90%, 40%)',
     500: 'hsl(0, 90%, 30%)',
@@ -128,6 +129,24 @@ export const colorSchemes = {
                 styleOverrides: {
                     root: {
                         backgroundColor: 'hsl(0, 0%, 99%)',
+                        maxWidth: '1600px !important',
+                    },
+                },
+            },
+            MuiDataGrid: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: 'hsl(0, 0%, 99%)',
+                        color: gray[800],
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: 'var(--mui-palette-baseShadow)',
+                    },
+                    columnHeaderRow: {
+                        backgroundColor: gray[100] + ' !important',
+                    },
+                    cell: {
+                        borderBottom: `1px solid ${alpha(gray[300], 0.6)}`,
                     },
                 },
             },
@@ -153,9 +172,9 @@ export const colorSchemes = {
                 dark: orange[700],
             },
             error: {
-                light: red[400],
-                main: red[500],
-                dark: red[700],
+                light: red[200],
+                main: red[250],
+                dark: red[400],
             },
             success: {
                 light: green[400],
@@ -192,6 +211,24 @@ export const colorSchemes = {
                 styleOverrides: {
                     root: {
                         backgroundColor: gray[900],
+                        maxWidth: '1600px !important',
+                    },
+                },
+            },
+            MuiDataGrid: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: '#191c23',
+                        color: 'hsl(0, 0%, 90%)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: 'var(--mui-palette-baseShadow)',
+                    },
+                    columnHeaderRow: {
+                        backgroundColor: gray[800] + ' !important',
+                    },
+                    cell: {
+                        borderBottom: `1px solid ${alpha(gray[700], 0.5)}`,
                     },
                 },
             },

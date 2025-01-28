@@ -15,6 +15,8 @@ git_push.sh
 index.ts
 models/continent.ts
 models/contract-create-dto.ts
+models/contract-dto.ts
+models/contract-overview-dto.ts
 models/device-config-dto.ts
 models/index.ts
 models/location-dto.ts

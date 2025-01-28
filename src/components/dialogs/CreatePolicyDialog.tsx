@@ -151,7 +151,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
             </CustomDialogContent>
             <CustomDialogActions>
                 <Button type="submit" variant="outlined">
-                    Ok
+                    Create
                 </Button>
                 <Button
                     onClick={() => {

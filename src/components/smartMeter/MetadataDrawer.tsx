@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { MediaQueryMobileMaxWidthStr } from '../../constants/constants.ts';
 import CreateEditMetadataDialog from '../dialogs/CreateEditMetadataDialog.tsx';
 import { useDialogs } from '@toolpad/core';
+import { formatToLocalDateTime } from '../../utils/helper.ts';
 
 interface MetadataDrawerProps {
     smartMeter: SmartMeterDto;
@@ -63,7 +64,7 @@ const MetadataDrawer = ({ smartMeter, isDrawerOpen, setIsDrawerOpen, reloadSmart
                         label={validFromLabel}>
                         {smartMeter.metadata.map((metadata) => (
                             <MenuItem key={metadata.id} value={metadata.validFrom}>
-                                {metadata.validFrom}
+                                {formatToLocalDateTime(metadata.validFrom)}
                             </MenuItem>
                         ))}
                     </Select>

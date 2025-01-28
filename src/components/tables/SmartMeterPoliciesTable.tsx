@@ -12,20 +12,7 @@ import {
 import { useState } from 'react';
 import { PolicyDto } from '../../api/openAPI';
 import Button from '@mui/material/Button';
-
-type Order = 'asc' | 'desc';
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
-    if (b[orderBy] < a[orderBy]) return -1;
-    if (b[orderBy] > a[orderBy]) return 1;
-    return 0;
-}
-
-function getComparator<T>(order: Order, orderBy: keyof T): (a: T, b: T) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import { getComparator, Order } from '../../utils/helper.ts';
 
 const SmartMeterPoliciesTable = ({
     policies,
@@ -47,7 +34,7 @@ const SmartMeterPoliciesTable = ({
 
     return (
         <TableContainer component={Paper} style={{ maxHeight: '400px' }}>
-            <Table stickyHeader>
+            <Table stickyHeader size="medium">
                 <TableHead>
                     <TableRow>
                         <TableCell>
@@ -58,16 +45,6 @@ const SmartMeterPoliciesTable = ({
                                     handleRequestSort('name');
                                 }}>
                                 Name
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'price'}
-                                direction={orderBy === 'price' ? order : 'asc'}
-                                onClick={() => {
-                                    handleRequestSort('price');
-                                }}>
-                                Price
                             </TableSortLabel>
                         </TableCell>
                         <TableCell>
@@ -90,6 +67,16 @@ const SmartMeterPoliciesTable = ({
                                 Measurement Resolution
                             </TableSortLabel>
                         </TableCell>
+                        <TableCell>
+                            <TableSortLabel
+                                active={orderBy === 'price'}
+                                direction={orderBy === 'price' ? order : 'asc'}
+                                onClick={() => {
+                                    handleRequestSort('price');
+                                }}>
+                                Price (€)
+                            </TableSortLabel>
+                        </TableCell>
                         {onPurchase && <TableCell></TableCell>}
                     </TableRow>
                 </TableHead>
@@ -98,15 +85,16 @@ const SmartMeterPoliciesTable = ({
                         sortedPolicies.map((policy) => (
                             <TableRow key={policy.id}>
                                 <TableCell>{policy.name}</TableCell>
-                                <TableCell>{policy.price}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
+                                <TableCell>{policy.price}</TableCell>
                                 {onPurchase && (
                                     <TableCell>
                                         <Button
                                             onClick={() => {
                                                 onPurchase(policy.id);
-                                            }}>
+                                            }}
+                                            sx={{ padding: '0' }}>
                                             Purchase
                                         </Button>
                                     </TableCell>
