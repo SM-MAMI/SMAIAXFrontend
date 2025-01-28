@@ -19,6 +19,7 @@ import MeasurementSection from '../../../components/measurement/MeasurementSecti
 import Divider from '@mui/material/Divider';
 import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
 import { SmartMeterId } from '../../../utils/helper.ts';
+import { useTheme } from '@mui/material/styles';
 
 type LocationState =
     | {
@@ -40,6 +41,8 @@ const generateBreadcrumbs = (smartMeter: SmartMeterDto | undefined, activePage: 
 };
 
 const SmartMeterDetailsPage = () => {
+    const theme = useTheme();
+
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -174,11 +177,16 @@ const SmartMeterDetailsPage = () => {
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: '10px',
                         }}>
                         <Typography variant="h5">{smartMeter.name}</Typography>
                         <KebabMenu items={kebabItems} />
                     </Box>
+
+                    <Typography
+                        sx={{ color: theme.palette.text.secondary, fontSize: '13px', marginBottom: '1em' }}
+                        variant="subtitle2">
+                        Serial number: {smartMeter.connectorSerialNumber}
+                    </Typography>
 
                     <MeasurementSection
                         measurementSourceId={smartMeter.id as SmartMeterId}

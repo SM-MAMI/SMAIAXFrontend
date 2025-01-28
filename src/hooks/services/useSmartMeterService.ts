@@ -86,11 +86,25 @@ export const useSmartMeterService = () => {
         [smartMeterApi]
     );
 
+    const removeSmartMeter = useCallback(
+        async (smartMeterId: string): Promise<void> => {
+            try {
+                await smartMeterApi.removeSmartMeter(smartMeterId);
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [smartMeterApi]
+    );
+
     return {
         addSmartMeter,
         addMetadata,
         getSmartMeters,
         getSmartMeter,
         updateMetadata,
+        removeSmartMeter,
     };
 };

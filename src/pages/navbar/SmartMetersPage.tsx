@@ -14,6 +14,7 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
+import RemoveSmartMeterDialog from '../../components/dialogs/RemoveSmartMeterDialog.tsx';
 
 const SmartMetersPage = () => {
     const theme = useTheme();
@@ -66,6 +67,15 @@ const SmartMetersPage = () => {
 
     const openDialogWithDeviceConfigurationDialog = async (smartMeterId: string) => {
         await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeterId });
+    };
+
+    const openRemoveSmartMeterDialog = async (smartMeterId: string) => {
+        await dialogs.open(RemoveSmartMeterDialog, {
+            smartMeterId: smartMeterId,
+            reloadSmartMeters: () => {
+                void loadSmartMeters();
+            },
+        });
     };
 
     const openAddSmartMeterDialog = async () => {
@@ -142,6 +152,10 @@ const SmartMetersPage = () => {
                                                 name: 'Device configuration',
                                                 onClick: () =>
                                                     void openDialogWithDeviceConfigurationDialog(smartMeterOverview.id),
+                                            },
+                                            {
+                                                name: 'Remove smart meter',
+                                                onClick: () => void openRemoveSmartMeterDialog(smartMeterOverview.id),
                                             },
                                         ]}
                                         isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
