@@ -81,13 +81,18 @@ const PolicySearchPage = () => {
     };
 
     const handlePurchase = (policyId: string) => {
+        const policy = policies.find((policy) => policy.id === policyId);
+        if (!policy) {
+            return;
+        }
+
         try {
             const contractCreateDto: ContractCreateDto = {
                 policyId: policyId,
             };
 
             void createContract(contractCreateDto);
-            showSnackbar('success', 'Successfully purchased data.');
+            showSnackbar('success', `Successfully purchased data from '${policy.name}'`);
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to purchase data.');

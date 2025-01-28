@@ -99,11 +99,16 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
     ];
 
     return (
-        <Box style={{ height: 'calc(100vh - 165px)', width: '100%' }}>
+        <Box sx={{ maxHeight: 'calc(100vh - 165px)', width: '100%' }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
                 disableColumnSelector
+                initialState={{
+                    sorting: {
+                        sortModel: [{ field: 'name', sort: 'asc' }],
+                    },
+                }}
                 onRowClick={(params: GridRowParams<ContractRow>) => {
                     void navigate(params.row.id);
                 }}

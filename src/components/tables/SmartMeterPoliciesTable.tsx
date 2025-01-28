@@ -67,7 +67,7 @@ const SmartMeterPoliciesTable = ({
                                 Measurement Resolution
                             </TableSortLabel>
                         </TableCell>
-                        <TableCell>
+                        <TableCell align={'right'}>
                             <TableSortLabel
                                 active={orderBy === 'price'}
                                 direction={orderBy === 'price' ? order : 'asc'}
@@ -77,7 +77,17 @@ const SmartMeterPoliciesTable = ({
                                 Price (€)
                             </TableSortLabel>
                         </TableCell>
-                        {onPurchase && <TableCell></TableCell>}
+                        <TableCell align={'right'}>
+                            <TableSortLabel
+                                active={orderBy === 'measurementCount'}
+                                direction={orderBy === 'measurementCount' ? order : 'asc'}
+                                onClick={() => {
+                                    handleRequestSort('measurementCount');
+                                }}>
+                                Measurement Count
+                            </TableSortLabel>
+                        </TableCell>
+                        {onPurchase && <TableCell align={'right'}></TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -87,14 +97,15 @@ const SmartMeterPoliciesTable = ({
                                 <TableCell>{policy.name}</TableCell>
                                 <TableCell>{policy.locationResolution}</TableCell>
                                 <TableCell>{policy.measurementResolution}</TableCell>
-                                <TableCell>{policy.price}</TableCell>
+                                <TableCell align={'right'}>{policy.price}</TableCell>
+                                <TableCell align={'right'}>{policy.measurementCount}</TableCell>
                                 {onPurchase && (
-                                    <TableCell>
+                                    <TableCell align={'right'}>
                                         <Button
+                                            variant={'outlined'}
                                             onClick={() => {
                                                 onPurchase(policy.id);
-                                            }}
-                                            sx={{ padding: '0' }}>
+                                            }}>
                                             Purchase
                                         </Button>
                                     </TableCell>
@@ -103,7 +114,7 @@ const SmartMeterPoliciesTable = ({
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={4} align="center">
+                            <TableCell colSpan={onPurchase ? 6 : 5} align="center">
                                 <Typography variant="body1">No policies found.</Typography>
                             </TableCell>
                         </TableRow>
