@@ -1,6 +1,6 @@
 import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core';
 import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
-import { Location, useLocation, useParams } from 'react-router-dom';
+import { Location, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
@@ -20,6 +20,8 @@ import Divider from '@mui/material/Divider';
 import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
 import { SmartMeterId } from '../../../utils/helper.ts';
 import { useTheme } from '@mui/material/styles';
+import RemoveSmartMeterDialog from '../../../components/dialogs/RemoveSmartMeterDialog.tsx';
+import { SmaiaXAbsoluteRoutes } from '../../../constants/constants.ts';
 
 type LocationState =
     | {
@@ -58,6 +60,7 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
     const { getMeasurements } = useMeasurementService();
+    const navigate = useNavigate();
 
     const breadcrumbs = generateBreadcrumbs(smartMeter, activePage);
 
@@ -139,6 +142,15 @@ const SmartMeterDetailsPage = () => {
         await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
+    const openRemoveSmartMeterDialog = async () => {
+        await dialogs.open(RemoveSmartMeterDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+            reloadSmartMeters: () => {
+                void navigate(SmaiaXAbsoluteRoutes.SMART_METERS);
+            },
+        });
+    };
+
     const kebabItems = [
         {
             name: 'Show metadata',
@@ -156,6 +168,12 @@ const SmartMeterDetailsPage = () => {
             name: 'Device configuration',
             onClick: () => {
                 void openCustomDialogWithDeviceConfiguration();
+            },
+        },
+        {
+            name: 'Remove smart meter',
+            onClick: () => {
+                void openRemoveSmartMeterDialog();
             },
         },
     ];

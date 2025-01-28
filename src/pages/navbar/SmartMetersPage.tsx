@@ -150,12 +150,15 @@ const SmartMetersPage = () => {
                                         kebabItems={[
                                             {
                                                 name: 'Device configuration',
-                                                onClick: () =>
-                                                    void openDialogWithDeviceConfigurationDialog(smartMeterOverview.id),
+                                                onClick: () => {
+                                                    void openDialogWithDeviceConfigurationDialog(smartMeterOverview.id);
+                                                },
                                             },
                                             {
                                                 name: 'Remove smart meter',
-                                                onClick: () => void openRemoveSmartMeterDialog(smartMeterOverview.id),
+                                                onClick: () => {
+                                                    void openRemoveSmartMeterDialog(smartMeterOverview.id);
+                                                },
                                             },
                                         ]}
                                         isRecentlyAdded={recentlyAddedSmartMeterName === smartMeterOverview.name}
