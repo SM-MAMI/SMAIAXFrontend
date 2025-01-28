@@ -120,6 +120,23 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             align: 'right',
             verticalAlign: 'middle',
         },
+        tooltip: {
+            useHTML: true,
+            formatter: function () {
+                const color = typeof this.color === 'string' ? this.color : 'black';
+
+                return `
+                    <div style="text-align: left;">
+                        <div style="display: block; font-size: 12px; color: ${theme.palette.text.secondary};">
+                            ${formatToLocalDateTime(this.x)}
+                        </div>
+                        <span style="color: ${color};">●</span> 
+                        <span style="font-size: 14px;">${this.series.name}:</span>
+                        <span style="font-size: 14px; font-weight: bold;">${this.y?.toLocaleString() ?? 'N/A'}</span>
+                    </div>
+                `;
+            },
+        },
         responsive: {
             rules: [
                 {

@@ -33,7 +33,12 @@ const SmartMeterPoliciesTable = ({
     const sortedPolicies = policies.slice().sort(getComparator(order, orderBy));
 
     return (
-        <TableContainer component={Paper} style={{ maxHeight: '400px' }}>
+        <TableContainer
+            component={Paper}
+            style={{
+                maxHeight: onPurchase ? 'calc(100vh - 500px)' : '450px',
+                minHeight: onPurchase ? '300px' : '',
+            }}>
             <Table stickyHeader size="medium">
                 <TableHead>
                     <TableRow>

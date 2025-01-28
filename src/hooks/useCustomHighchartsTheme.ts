@@ -22,6 +22,35 @@ const useCustomHighchartsTheme = () => {
                 style: {
                     fontFamily: theme.typography.fontFamily,
                 },
+                zooming: {
+                    type: 'x',
+                    resetButton: {
+                        theme: {
+                            fill: theme.palette.background.paper,
+                            stroke: theme.palette.primary.main,
+                            style: {
+                                color: theme.palette.primary.main,
+                                fontSize: String(theme.typography.body2.fontSize),
+                            },
+                            states: {
+                                hover: {
+                                    fill: theme.palette.action.hover,
+                                    stroke: theme.palette.primary.main,
+                                    style: {
+                                        color: theme.palette.primary.main,
+                                    },
+                                },
+                                select: {
+                                    fill: theme.palette.action.selected,
+                                    stroke: theme.palette.primary.main,
+                                    style: {
+                                        color: theme.palette.primary.main,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
             title: {
                 style: {
