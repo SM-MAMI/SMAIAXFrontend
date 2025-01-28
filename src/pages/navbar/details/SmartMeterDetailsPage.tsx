@@ -1,5 +1,5 @@
 import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core';
-import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
+import { PolicyDto, SmartMeterDto, SmartMeterUpdateDto } from '../../../api/openAPI';
 import { Location, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +22,7 @@ import { SmartMeterId } from '../../../utils/helper.ts';
 import { useTheme } from '@mui/material/styles';
 import RemoveSmartMeterDialog from '../../../components/dialogs/RemoveSmartMeterDialog.tsx';
 import { SmaiaXAbsoluteRoutes } from '../../../constants/constants.ts';
+import EditSmartMeterDialog from '../../../components/dialogs/EditSmartMeterDialog.tsx';
 
 type LocationState =
     | {
@@ -142,6 +143,24 @@ const SmartMeterDetailsPage = () => {
         await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
+    const openEditSmartMeterDialog = async () => {
+        if (smartMeter == null) {
+            return;
+        }
+
+        const smartMeterUpdateDto: SmartMeterUpdateDto = {
+            id: smartMeter.id,
+            name: smartMeter.name,
+        };
+
+        await dialogs.open(EditSmartMeterDialog, {
+            smartMeterUpdateDto: smartMeterUpdateDto,
+            reloadSmartMeters: () => {
+                void loadSmartMeter();
+            },
+        });
+    };
+
     const openRemoveSmartMeterDialog = async () => {
         await dialogs.open(RemoveSmartMeterDialog, {
             smartMeterId: smartMeter?.id ?? '',
@@ -168,6 +187,12 @@ const SmartMeterDetailsPage = () => {
             name: 'Device configuration',
             onClick: () => {
                 void openCustomDialogWithDeviceConfiguration();
+            },
+        },
+        {
+            name: 'Edit smart meter',
+            onClick: () => {
+                void openEditSmartMeterDialog();
             },
         },
         {

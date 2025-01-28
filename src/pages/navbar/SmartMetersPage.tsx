@@ -2,7 +2,7 @@ import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
-import { SmartMeterOverviewDto } from '../../api/openAPI';
+import { SmartMeterOverviewDto, SmartMeterUpdateDto } from '../../api/openAPI';
 import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
 import DialogWithDeviceConfiguration from '../../components/dialogs/DialogWithDeviceConfiguration.tsx';
@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import RemoveSmartMeterDialog from '../../components/dialogs/RemoveSmartMeterDialog.tsx';
+import EditSmartMeterDialog from '../../components/dialogs/EditSmartMeterDialog.tsx';
 
 const SmartMetersPage = () => {
     const theme = useTheme();
@@ -67,6 +68,15 @@ const SmartMetersPage = () => {
 
     const openDialogWithDeviceConfigurationDialog = async (smartMeterId: string) => {
         await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeterId });
+    };
+
+    const openEditSmartMeterDialog = async (smartMeterUpdateDto: SmartMeterUpdateDto) => {
+        await dialogs.open(EditSmartMeterDialog, {
+            smartMeterUpdateDto: smartMeterUpdateDto,
+            reloadSmartMeters: () => {
+                void loadSmartMeters();
+            },
+        });
     };
 
     const openRemoveSmartMeterDialog = async (smartMeterId: string) => {
@@ -152,6 +162,17 @@ const SmartMetersPage = () => {
                                                 name: 'Device configuration',
                                                 onClick: () => {
                                                     void openDialogWithDeviceConfigurationDialog(smartMeterOverview.id);
+                                                },
+                                            },
+                                            {
+                                                name: 'Edit smart meter',
+                                                onClick: () => {
+                                                    const smartMeterUpdateDto: SmartMeterUpdateDto = {
+                                                        id: smartMeterOverview.id,
+                                                        name: smartMeterOverview.name,
+                                                    };
+
+                                                    void openEditSmartMeterDialog(smartMeterUpdateDto);
                                                 },
                                             },
                                             {

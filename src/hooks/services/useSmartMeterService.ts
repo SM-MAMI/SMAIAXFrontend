@@ -7,6 +7,7 @@ import {
     SmartMeterAssignDto,
     SmartMeterDto,
     SmartMeterOverviewDto,
+    SmartMeterUpdateDto,
 } from '../../api/openAPI';
 import { AxiosError } from 'axios';
 
@@ -86,6 +87,20 @@ export const useSmartMeterService = () => {
         [smartMeterApi]
     );
 
+    const updateSmartMeter = useCallback(
+        async (smartMeterId: string, updatedSmartMeter: SmartMeterUpdateDto): Promise<string> => {
+            try {
+                const response = await smartMeterApi.updateSmartMeter(smartMeterId, updatedSmartMeter);
+                return response.data;
+            } catch (error) {
+                const axiosError = error as AxiosError<ProblemDetails>;
+                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
+                throw new Error(errorMessage);
+            }
+        },
+        [smartMeterApi]
+    );
+
     const removeSmartMeter = useCallback(
         async (smartMeterId: string): Promise<void> => {
             try {
@@ -105,6 +120,7 @@ export const useSmartMeterService = () => {
         getSmartMeters,
         getSmartMeter,
         updateMetadata,
+        updateSmartMeter,
         removeSmartMeter,
     };
 };

@@ -6,12 +6,12 @@ import { DialogProps } from '@toolpad/core';
 import { useSmartMeterService } from '../../hooks/services/useSmartMeterService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 
-interface DeleteSmartMeterDialogPayload {
+interface RemoveSmartMeterDialogPayload {
     reloadSmartMeters: () => void;
     smartMeterId: string;
 }
 
-const RemoveSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<DeleteSmartMeterDialogPayload>>) => {
+const RemoveSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<RemoveSmartMeterDialogPayload>>) => {
     const { removeSmartMeter } = useSmartMeterService();
     const { showSnackbar } = useSnackbar();
 

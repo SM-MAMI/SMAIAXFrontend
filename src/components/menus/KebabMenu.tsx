@@ -70,9 +70,9 @@ const KebabMenu = ({ items }: Readonly<KebabMenuProps>) => {
                 open={open}
                 anchorEl={anchorRef.current}
                 role={undefined}
-                placement="bottom-start"
+                placement="bottom-end"
                 transition
-                disablePortal
+                disablePortal={false}
                 sx={{ zIndex: 100 }}>
                 {({ TransitionProps, placement }) => (
                     <Grow
