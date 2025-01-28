@@ -6,6 +6,8 @@ import { Box, CircularProgress } from '@mui/material';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import { useContractService } from '../../../hooks/services/useContractService.ts';
 import { useParams } from 'react-router-dom';
+import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
+import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
 
 const generateBreadcrumbs = (contract: ContractDto | undefined, activePage: ActivePage | null): Breadcrumb[] => {
     const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
@@ -28,6 +30,7 @@ const ContractDetailsPage = () => {
     const activePage = useActivePage();
     const { showSnackbar } = useSnackbar();
     const { getContract } = useContractService();
+    const { getPolicyMeasurements } = usePolicyService();
 
     const breadcrumbs = generateBreadcrumbs(contract, activePage);
 
@@ -67,7 +70,13 @@ const ContractDetailsPage = () => {
                     <div>No contract details available</div>
                 </Box>
             ) : (
-                <></>
+                <>
+                    <MeasurementSection
+                        measurementSourceId={contract.policy.id}
+                        getMeasurements={getPolicyMeasurements}
+                        requestOnInitialLoad={true}
+                    />
+                </>
             )}
         </PageContainer>
     );

@@ -17,6 +17,7 @@ import KebabMenu from '../../../components/menus/KebabMenu.tsx';
 import Button from '@mui/material/Button';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
 import Divider from '@mui/material/Divider';
+import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
 
 type LocationState =
     | {
@@ -52,6 +53,7 @@ const SmartMeterDetailsPage = () => {
     const { showSnackbar } = useSnackbar();
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
+    const { getMeasurements } = useMeasurementService();
 
     const breadcrumbs = generateBreadcrumbs(smartMeter, activePage);
 
@@ -179,7 +181,11 @@ const SmartMeterDetailsPage = () => {
                         <KebabMenu items={kebabItems} />
                     </Box>
 
-                    <MeasurementSection smartMeterId={smartMeter.id} requestOnInitialLoad={true} />
+                    <MeasurementSection
+                        measurementSourceId={smartMeter.id}
+                        getMeasurements={getMeasurements}
+                        requestOnInitialLoad={true}
+                    />
 
                     <Divider sx={{ margin: '2em' }} />
 

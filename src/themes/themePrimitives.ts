@@ -136,7 +136,7 @@ export const colorSchemes = {
             MuiDataGrid: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: 'hsl(0, 0%, 99%)',
+                        backgroundColor: '#f5f6fa',
                         color: gray[800],
                         border: 'none',
                         borderRadius: '8px',

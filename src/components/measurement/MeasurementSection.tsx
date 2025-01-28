@@ -4,19 +4,29 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
-import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import {
     AggregatedVariableLabelMap,
     AggregatedVariables,
     RawVariableLabelMap,
     RawVariables,
 } from '../../constants/variableConstants.ts';
-import { MeasurementAggregatedDto, MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
+import {
+    MeasurementAggregatedDto,
+    MeasurementListDto,
+    MeasurementRawDto,
+    MeasurementResolution,
+} from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
 import CustomVariableAutoComplete from '../pure/CustomVariableAutoComplete.tsx';
 
 interface MeasurementSectionProps {
-    smartMeterId: string;
+    measurementSourceId: string;
+    getMeasurements: (
+        smartMeterId: string,
+        resolution: MeasurementResolution,
+        startAt: string,
+        endAt: string
+    ) => Promise<MeasurementListDto>;
     requestOnInitialLoad?: boolean;
     chartOptions?: ChartOptions;
     backgroundColor?: string;
@@ -27,7 +37,8 @@ export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
 export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 
 const MeasurementSection: React.FC<MeasurementSectionProps> = ({
-    smartMeterId,
+    measurementSourceId,
+    getMeasurements,
     requestOnInitialLoad = false,
     chartOptions = {},
     backgroundColor = '',
@@ -50,7 +61,6 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const [endAt, setEndAt] = useState<Dayjs>(dayjs());
 
     const { showSnackbar } = useSnackbar();
-    const { getMeasurements } = useMeasurementService();
 
     useEffect(() => {
         if (selectedResolution === MeasurementResolution.Raw) {
@@ -110,7 +120,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             setMeasurements([]);
 
             const measurements = await getMeasurements(
-                smartMeterId,
+                measurementSourceId,
                 selectedResolution,
                 startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
                 endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
