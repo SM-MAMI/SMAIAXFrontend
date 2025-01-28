@@ -185,7 +185,12 @@ const PolicySearchPage = () => {
                 </div>
             ) : (
                 <div style={{ marginTop: '20px', width: '100%' }}>
-                    <SmartMeterPoliciesTable policies={policies} onPurchase={handlePurchase} />
+                    <SmartMeterPoliciesTable
+                        policies={policies}
+                        onPurchase={(policyId) => {
+                            void handlePurchase(policyId);
+                        }}
+                    />
                 </div>
             )}
         </PageContainer>
