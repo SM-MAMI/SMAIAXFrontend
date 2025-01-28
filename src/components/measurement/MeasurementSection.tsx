@@ -30,6 +30,8 @@ interface MeasurementSectionProps {
         startAt: string,
         endAt: string
     ) => Promise<MeasurementListDto>;
+    defaultResolution?: MeasurementResolution;
+    highestAvailableResolution?: MeasurementResolution;
     requestOnInitialLoad?: boolean;
     chartOptions?: ChartOptions;
     backgroundColor?: string;
@@ -42,6 +44,8 @@ export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 const MeasurementSection: FC<MeasurementSectionProps> = ({
     measurementSourceId,
     getMeasurements,
+    defaultResolution = MeasurementResolution.QuarterHour,
+    highestAvailableResolution = MeasurementResolution.Raw,
     requestOnInitialLoad = false,
     chartOptions = {},
     backgroundColor = '',
@@ -50,12 +54,28 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
     const theme = useTheme();
 
     const allVariableSelect = ['all'] as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+    const resolutionOrder = [
+        MeasurementResolution.Raw,
+        MeasurementResolution.Minute,
+        MeasurementResolution.QuarterHour,
+        MeasurementResolution.Hour,
+        MeasurementResolution.Day,
+        MeasurementResolution.Week,
+    ];
+
+    const availableResolutions = resolutionOrder.filter(
+        (res) => resolutionOrder.indexOf(res) >= resolutionOrder.indexOf(highestAvailableResolution)
+    );
+
+    const validatedDefaultResolution =
+        resolutionOrder.indexOf(defaultResolution) >= resolutionOrder.indexOf(highestAvailableResolution)
+            ? defaultResolution
+            : highestAvailableResolution;
+
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(validatedDefaultResolution);
 
     const [isLoading, setIsLoading] = useState(false);
     const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
-    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(
-        MeasurementResolution.QuarterHour
-    );
     const [variableError, setVariableError] = useState(false);
     const [selectedVariables, setSelectedVariables] = useState<
         (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
@@ -90,6 +110,10 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
 
     const handleResolutionChange = (resolution: MeasurementResolution) => {
         setSelectedResolution(resolution);
+
+        if (highestAvailableResolution !== MeasurementResolution.Raw) {
+            return;
+        }
 
         if (selectedResolution === MeasurementResolution.Raw && resolution !== MeasurementResolution.Raw) {
             const updatedVariables = selectedVariables.map((variable) => {
@@ -209,7 +233,7 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                 }}>
                 <Box>
                     <Autocomplete
-                        options={Object.values(MeasurementResolution)}
+                        options={availableResolutions}
                         getOptionLabel={(option) => option}
                         value={selectedResolution}
                         onChange={(_event, value) => {
