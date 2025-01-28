@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
@@ -11,6 +11,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const { refresh } = useAuthenticationService();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkTokens = async () => {
@@ -32,6 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
                 const utcNowInMs = Date.now();
                 const utcExpirationDateInMs = decodedAccessToken.exp * 1000;
+
                 if (utcExpirationDateInMs < utcNowInMs) {
                     const newTokens = await refresh({ accessToken, refreshToken });
                     localStorage.setItem('access_token', newTokens.accessToken);
@@ -43,11 +45,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 localStorage.removeItem('refresh_token');
                 void navigate(SmaiaXAbsoluteRoutes.SIGN_IN);
                 return;
+            } finally {
+                setLoading(false);
             }
         };
 
         void checkTokens();
     }, [navigate, refresh]);
+
+    if (loading) {
+        return <></>;
+    }
 
     return <>{children}</>;
 };
