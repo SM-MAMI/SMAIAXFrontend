@@ -61,7 +61,9 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         );
     }
 
-    const variableIds = Object.entries(measurements[0]).filter(([key]) => key !== 'timestamp' && key !== 'uptime');
+    const variableIds = Object.entries(measurements[0]).filter(
+        ([key]) => key !== 'timestamp' && key !== 'amountOfMeasurements'
+    );
 
     const series: SeriesOptionsType[] = variableIds.map(([key]) => {
         const data = measurements.map((measurement) => [

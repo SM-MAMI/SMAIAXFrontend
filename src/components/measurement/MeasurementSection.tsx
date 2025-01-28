@@ -102,7 +102,6 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
 
         return measurements.map((measurement) => {
             const filteredMeasurement: Partial<MeasurementRawDto | MeasurementAggregatedDto> = {
-                uptime: measurement.uptime,
                 timestamp: measurement.timestamp,
             };
 
