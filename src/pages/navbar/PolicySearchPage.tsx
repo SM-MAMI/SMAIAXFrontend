@@ -18,8 +18,11 @@ import { useContractService } from '../../hooks/services/useContractService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
 const PolicySearchPage = () => {
+    const theme = useTheme();
+
     const [policies, setPolicies] = useState<PolicyDto[]>([]);
     const [isPoliciesCallPending, setIsPoliciesCallPending] = useState(true);
 
@@ -106,7 +109,16 @@ const PolicySearchPage = () => {
 
     return (
         <PageContainer title="">
-            <div style={{ marginTop: '20px', width: '100%' }}>
+            <div
+                style={{
+                    marginTop: '1em',
+                    width: '100%',
+                    background: theme.palette.background.paper,
+                    padding: '1em',
+                    borderRadius: '8px',
+                    marginBottom: '3em',
+                    boxShadow: theme.shadows[1],
+                }}>
                 <Box
                     component="form"
                     onSubmit={handleSubmit}

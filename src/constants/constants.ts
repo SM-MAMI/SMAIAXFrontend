@@ -22,4 +22,5 @@ export const SmaiaXAbsoluteRoutes = {
     SIGN_UP: '/' + SmaiaxRoutes.SIGN_UP,
     ORDERS: '/' + SmaiaxRoutes.ORDERS,
     CONTRACTS: '/' + SmaiaxRoutes.CONTRACTS,
+    SMART_METERS: '/' + SmaiaxRoutes.SMART_METERS,
 };

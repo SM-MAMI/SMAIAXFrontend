@@ -1,6 +1,6 @@
 import { ActivePage, Breadcrumb, useActivePage, useDialogs } from '@toolpad/core';
-import { PolicyDto, SmartMeterDto } from '../../../api/openAPI';
-import { Location, useLocation, useParams } from 'react-router-dom';
+import { PolicyDto, SmartMeterDto, SmartMeterUpdateDto } from '../../../api/openAPI';
+import { Location, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSmartMeterService } from '../../../hooks/services/useSmartMeterService.ts';
 import { useEffect, useRef, useState } from 'react';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
@@ -19,6 +19,10 @@ import MeasurementSection from '../../../components/measurement/MeasurementSecti
 import Divider from '@mui/material/Divider';
 import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
 import { SmartMeterId } from '../../../utils/helper.ts';
+import { useTheme } from '@mui/material/styles';
+import RemoveSmartMeterDialog from '../../../components/dialogs/RemoveSmartMeterDialog.tsx';
+import { SmaiaXAbsoluteRoutes } from '../../../constants/constants.ts';
+import EditSmartMeterDialog from '../../../components/dialogs/EditSmartMeterDialog.tsx';
 
 type LocationState =
     | {
@@ -40,6 +44,8 @@ const generateBreadcrumbs = (smartMeter: SmartMeterDto | undefined, activePage: 
 };
 
 const SmartMeterDetailsPage = () => {
+    const theme = useTheme();
+
     const [smartMeter, setSmartMeter] = useState<SmartMeterDto | undefined>(undefined);
     const [smartMeterPolicies, setSmartMeterPolicies] = useState<PolicyDto[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -55,6 +61,7 @@ const SmartMeterDetailsPage = () => {
     const { getSmartMeter } = useSmartMeterService();
     const { getPoliciesBySmartMeterId } = usePolicyService();
     const { getMeasurements } = useMeasurementService();
+    const navigate = useNavigate();
 
     const breadcrumbs = generateBreadcrumbs(smartMeter, activePage);
 
@@ -136,6 +143,33 @@ const SmartMeterDetailsPage = () => {
         await dialogs.open(DialogWithDeviceConfiguration, { smartMeterId: smartMeter?.id ?? '' });
     };
 
+    const openEditSmartMeterDialog = async () => {
+        if (smartMeter == null) {
+            return;
+        }
+
+        const smartMeterUpdateDto: SmartMeterUpdateDto = {
+            id: smartMeter.id,
+            name: smartMeter.name,
+        };
+
+        await dialogs.open(EditSmartMeterDialog, {
+            smartMeterUpdateDto: smartMeterUpdateDto,
+            reloadSmartMeters: () => {
+                void loadSmartMeter();
+            },
+        });
+    };
+
+    const openRemoveSmartMeterDialog = async () => {
+        await dialogs.open(RemoveSmartMeterDialog, {
+            smartMeterId: smartMeter?.id ?? '',
+            reloadSmartMeters: () => {
+                void navigate(SmaiaXAbsoluteRoutes.SMART_METERS);
+            },
+        });
+    };
+
     const kebabItems = [
         {
             name: 'Show metadata',
@@ -153,6 +187,18 @@ const SmartMeterDetailsPage = () => {
             name: 'Device configuration',
             onClick: () => {
                 void openCustomDialogWithDeviceConfiguration();
+            },
+        },
+        {
+            name: 'Edit smart meter',
+            onClick: () => {
+                void openEditSmartMeterDialog();
+            },
+        },
+        {
+            name: 'Remove smart meter',
+            onClick: () => {
+                void openRemoveSmartMeterDialog();
             },
         },
     ];
@@ -174,11 +220,16 @@ const SmartMeterDetailsPage = () => {
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: '10px',
                         }}>
                         <Typography variant="h5">{smartMeter.name}</Typography>
                         <KebabMenu items={kebabItems} />
                     </Box>
+
+                    <Typography
+                        sx={{ color: theme.palette.text.secondary, fontSize: '13px', marginBottom: '1em' }}
+                        variant="subtitle2">
+                        Serial number: {smartMeter.connectorSerialNumber}
+                    </Typography>
 
                     <MeasurementSection
                         measurementSourceId={smartMeter.id as SmartMeterId}
