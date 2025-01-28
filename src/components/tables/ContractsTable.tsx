@@ -37,14 +37,15 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
     });
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Name', flex: 1, sortable: true, filterable: true },
-        { field: 'createdAt', headerName: 'Created At', flex: 1, sortable: true, filterable: true },
+        { field: 'name', headerName: 'Name', flex: 1, sortable: true, filterable: true, minWidth: 100 },
+        { field: 'createdAt', headerName: 'Created At', flex: 1, sortable: true, filterable: true, minWidth: 100 },
         {
             field: 'locationResolution',
             headerName: 'Location Resolution',
             flex: 1,
             sortable: true,
             filterable: true,
+            minWidth: 100,
         },
         {
             field: 'measurementResolution',
@@ -52,6 +53,7 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
             flex: 1,
             sortable: true,
             filterable: true,
+            minWidth: 100,
         },
         {
             field: 'price',
@@ -60,6 +62,7 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
             sortable: true,
             filterable: true,
             type: 'number',
+            minWidth: 100,
             filterOperators: [
                 ...getGridNumericOperators(),
                 {
@@ -95,6 +98,7 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
             sortable: true,
             filterable: true,
             type: 'number',
+            minWidth: 100,
         },
     ];
 

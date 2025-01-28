@@ -16,6 +16,8 @@ import SmartMeterPoliciesTable from '../../components/tables/SmartMeterPoliciesT
 import FormControl from '@mui/material/FormControl';
 import { useContractService } from '../../hooks/services/useContractService.ts';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
+import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
+import { useNavigate } from 'react-router-dom';
 
 const PolicySearchPage = () => {
     const [policies, setPolicies] = useState<PolicyDto[]>([]);
@@ -24,6 +26,7 @@ const PolicySearchPage = () => {
     const { searchPolicies } = usePolicyService();
     const { createContract } = useContractService();
     const { showSnackbar } = useSnackbar();
+    const navigate = useNavigate();
 
     const hasExecutedInitialLoadPolicies = useRef(false);
     useEffect(() => {
@@ -80,7 +83,7 @@ const PolicySearchPage = () => {
         void loadPolicies();
     };
 
-    const handlePurchase = (policyId: string) => {
+    const handlePurchase = async (policyId: string) => {
         const policy = policies.find((policy) => policy.id === policyId);
         if (!policy) {
             return;
@@ -91,8 +94,10 @@ const PolicySearchPage = () => {
                 policyId: policyId,
             };
 
-            void createContract(contractCreateDto);
+            const contractId = await createContract(contractCreateDto);
             showSnackbar('success', `Successfully purchased data from '${policy.name}'`);
+
+            void navigate(SmaiaXAbsoluteRoutes.CONTRACTS + '/' + contractId);
         } catch (error) {
             console.error(error);
             showSnackbar('error', 'Failed to purchase data.');
