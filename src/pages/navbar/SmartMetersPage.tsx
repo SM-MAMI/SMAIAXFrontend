@@ -7,13 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@toolpad/core';
 import DialogWithDeviceConfiguration from '../../components/dialogs/DialogWithDeviceConfiguration.tsx';
 import AddSmartMeterDialog from '../../components/dialogs/AddSmartMeterDialog.tsx';
-import { MediaQueryTabletMaxWidthStr } from '../../constants/constants.ts';
+import { MediaQueryTabletMaxWidthStr, SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
 import Button from '@mui/material/Button';
 import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
+import Card from '@mui/material/Card';
 
 const SmartMetersPage = () => {
+    const theme = useTheme();
+
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[]>([]);
     const [isSmartMetersCallPending, setIsSmartMetersCallPending] = useState(true);
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
@@ -82,9 +86,40 @@ const SmartMetersPage = () => {
                     <CircularProgress size="3em" />
                 </Box>
             ) : smartMeters.length <= 0 ? (
-                <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div>No smart meter available</div>
-                </Box>
+                <Card
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        backgroundColor: theme.palette.background.paper,
+                        height: '151px',
+                        width: isSmallScreen ? '100%' : '50%',
+                        minWidth: isSmallScreen ? '' : '532px',
+                        alignSelf: 'center',
+                        borderRadius: '8px',
+                        padding: '1em',
+                        margin: '1em',
+                        boxShadow: theme.shadows[1],
+                    }}>
+                    <Box>No smart meters found.</Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            marginTop: '1em',
+                        }}>
+                        <Button onClick={() => void navigate(SmaiaXAbsoluteRoutes.ORDERS)}>👉 Buy One Here 👈</Button>
+                        <Button
+                            onClick={() => {
+                                void openAddSmartMeterDialog();
+                            }}>
+                            ⚡Add an existing smart meter⚡
+                        </Button>
+                    </Box>
+                </Card>
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
                     <Box sx={{ padding: '1em' }}>

@@ -20,4 +20,5 @@ export const SmaiaxRoutes = {
 export const SmaiaXAbsoluteRoutes = {
     SIGN_IN: '/' + SmaiaxRoutes.SIGN_IN,
     SIGN_UP: '/' + SmaiaxRoutes.SIGN_UP,
+    ORDERS: '/' + SmaiaxRoutes.ORDERS,
 };
