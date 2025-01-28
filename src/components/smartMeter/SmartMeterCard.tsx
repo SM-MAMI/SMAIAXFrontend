@@ -38,7 +38,10 @@ const SmartMeterCard = ({
                 <KebabMenu items={kebabItems} />
             </Box>
             <CardActionArea>
-                <CardHeader title={smartMeterOverview.name} subheader={`ID: ${smartMeterOverview.id}`} />
+                <CardHeader
+                    title={smartMeterOverview.name}
+                    subheader={`Serial number: ${smartMeterOverview.connectorSerialNumber}`}
+                />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
                         Metadata count: {smartMeterOverview.metadataCount}

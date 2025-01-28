@@ -31,6 +31,12 @@ export interface SmartMeterOverviewDto {
      * @type {string}
      * @memberof SmartMeterOverviewDto
      */
+    'connectorSerialNumber': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SmartMeterOverviewDto
+     */
     'name': string;
     /**
      * 

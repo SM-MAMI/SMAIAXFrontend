@@ -7,8 +7,7 @@ import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import { useContractService } from '../../../hooks/services/useContractService.ts';
 import { useParams } from 'react-router-dom';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
-import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
-import { formatToLocalDateTime, PolicyId } from '../../../utils/helper.ts';
+import { ContractId, formatToLocalDateTime } from '../../../utils/helper.ts';
 
 const generateBreadcrumbs = (contract: ContractDto | undefined, activePage: ActivePage | null): Breadcrumb[] => {
     const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
@@ -30,8 +29,7 @@ const ContractDetailsPage = () => {
     const params = useParams<{ id: string }>();
     const activePage = useActivePage();
     const { showSnackbar } = useSnackbar();
-    const { getContract } = useContractService();
-    const { getPolicyMeasurements } = usePolicyService();
+    const { getContract, getContractMeasurements } = useContractService();
 
     const breadcrumbs = generateBreadcrumbs(contract, activePage);
 
@@ -86,8 +84,8 @@ const ContractDetailsPage = () => {
                     </Box>
 
                     <MeasurementSection
-                        measurementSourceId={contract.policy.id as PolicyId}
-                        getMeasurements={getPolicyMeasurements}
+                        measurementSourceId={contract.id as ContractId}
+                        getMeasurements={getContractMeasurements}
                         requestOnInitialLoad={true}
                     />
                 </>

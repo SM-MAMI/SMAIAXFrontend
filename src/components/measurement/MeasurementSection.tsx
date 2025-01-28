@@ -178,7 +178,12 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
             }
         } catch (error) {
             console.error(error);
-            showSnackbar('error', 'Failed to load measurements!');
+
+            if (error instanceof Error) {
+                showSnackbar('error', error.message);
+            } else {
+                showSnackbar('error', 'Failed to load measurements!');
+            }
         } finally {
             setIsLoading(false);
         }
