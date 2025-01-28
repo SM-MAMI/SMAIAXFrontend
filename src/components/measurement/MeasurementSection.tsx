@@ -53,9 +53,13 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
 
     const [isLoading, setIsLoading] = useState(false);
     const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
-    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(MeasurementResolution.Raw);
-    const [selectedVariables, setSelectedVariables] =
-        useState<(RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]>(allVariableSelect);
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(
+        MeasurementResolution.QuarterHour
+    );
+    const [variableError, setVariableError] = useState(false);
+    const [selectedVariables, setSelectedVariables] = useState<
+        (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
+    >(['avgVoltagePhase1', 'avgVoltagePhase2', 'avgVoltagePhase3']);
     const [variableOptions, setVariableOptions] = useState<
         (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
     >([]);
@@ -86,10 +90,28 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
 
     const handleResolutionChange = (resolution: MeasurementResolution) => {
         setSelectedResolution(resolution);
-        setSelectedVariables(allVariableSelect);
+
+        if (selectedResolution === MeasurementResolution.Raw && resolution !== MeasurementResolution.Raw) {
+            const updatedVariables = selectedVariables.map((variable) => {
+                return variable.startsWith('avg')
+                    ? variable
+                    : `avg${variable.charAt(0).toUpperCase()}${variable.slice(1)}`;
+            }) as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+
+            setSelectedVariables(updatedVariables);
+        } else if (selectedResolution !== MeasurementResolution.Raw && resolution === MeasurementResolution.Raw) {
+            const updatedVariables = selectedVariables.map((variable) => {
+                const noPrefix = variable.replace(/^(avg|min|max|med)/, '');
+                return noPrefix.charAt(0).toLowerCase() + noPrefix.slice(1);
+            }) as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+
+            const uniqueVariables = Array.from(new Set(updatedVariables));
+            setSelectedVariables(uniqueVariables);
+        }
     };
 
     const handleVariableChange = (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]): void => {
+        setVariableError(false);
         setSelectedVariables(variables);
     };
 
@@ -117,9 +139,17 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
     };
 
     const handleLoadData = async (isInitialLoad = false): Promise<void> => {
+        if (selectedVariables.length <= 0) {
+            setVariableError(true);
+            setMeasurements([]);
+            return;
+        }
+
         try {
             setIsLoading(true);
             setMeasurements([]);
+
+            setVariableError(false);
 
             const measurements = await getMeasurements(
                 measurementSourceId,
@@ -178,14 +208,11 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                         getOptionLabel={(option) => option}
                         value={selectedResolution}
                         onChange={(_event, value) => {
-                            if (value == null) {
-                                value = MeasurementResolution.Raw;
-                            }
-
                             handleResolutionChange(value);
                         }}
                         renderInput={(params) => <TextField {...params} label="Resolution" />}
                         sx={{ width: 175 }}
+                        disableClearable
                     />
                 </Box>
 
@@ -194,6 +221,7 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                         selectedVariables={selectedVariables}
                         onChange={handleVariableChange}
                         variableOptions={variableOptions}
+                        error={variableError}
                     />
                 </Box>
 
@@ -233,11 +261,6 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                         variant="contained"
                         size="medium"
                         onClick={() => {
-                            if (selectedVariables.length <= 0) {
-                                setMeasurements([]);
-                                return;
-                            }
-
                             void handleLoadData();
                         }}
                         sx={{
