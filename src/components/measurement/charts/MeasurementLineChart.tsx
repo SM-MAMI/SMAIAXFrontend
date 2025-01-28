@@ -61,12 +61,16 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         );
     }
 
-    const variableIds = Object.entries(measurements[0]).filter(
+    const sortedMeasurements = [...measurements].sort(
+        (a, b) => new Date(a.timestamp || '').getTime() - new Date(b.timestamp || '').getTime()
+    );
+
+    const variableIds = Object.entries(sortedMeasurements[0]).filter(
         ([key]) => key !== 'timestamp' && key !== 'amountOfMeasurements'
     );
 
     const series: SeriesOptionsType[] = variableIds.map(([key]) => {
-        const data = measurements.map((measurement) => [
+        const data = sortedMeasurements.map((measurement) => [
             new Date(measurement.timestamp ?? '').getTime(),
             measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
         ]);
