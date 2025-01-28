@@ -46,7 +46,6 @@ const CustomPasswordFormControl: React.FC<CustomPasswordFormControlProps> = ({
                 required={isRequired}
                 id="outlined-adornment-password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="••••••"
                 value={password}
                 onChange={onPasswordChange}
                 error={error}
