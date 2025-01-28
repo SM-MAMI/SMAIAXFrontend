@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { useAuthenticationService } from '../../hooks/services/useAuthenticationService.ts';
+import { Box, CircularProgress } from '@mui/material';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -54,7 +55,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     }, [navigate, refresh]);
 
     if (loading) {
-        return <></>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress size="3em" />
+            </Box>
+        );
     }
 
     return <>{children}</>;
