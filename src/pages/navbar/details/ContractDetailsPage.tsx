@@ -2,12 +2,13 @@ import { PageContainer } from '@toolpad/core/PageContainer';
 import { ActivePage, Breadcrumb, useActivePage } from '@toolpad/core';
 import { ContractDto } from '../../../api/openAPI';
 import { useEffect, useRef, useState } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { useSnackbar } from '../../../hooks/useSnackbar.ts';
 import { useContractService } from '../../../hooks/services/useContractService.ts';
 import { useParams } from 'react-router-dom';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
 import { usePolicyService } from '../../../hooks/services/usePolicyService.ts';
+import { formatToLocalDateTime, PolicyId } from '../../../utils/helper.ts';
 
 const generateBreadcrumbs = (contract: ContractDto | undefined, activePage: ActivePage | null): Breadcrumb[] => {
     const previousBreadcrumbs = activePage?.breadcrumbs ?? [];
@@ -71,8 +72,21 @@ const ContractDetailsPage = () => {
                 </Box>
             ) : (
                 <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            marginBottom: '10px',
+                        }}>
+                        <Typography variant="h5">{contract.policy.name}</Typography>
+                        <Typography variant="subtitle2">
+                            Created at: {formatToLocalDateTime(contract.createdAt)}
+                        </Typography>
+                    </Box>
+
                     <MeasurementSection
-                        measurementSourceId={contract.policy.id}
+                        measurementSourceId={contract.policy.id as PolicyId}
                         getMeasurements={getPolicyMeasurements}
                         requestOnInitialLoad={true}
                     />

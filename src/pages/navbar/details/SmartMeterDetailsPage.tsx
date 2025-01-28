@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import MeasurementSection from '../../../components/measurement/MeasurementSection.tsx';
 import Divider from '@mui/material/Divider';
 import { useMeasurementService } from '../../../hooks/services/useMeasurementService.ts';
+import { SmartMeterId } from '../../../utils/helper.ts';
 
 type LocationState =
     | {
@@ -175,14 +176,12 @@ const SmartMeterDetailsPage = () => {
                             alignItems: 'center',
                             marginBottom: '10px',
                         }}>
-                        <Typography variant="h5" style={{}}>
-                            {smartMeter.name}
-                        </Typography>
+                        <Typography variant="h5">{smartMeter.name}</Typography>
                         <KebabMenu items={kebabItems} />
                     </Box>
 
                     <MeasurementSection
-                        measurementSourceId={smartMeter.id}
+                        measurementSourceId={smartMeter.id as SmartMeterId}
                         getMeasurements={getMeasurements}
                         requestOnInitialLoad={true}
                     />
@@ -198,9 +197,7 @@ const SmartMeterDetailsPage = () => {
                                     alignItems: 'center',
                                     marginBottom: '10px',
                                 }}>
-                                <Typography variant="h5" style={{}}>
-                                    Smart Meter Policies
-                                </Typography>
+                                <Typography variant="h5">Smart Meter Policies</Typography>
                             </Box>
                             <SmartMeterPoliciesTable policies={smartMeterPolicies} />
                         </Box>

@@ -7,6 +7,7 @@ import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
 import { useTheme } from '@mui/material/styles';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
+import { SmartMeterId } from '../../utils/helper.ts';
 
 const HomePage = () => {
     const theme = useTheme();
@@ -111,7 +112,7 @@ const HomePage = () => {
 
                             {section.selectedSmartMeter && (
                                 <MeasurementSection
-                                    measurementSourceId={section.selectedSmartMeter}
+                                    measurementSourceId={section.selectedSmartMeter as SmartMeterId}
                                     getMeasurements={getMeasurements}
                                     requestOnInitialLoad={true}
                                     chartOptions={{ title: '' }}

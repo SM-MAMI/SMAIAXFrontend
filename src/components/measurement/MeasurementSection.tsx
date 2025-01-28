@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
@@ -18,11 +18,14 @@ import {
 } from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
 import CustomVariableAutoComplete from '../pure/CustomVariableAutoComplete.tsx';
+import { ContractId, PolicyId, SmartMeterId } from '../../utils/helper.ts';
+
+type MeasurementSourceId = SmartMeterId | PolicyId | ContractId;
 
 interface MeasurementSectionProps {
-    measurementSourceId: string;
+    measurementSourceId: MeasurementSourceId;
     getMeasurements: (
-        smartMeterId: string,
+        measurementSourceId: MeasurementSourceId,
         resolution: MeasurementResolution,
         startAt: string,
         endAt: string
@@ -36,7 +39,7 @@ interface MeasurementSectionProps {
 export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
 export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 
-const MeasurementSection: React.FC<MeasurementSectionProps> = ({
+const MeasurementSection: FC<MeasurementSectionProps> = ({
     measurementSourceId,
     getMeasurements,
     requestOnInitialLoad = false,
