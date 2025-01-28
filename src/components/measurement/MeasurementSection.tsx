@@ -84,8 +84,8 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
         (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
     >([]);
 
-    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
-    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
+    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day').startOf('day'));
+    const [endAt, setEndAt] = useState<Dayjs>(dayjs().startOf('day'));
 
     const { showSnackbar } = useSnackbar();
 
@@ -269,7 +269,7 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                             if (newValue) {
-                                setStartAt(newValue);
+                                setStartAt(newValue.startOf('day'));
                             }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
@@ -281,7 +281,7 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                             if (newValue) {
-                                setEndAt(newValue);
+                                setEndAt(newValue.startOf('day'));
                             }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
