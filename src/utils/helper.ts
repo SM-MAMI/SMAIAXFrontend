@@ -1,6 +1,6 @@
 export type Order = 'asc' | 'desc';
 
-export const formatToLocalDateTime = (isoTimestamp: string) => {
+export const formatToLocalDateTime = (isoTimestamp: string | number) => {
     const localDate = new Date(isoTimestamp);
     return localDate.toLocaleString();
 };
