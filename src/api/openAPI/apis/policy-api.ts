@@ -80,10 +80,13 @@ export const PolicyApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurementsByPolicy: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMeasurementsByPolicy: async (id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getMeasurementsByPolicy', 'id', id)
             const localVarPath = `/api/policies/{id}/measurements`
@@ -101,6 +104,22 @@ export const PolicyApiAxiosParamCreator = function (configuration?: Configuratio
 
             // authentication Bearer required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (measurementResolution !== undefined) {
+                localVarQueryParameter['measurementResolution'] = measurementResolution;
+            }
+
+            if (startAt !== undefined) {
+                localVarQueryParameter['startAt'] = (startAt as any instanceof Date) ?
+                    (startAt as any).toISOString() :
+                    startAt;
+            }
+
+            if (endAt !== undefined) {
+                localVarQueryParameter['endAt'] = (endAt as any instanceof Date) ?
+                    (endAt as any).toISOString() :
+                    endAt;
+            }
 
 
     
@@ -222,11 +241,14 @@ export const PolicyApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementListDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurementsByPolicy(id, options);
+        async getMeasurementsByPolicy(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementListDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurementsByPolicy(id, measurementResolution, startAt, endAt, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PolicyApi.getMeasurementsByPolicy']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -279,11 +301,14 @@ export const PolicyApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig): AxiosPromise<MeasurementListDto> {
-            return localVarFp.getMeasurementsByPolicy(id, options).then((request) => request(axios, basePath));
+        getMeasurementsByPolicy(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): AxiosPromise<MeasurementListDto> {
+            return localVarFp.getMeasurementsByPolicy(id, measurementResolution, startAt, endAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -329,12 +354,15 @@ export class PolicyApi extends BaseAPI {
     /**
      * 
      * @param {string} id 
+     * @param {MeasurementResolution} [measurementResolution] 
+     * @param {string} [startAt] 
+     * @param {string} [endAt] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PolicyApi
      */
-    public getMeasurementsByPolicy(id: string, options?: RawAxiosRequestConfig) {
-        return PolicyApiFp(this.configuration).getMeasurementsByPolicy(id, options).then((request) => request(this.axios, this.basePath));
+    public getMeasurementsByPolicy(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig) {
+        return PolicyApiFp(this.configuration).getMeasurementsByPolicy(id, measurementResolution, startAt, endAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

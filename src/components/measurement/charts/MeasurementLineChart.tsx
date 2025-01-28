@@ -12,6 +12,7 @@ import {
     RawVariables,
 } from '../../../constants/variableConstants.ts';
 import { TabletMaxWidth } from '../../../constants/constants.ts';
+import { formatToLocalDateTime } from '../../../utils/helper.ts';
 import 'highcharts/modules/exporting';
 import 'highcharts/modules/export-data';
 
@@ -60,13 +61,15 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         );
     }
 
-    const variableIds = Object.entries(measurements[0]).filter(([key]) => key !== 'timestamp' && key !== 'uptime');
+    const variableIds = Object.entries(measurements[0]).filter(
+        ([key]) => key !== 'timestamp' && key !== 'amountOfMeasurements'
+    );
 
     const series: SeriesOptionsType[] = variableIds.map(([key]) => {
-        const data = measurements.map((measurement) => ({
-            x: new Date(measurement.timestamp ?? '').getTime(),
-            y: measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
-        }));
+        const data = measurements.map((measurement) => [
+            new Date(measurement.timestamp ?? '').getTime(),
+            measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
+        ]);
 
         return {
             type: 'line',
@@ -88,6 +91,9 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         chart: {
             type: 'line',
             height: chartHeight,
+            zooming: {
+                type: 'x',
+            },
         },
         title: {
             text: chartTitleText,
@@ -97,6 +103,11 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
                 text: xAxisTitleText,
             },
             type: 'datetime',
+            labels: {
+                formatter: function () {
+                    return formatToLocalDateTime(this.value);
+                },
+            },
             dateTimeLabelFormats: {
                 hour: '%H:%M:%S',
             },
@@ -110,6 +121,23 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             layout: 'vertical',
             align: 'right',
             verticalAlign: 'middle',
+        },
+        tooltip: {
+            useHTML: true,
+            formatter: function () {
+                const color = typeof this.color === 'string' ? this.color : 'black';
+
+                return `
+                    <div style="text-align: left;">
+                        <div style="display: block; font-size: 12px; color: ${theme.palette.text.secondary};">
+                            ${formatToLocalDateTime(this.x)}
+                        </div>
+                        <span style="color: ${color};">●</span> 
+                        <span style="font-size: 14px;">${this.series.name}:</span>
+                        <span style="font-size: 14px; font-weight: bold;">${this.y?.toLocaleString() ?? 'N/A'}</span>
+                    </div>
+                `;
+            },
         },
         responsive: {
             rules: [

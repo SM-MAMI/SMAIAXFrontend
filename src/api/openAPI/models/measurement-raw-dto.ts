@@ -28,70 +28,10 @@ export interface MeasurementRawDto {
     'timestamp': string;
     /**
      * 
-     * @type {string}
-     * @memberof MeasurementRawDto
-     */
-    'uptime': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'positiveActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'positiveActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'negativeActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'negativeActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'reactiveEnergyQuadrant1Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'reactiveEnergyQuadrant3Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'totalPower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'currentPhase1': number;
-    /**
-     * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
     'voltagePhase1': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementRawDto
-     */
-    'currentPhase2': number;
     /**
      * 
      * @type {number}
@@ -103,12 +43,60 @@ export interface MeasurementRawDto {
      * @type {number}
      * @memberof MeasurementRawDto
      */
+    'voltagePhase3': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'currentPhase1': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'currentPhase2': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
     'currentPhase3': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementRawDto
      */
-    'voltagePhase3': number;
+    'positiveActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'negativeActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'positiveReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'negativeReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'positiveActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementRawDto
+     */
+    'negativeActiveEnergyTotal': number;
 }
 

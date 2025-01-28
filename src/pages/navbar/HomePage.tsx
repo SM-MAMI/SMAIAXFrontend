@@ -6,6 +6,8 @@ import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/mat
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
 import MeasurementSection from '../../components/measurement/MeasurementSection.tsx';
 import { useTheme } from '@mui/material/styles';
+import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
+import { SmartMeterId } from '../../utils/helper.ts';
 
 const HomePage = () => {
     const theme = useTheme();
@@ -17,6 +19,7 @@ const HomePage = () => {
     );
 
     const { getSmartMeters } = useSmartMeterService();
+    const { getMeasurements } = useMeasurementService();
     const { showSnackbar } = useSnackbar();
 
     const hasExecutedInitialLoadSmartMeters = useRef(false);
@@ -109,7 +112,8 @@ const HomePage = () => {
 
                             {section.selectedSmartMeter && (
                                 <MeasurementSection
-                                    smartMeterId={section.selectedSmartMeter}
+                                    measurementSourceId={section.selectedSmartMeter as SmartMeterId}
+                                    getMeasurements={getMeasurements}
                                     requestOnInitialLoad={true}
                                     chartOptions={{ title: '' }}
                                     backgroundColor={theme.palette.background.paper}

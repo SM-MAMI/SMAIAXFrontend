@@ -12,6 +12,7 @@ interface VariableAutoCompleteProps {
     selectedVariables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
     onChange: (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]) => void;
     variableOptions: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+    error?: boolean;
 }
 
 const mapVariableOptions = (variableOptions: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]) => {
@@ -28,6 +29,7 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({
     selectedVariables,
     onChange,
     variableOptions,
+    error = false,
 }) => {
     const allOptionKey = 'all';
     const optionsWithLabels = [[allOptionKey, 'All'], ...mapVariableOptions(variableOptions)];
@@ -72,6 +74,18 @@ const CustomVariableAutoComplete: React.FC<VariableAutoCompleteProps> = ({
                 <TextField
                     {...params}
                     label="Variables"
+                    error={error}
+                    helperText={error ? 'Please select at least one variable.' : ''}
+                    slotProps={{
+                        formHelperText: {
+                            sx: {
+                                position: 'absolute',
+                                bottom: '-20px',
+                                left: 0,
+                                fontSize: '12px',
+                            },
+                        },
+                    }}
                     placeholder={
                         selectedVariables.includes(allOptionKey)
                             ? 'All Variables Selected'

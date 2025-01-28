@@ -6,7 +6,6 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Card, CardContainer } from '../components/auth/CardContainer.tsx';
 import { useValidation } from '../hooks/useValidation.ts';
 import { LoginDto } from '../api/openAPI';
 import { useAuthenticationService } from '../hooks/services/useAuthenticationService.ts';
@@ -14,6 +13,8 @@ import { useSnackbar } from '../hooks/useSnackbar.ts';
 import { SmaiaxTextAndDotsIcon } from '../assets/SmaiaxTextAndDots.tsx';
 import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
 import CustomPasswordFormControl from '../components/pure/CustomPasswordFormControl.tsx';
+import CustomAuthCardContainer from '../components/pure/CustomAuthCardContainer.tsx';
+import CustomAuthCard from '../components/pure/CustomAuthCard.tsx';
 
 export default function SignIn() {
     const [password, setPassword] = React.useState('');
@@ -53,8 +54,8 @@ export default function SignIn() {
 
     return (
         <Box sx={{ height: '100%', display: 'flex' }}>
-            <CardContainer direction="column" justifyContent="space-between">
-                <Card variant="outlined">
+            <CustomAuthCardContainer>
+                <CustomAuthCard>
                     <SmaiaxTextAndDotsIcon />
 
                     <Typography
@@ -125,8 +126,8 @@ export default function SignIn() {
                             </Typography>
                         </Box>
                     </Box>
-                </Card>
-            </CardContainer>
+                </CustomAuthCard>
+            </CustomAuthCardContainer>
         </Box>
     );
 }

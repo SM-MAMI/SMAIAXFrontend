@@ -1,6 +1,9 @@
 export type Order = 'asc' | 'desc';
+export type SmartMeterId = string & { readonly __brand: 'SmartMeterId' };
+export type PolicyId = string & { readonly __brand: 'PolicyId' };
+export type ContractId = string & { readonly __brand: 'ContractId' };
 
-export const formatToLocalDateTime = (isoTimestamp: string) => {
+export const formatToLocalDateTime = (isoTimestamp: string | number) => {
     const localDate = new Date(isoTimestamp);
     return localDate.toLocaleString();
 };

@@ -3,7 +3,7 @@ import { createBrowserRouter, NonIndexRouteObject, RouterProvider } from 'react-
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
-import ProtectedRoute from './components/auth/ProtectedRoute.tsx';
+import ProtectedRoute from './pages/auth/ProtectedRoute.tsx';
 import SmartMetersPage from './pages/navbar/SmartMetersPage.tsx';
 import NavbarNavigation from './pages/navbar/toolpad/NavbarNavigation.tsx';
 import Navbar from './pages/navbar/toolpad/Navbar.tsx';

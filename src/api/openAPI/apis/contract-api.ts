@@ -28,6 +28,10 @@ import type { ContractDto } from '../models';
 // @ts-ignore
 import type { ContractOverviewDto } from '../models';
 // @ts-ignore
+import type { MeasurementListDto } from '../models';
+// @ts-ignore
+import type { MeasurementResolution } from '../models';
+// @ts-ignore
 import type { ProblemDetails } from '../models';
 /**
  * ContractApi - axios parameter creator
@@ -141,6 +145,61 @@ export const ContractApiAxiosParamCreator = function (configuration?: Configurat
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMeasurementsByContractId: async (id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getMeasurementsByContractId', 'id', id)
+            const localVarPath = `/api/contracts/{id}/measurements`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (measurementResolution !== undefined) {
+                localVarQueryParameter['measurementResolution'] = measurementResolution;
+            }
+
+            if (startAt !== undefined) {
+                localVarQueryParameter['startAt'] = (startAt as any instanceof Date) ?
+                    (startAt as any).toISOString() :
+                    startAt;
+            }
+
+            if (endAt !== undefined) {
+                localVarQueryParameter['endAt'] = (endAt as any instanceof Date) ?
+                    (endAt as any).toISOString() :
+                    endAt;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -186,6 +245,21 @@ export const ContractApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['ContractApi.getContracts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getMeasurementsByContractId(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeasurementListDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMeasurementsByContractId(id, measurementResolution, startAt, endAt, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ContractApi.getMeasurementsByContractId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -221,6 +295,18 @@ export const ContractApiFactory = function (configuration?: Configuration, baseP
          */
         getContracts(options?: RawAxiosRequestConfig): AxiosPromise<Array<ContractOverviewDto>> {
             return localVarFp.getContracts(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {MeasurementResolution} [measurementResolution] 
+         * @param {string} [startAt] 
+         * @param {string} [endAt] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getMeasurementsByContractId(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig): AxiosPromise<MeasurementListDto> {
+            return localVarFp.getMeasurementsByContractId(id, measurementResolution, startAt, endAt, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -262,6 +348,20 @@ export class ContractApi extends BaseAPI {
      */
     public getContracts(options?: RawAxiosRequestConfig) {
         return ContractApiFp(this.configuration).getContracts(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {MeasurementResolution} [measurementResolution] 
+     * @param {string} [startAt] 
+     * @param {string} [endAt] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ContractApi
+     */
+    public getMeasurementsByContractId(id: string, measurementResolution?: MeasurementResolution, startAt?: string, endAt?: string, options?: RawAxiosRequestConfig) {
+        return ContractApiFp(this.configuration).getMeasurementsByContractId(id, measurementResolution, startAt, endAt, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

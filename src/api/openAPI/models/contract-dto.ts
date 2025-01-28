@@ -15,9 +15,6 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { MeasurementListDto } from './measurement-list-dto';
-// May contain unused imports in some cases
-// @ts-ignore
 import type { PolicyDto } from './policy-dto';
 
 /**
@@ -44,11 +41,5 @@ export interface ContractDto {
      * @memberof ContractDto
      */
     'policy': PolicyDto;
-    /**
-     * 
-     * @type {MeasurementListDto}
-     * @memberof ContractDto
-     */
-    'measurementList': MeasurementListDto;
 }
 

@@ -28,204 +28,6 @@ export interface MeasurementAggregatedDto {
     'timestamp': string;
     /**
      * 
-     * @type {string}
-     * @memberof MeasurementAggregatedDto
-     */
-    'uptime': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minPositiveActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxPositiveActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgPositiveActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medPositiveActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minPositiveActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxPositiveActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgPositiveActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medPositiveActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minNegativeActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxNegativeActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgNegativeActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medNegativeActivePower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minNegativeActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxNegativeActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgNegativeActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medNegativeActiveEnergyTotal': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minReactiveEnergyQuadrant1Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxReactiveEnergyQuadrant1Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgReactiveEnergyQuadrant1Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medReactiveEnergyQuadrant1Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minReactiveEnergyQuadrant3Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxReactiveEnergyQuadrant3Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgReactiveEnergyQuadrant3Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medReactiveEnergyQuadrant3Total': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minTotalPower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxTotalPower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgTotalPower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medTotalPower': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minCurrentPhase1': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxCurrentPhase1': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgCurrentPhase1': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medCurrentPhase1': number;
-    /**
-     * 
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
@@ -248,30 +50,6 @@ export interface MeasurementAggregatedDto {
      * @memberof MeasurementAggregatedDto
      */
     'medVoltagePhase1': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'minCurrentPhase2': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'maxCurrentPhase2': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'avgCurrentPhase2': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof MeasurementAggregatedDto
-     */
-    'medCurrentPhase2': number;
     /**
      * 
      * @type {number}
@@ -301,6 +79,78 @@ export interface MeasurementAggregatedDto {
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
+    'minVoltagePhase3': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxVoltagePhase3': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgVoltagePhase3': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medVoltagePhase3': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minCurrentPhase1': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxCurrentPhase1': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgCurrentPhase1': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medCurrentPhase1': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minCurrentPhase2': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxCurrentPhase2': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgCurrentPhase2': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medCurrentPhase2': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
     'minCurrentPhase3': number;
     /**
      * 
@@ -325,25 +175,145 @@ export interface MeasurementAggregatedDto {
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
-    'minVoltagePhase3': number;
+    'minPositiveActivePower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
-    'maxVoltagePhase3': number;
+    'maxPositiveActivePower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
-    'avgVoltagePhase3': number;
+    'avgPositiveActivePower': number;
     /**
      * 
      * @type {number}
      * @memberof MeasurementAggregatedDto
      */
-    'medVoltagePhase3': number;
+    'medPositiveActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minNegativeActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxNegativeActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgNegativeActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medNegativeActivePower': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minPositiveReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxPositiveReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgPositiveReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medPositiveReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minNegativeReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxNegativeReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgNegativeReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medNegativeReactiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minPositiveActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxPositiveActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgPositiveActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medPositiveActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'minNegativeActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'maxNegativeActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'avgNegativeActiveEnergyTotal': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MeasurementAggregatedDto
+     */
+    'medNegativeActiveEnergyTotal': number;
     /**
      * 
      * @type {number}

@@ -1,22 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Autocomplete, Box, Button, CircularProgress, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MeasurementLineChart, { ChartOptions } from './charts/MeasurementLineChart.tsx';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from '../../hooks/useSnackbar.ts';
-import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import {
     AggregatedVariableLabelMap,
     AggregatedVariables,
     RawVariableLabelMap,
     RawVariables,
 } from '../../constants/variableConstants.ts';
-import { MeasurementAggregatedDto, MeasurementRawDto, MeasurementResolution } from '../../api/openAPI';
+import {
+    MeasurementAggregatedDto,
+    MeasurementListDto,
+    MeasurementRawDto,
+    MeasurementResolution,
+} from '../../api/openAPI';
 import { useTheme } from '@mui/material/styles';
 import CustomVariableAutoComplete from '../pure/CustomVariableAutoComplete.tsx';
+import { ContractId, PolicyId, SmartMeterId } from '../../utils/helper.ts';
+
+type MeasurementSourceId = SmartMeterId | PolicyId | ContractId;
 
 interface MeasurementSectionProps {
-    smartMeterId: string;
+    measurementSourceId: MeasurementSourceId;
+    getMeasurements: (
+        measurementSourceId: MeasurementSourceId,
+        resolution: MeasurementResolution,
+        startAt: string,
+        endAt: string
+    ) => Promise<MeasurementListDto>;
+    defaultResolution?: MeasurementResolution;
+    highestAvailableResolution?: MeasurementResolution;
     requestOnInitialLoad?: boolean;
     chartOptions?: ChartOptions;
     backgroundColor?: string;
@@ -26,8 +41,11 @@ interface MeasurementSectionProps {
 export type RawVariablesOptionsKeys = keyof RawVariables | 'all';
 export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 
-const MeasurementSection: React.FC<MeasurementSectionProps> = ({
-    smartMeterId,
+const MeasurementSection: FC<MeasurementSectionProps> = ({
+    measurementSourceId,
+    getMeasurements,
+    defaultResolution = MeasurementResolution.QuarterHour,
+    highestAvailableResolution = MeasurementResolution.Raw,
     requestOnInitialLoad = false,
     chartOptions = {},
     backgroundColor = '',
@@ -36,21 +54,40 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     const theme = useTheme();
 
     const allVariableSelect = ['all'] as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+    const resolutionOrder = [
+        MeasurementResolution.Raw,
+        MeasurementResolution.Minute,
+        MeasurementResolution.QuarterHour,
+        MeasurementResolution.Hour,
+        MeasurementResolution.Day,
+        MeasurementResolution.Week,
+    ];
+
+    const availableResolutions = resolutionOrder.filter(
+        (res) => resolutionOrder.indexOf(res) >= resolutionOrder.indexOf(highestAvailableResolution)
+    );
+
+    const validatedDefaultResolution =
+        resolutionOrder.indexOf(defaultResolution) >= resolutionOrder.indexOf(highestAvailableResolution)
+            ? defaultResolution
+            : highestAvailableResolution;
+
+    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(validatedDefaultResolution);
 
     const [isLoading, setIsLoading] = useState(false);
     const [measurements, setMeasurements] = useState<Partial<MeasurementRawDto>[]>([]);
-    const [selectedResolution, setSelectedResolution] = useState<MeasurementResolution>(MeasurementResolution.Raw);
-    const [selectedVariables, setSelectedVariables] =
-        useState<(RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]>(allVariableSelect);
+    const [variableError, setVariableError] = useState(false);
+    const [selectedVariables, setSelectedVariables] = useState<
+        (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
+    >(['avgVoltagePhase1', 'avgVoltagePhase2', 'avgVoltagePhase3']);
     const [variableOptions, setVariableOptions] = useState<
         (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]
     >([]);
 
-    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day'));
-    const [endAt, setEndAt] = useState<Dayjs>(dayjs());
+    const [startAt, setStartAt] = useState<Dayjs>(dayjs().subtract(1, 'day').startOf('day'));
+    const [endAt, setEndAt] = useState<Dayjs>(dayjs().startOf('day'));
 
     const { showSnackbar } = useSnackbar();
-    const { getMeasurements } = useMeasurementService();
 
     useEffect(() => {
         if (selectedResolution === MeasurementResolution.Raw) {
@@ -73,10 +110,32 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
 
     const handleResolutionChange = (resolution: MeasurementResolution) => {
         setSelectedResolution(resolution);
-        setSelectedVariables(allVariableSelect);
+
+        if (highestAvailableResolution !== MeasurementResolution.Raw) {
+            return;
+        }
+
+        if (selectedResolution === MeasurementResolution.Raw && resolution !== MeasurementResolution.Raw) {
+            const updatedVariables = selectedVariables.map((variable) => {
+                return variable.startsWith('avg')
+                    ? variable
+                    : `avg${variable.charAt(0).toUpperCase()}${variable.slice(1)}`;
+            }) as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+
+            setSelectedVariables(updatedVariables);
+        } else if (selectedResolution !== MeasurementResolution.Raw && resolution === MeasurementResolution.Raw) {
+            const updatedVariables = selectedVariables.map((variable) => {
+                const noPrefix = variable.replace(/^(avg|min|max|med)/, '');
+                return noPrefix.charAt(0).toLowerCase() + noPrefix.slice(1);
+            }) as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];
+
+            const uniqueVariables = Array.from(new Set(updatedVariables));
+            setSelectedVariables(uniqueVariables);
+        }
     };
 
     const handleVariableChange = (variables: (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[]): void => {
+        setVariableError(false);
         setSelectedVariables(variables);
     };
 
@@ -89,7 +148,6 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
 
         return measurements.map((measurement) => {
             const filteredMeasurement: Partial<MeasurementRawDto | MeasurementAggregatedDto> = {
-                uptime: measurement.uptime,
                 timestamp: measurement.timestamp,
             };
 
@@ -105,12 +163,20 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
     };
 
     const handleLoadData = async (isInitialLoad = false): Promise<void> => {
+        if (selectedVariables.length <= 0) {
+            setVariableError(true);
+            setMeasurements([]);
+            return;
+        }
+
         try {
             setIsLoading(true);
             setMeasurements([]);
 
+            setVariableError(false);
+
             const measurements = await getMeasurements(
-                smartMeterId,
+                measurementSourceId,
                 selectedResolution,
                 startAt.format('YYYY-MM-DDTHH:mm:ss[Z]'),
                 endAt.format('YYYY-MM-DDTHH:mm:ss[Z]')
@@ -136,7 +202,12 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
             }
         } catch (error) {
             console.error(error);
-            showSnackbar('error', 'Failed to load measurements!');
+
+            if (error instanceof Error) {
+                showSnackbar('error', error.message);
+            } else {
+                showSnackbar('error', 'Failed to load measurements!');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -162,18 +233,15 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                 }}>
                 <Box>
                     <Autocomplete
-                        options={Object.values(MeasurementResolution)}
+                        options={availableResolutions}
                         getOptionLabel={(option) => option}
                         value={selectedResolution}
                         onChange={(_event, value) => {
-                            if (value == null) {
-                                value = MeasurementResolution.Raw;
-                            }
-
                             handleResolutionChange(value);
                         }}
                         renderInput={(params) => <TextField {...params} label="Resolution" />}
                         sx={{ width: 175 }}
+                        disableClearable
                     />
                 </Box>
 
@@ -182,6 +250,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         selectedVariables={selectedVariables}
                         onChange={handleVariableChange}
                         variableOptions={variableOptions}
+                        error={variableError}
                     />
                 </Box>
 
@@ -200,7 +269,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                             if (newValue) {
-                                setStartAt(newValue);
+                                setStartAt(newValue.startOf('day'));
                             }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
@@ -212,7 +281,7 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                             if (newValue) {
-                                setEndAt(newValue);
+                                setEndAt(newValue.startOf('day'));
                             }
                         }}
                         sx={{ maxWidth: 145, minWidth: 100 }}
@@ -221,11 +290,6 @@ const MeasurementSection: React.FC<MeasurementSectionProps> = ({
                         variant="contained"
                         size="medium"
                         onClick={() => {
-                            if (selectedVariables.length <= 0) {
-                                setMeasurements([]);
-                                return;
-                            }
-
                             void handleLoadData();
                         }}
                         sx={{
