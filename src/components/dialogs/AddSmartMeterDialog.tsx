@@ -242,7 +242,7 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
             console.error(error);
 
             if (error instanceof Error) {
-                if (error.message !== 'Something went wrong') {
+                if (error.message !== 'Something went wrong.') {
                     showSnackbar('error', error.message);
                     return;
                 }
