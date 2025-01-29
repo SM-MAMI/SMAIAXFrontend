@@ -23,14 +23,36 @@ export default function DialogWithDeviceConfiguration({
 }: Readonly<DialogProps<CustomDialogWithDeviceConfigurationPayload>>) {
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
+    const [ssidError, setSsidError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const { getDeviceConfig } = useDeviceConfigService();
 
     function onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
         setPassword(e.target.value);
+        setPasswordError('');
+    }
+
+    function onNetworkNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setSsid(e.target.value);
+        setSsidError('');
     }
 
     const handleDownload = async () => {
+        let valid = true;
+
+        if (!ssid.trim()) {
+            setSsidError('WIFI Network Name (SSID) is required');
+            valid = false;
+        }
+
+        if (!password.trim()) {
+            setPasswordError('WIFI Password is required');
+            valid = false;
+        }
+
+        if (!valid) return;
+
         const deviceConfig = await getDeviceConfig(payload.smartMeterId);
 
         if (!deviceConfig.publicKey) {
@@ -64,10 +86,6 @@ export default function DialogWithDeviceConfiguration({
         await onClose();
     };
 
-    function onNetworkNameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setSsid(e.target.value);
-    }
-
     return (
         <CustomDialog open={open}>
             <DialogTitle>Device Configuration</DialogTitle>
@@ -76,17 +94,23 @@ export default function DialogWithDeviceConfiguration({
                     Please enter your home WIFI network information to configure the connector.
                 </Typography>
                 <TextField
+                    required
                     label="WIFI Network Name (SSID)"
                     variant="outlined"
                     fullWidth
                     margin="normal"
                     value={ssid}
                     onChange={onNetworkNameChange}
+                    error={!!ssidError}
+                    helperText={ssidError}
                 />
                 <CustomPasswordFormControl
+                    isRequired={true}
                     password={password}
                     onPasswordChange={onPasswordChange}
                     label="WIFI Password"
+                    error={!!passwordError}
+                    helperText={passwordError}
                 />
             </CustomDialogContent>
             <CustomDialogActions>

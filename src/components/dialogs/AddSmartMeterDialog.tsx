@@ -52,7 +52,7 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
 
     const steps: StepItem[] = [
         {
-            title: 'Step 1: Enter Connector Serial number',
+            title: 'Step 1: Enter Connector Serial number *',
             content: (
                 <FormControl fullWidth>
                     <TextField
@@ -71,7 +71,7 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
             ),
         },
         {
-            title: 'Step 2: Enter Smart Meter Name',
+            title: 'Step 2: Enter Smart Meter Name *',
             content: (
                 <FormControl fullWidth>
                     <TextField
