@@ -25,13 +25,13 @@ export type ChartOptions = {
 
 interface MeasurementLineChartProps {
     measurements: Partial<MeasurementRawDto | MeasurementAggregatedDto>[];
-    chartOptions?: ChartOptions;
+    chartOptions: ChartOptions;
     useBoxShadow?: boolean;
 }
 
 const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
     measurements,
-    chartOptions = {},
+    chartOptions,
     useBoxShadow = true,
 }) => {
     const [visibleDataCount, setVisibleDataCount] = useState(measurements.length);

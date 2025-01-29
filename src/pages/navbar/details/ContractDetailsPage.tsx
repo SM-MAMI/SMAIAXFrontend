@@ -88,6 +88,7 @@ const ContractDetailsPage = () => {
                         getMeasurements={getContractMeasurements}
                         highestAvailableResolution={contract.policy.measurementResolution}
                         requestOnInitialLoad={true}
+                        chartOptions={{}}
                     />
                 </>
             )}
