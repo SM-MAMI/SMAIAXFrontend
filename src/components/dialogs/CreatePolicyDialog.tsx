@@ -40,7 +40,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     const validatePrice = (): boolean => {
         if (price === '' || price < 0) {
             setPriceError(true);
-            setPriceErrorMessage('Price must be greater than zero.');
+            setPriceErrorMessage('Price must be greater or equal than zero.');
             return false;
         }
         setPriceError(false);
