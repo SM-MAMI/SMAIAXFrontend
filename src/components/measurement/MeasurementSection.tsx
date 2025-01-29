@@ -172,7 +172,6 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
         try {
             setIsLoading(true);
             setMeasurements([]);
-
             setVariableError(false);
 
             const measurements = await getMeasurements(

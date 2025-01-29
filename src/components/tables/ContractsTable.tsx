@@ -114,11 +114,19 @@ const ContractsTable = ({ contracts }: { contracts: ContractOverviewDto[] }) => 
                     },
                 }}
                 onRowClick={(params: GridRowParams<ContractRow>) => {
+                    const selection = window.getSelection();
+                    if (selection && selection.toString().length > 0) {
+                        return;
+                    }
+
                     void navigate(params.row.id);
                 }}
                 sx={{
                     '& .MuiDataGrid-root': {
                         border: 'none',
+                    },
+                    '& .MuiDataGrid-row:hover': {
+                        cursor: 'pointer',
                     },
                 }}
             />
