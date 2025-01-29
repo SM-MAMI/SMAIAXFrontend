@@ -1,4 +1,4 @@
-import { Box, Button, DialogTitle, FormLabel, Input, NativeSelect, TextField } from '@mui/material';
+import { Box, Button, DialogTitle, FormLabel, NativeSelect, TextField } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { LocationResolution, MeasurementResolution, PolicyCreateDto } from '../../api/openAPI';
@@ -18,6 +18,9 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     const [policyName, setPolicyName] = useState<string>('');
     const [policyNameError, setPolicyNameError] = useState(false);
     const [policyNameErrorMessage, setPolicyNameErrorMessage] = useState('');
+    const [price, setPrice] = useState<number | ''>(0);
+    const [priceError, setPriceError] = useState(false);
+    const [priceErrorMessage, setPriceErrorMessage] = useState('');
     const formRef = useRef<HTMLFormElement>(null);
 
     const { createPolicy } = usePolicyService();
@@ -29,9 +32,19 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
             setPolicyNameErrorMessage('Policy name is required.');
             return false;
         }
-
         setPolicyNameError(false);
         setPolicyNameErrorMessage('');
+        return true;
+    };
+
+    const validatePrice = (): boolean => {
+        if (price === '' || price < 0) {
+            setPriceError(true);
+            setPriceErrorMessage('Price must be greater or equal than zero.');
+            return false;
+        }
+        setPriceError(false);
+        setPriceErrorMessage('');
         return true;
     };
 
@@ -42,7 +55,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
             return;
         }
 
-        const valid = validatePolicyName();
+        const valid = validatePolicyName() && validatePrice();
         if (!valid) {
             return;
         }
@@ -53,16 +66,14 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
             name: policyName,
             measurementResolution: data.get('measurementResolution') as MeasurementResolution,
             locationResolution: data.get('locationResolution') as LocationResolution,
-            price: data.get('price') as unknown as number,
+            price: Number(price),
             smartMeterId: payload.smartMeterId,
         };
 
         try {
             await createPolicy(policyCreateDto);
             showSnackbar('success', 'Successfully created policy!');
-
             payload.reloadPolicies(payload.smartMeterId);
-
             void onClose();
         } catch (error) {
             showSnackbar('error', 'Create policy failed!');
@@ -83,7 +94,6 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
                     <FormControl>
                         <TextField
-                            required
                             fullWidth
                             id="policyName"
                             name="policyName"
@@ -96,7 +106,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                             color={policyNameError ? 'error' : 'primary'}
                             error={policyNameError}
                             helperText={policyNameErrorMessage}
-                            label={'Policy Name'}
+                            label={'Policy Name *'}
                         />
                     </FormControl>
                     <FormControl>
@@ -154,8 +164,21 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                         </NativeSelect>
                     </FormControl>
                     <FormControl>
-                        <FormLabel htmlFor="price">Enter a price</FormLabel>
-                        <Input type="number" defaultValue={0} id="price" name="price" inputProps={{ min: 0 }} />
+                        <FormLabel htmlFor="locationResolution">Enter a price (€) *</FormLabel>
+                        <TextField
+                            sx={{ marginTop: '1em' }}
+                            variant={'standard'}
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={price}
+                            onChange={(e) => {
+                                setPrice(e.target.value ? Number(e.target.value) : '');
+                            }}
+                            error={priceError}
+                            helperText={priceErrorMessage}
+                            slotProps={{ htmlInput: { min: 0 } }}
+                        />
                     </FormControl>
                 </Box>
             </CustomDialogContent>
