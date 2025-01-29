@@ -10,6 +10,7 @@ import {
     SmartMeterUpdateDto,
 } from '../../api/openAPI';
 import { AxiosError } from 'axios';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useSmartMeterService = () => {
     const context = useContext(ApiContext);
@@ -27,8 +28,7 @@ export const useSmartMeterService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]
@@ -41,8 +41,7 @@ export const useSmartMeterService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]
@@ -54,8 +53,7 @@ export const useSmartMeterService = () => {
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError<ProblemDetails>;
-            const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-            throw new Error(errorMessage);
+            throw new Error(getErrorDetails(axiosError));
         }
     }, [smartMeterApi]);
 
@@ -66,8 +64,7 @@ export const useSmartMeterService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]
@@ -80,8 +77,7 @@ export const useSmartMeterService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]
@@ -94,8 +90,7 @@ export const useSmartMeterService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]
@@ -107,8 +102,7 @@ export const useSmartMeterService = () => {
                 await smartMeterApi.removeSmartMeter(smartMeterId);
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [smartMeterApi]

@@ -8,6 +8,11 @@ import MeasurementSection from '../../components/measurement/MeasurementSection.
 import { useTheme } from '@mui/material/styles';
 import { useMeasurementService } from '../../hooks/services/useMeasurementService.ts';
 import { SmartMeterId } from '../../utils/helper.ts';
+import { SmaiaXAbsoluteRoutes } from '../../constants/constants.ts';
+import NoSmartMetersCard from '../../components/smartMeter/NoSmartMeterCard.tsx';
+import AddSmartMeterDialog from '../../components/dialogs/AddSmartMeterDialog.tsx';
+import { useDialogs } from '@toolpad/core';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const theme = useTheme();
@@ -21,6 +26,8 @@ const HomePage = () => {
     const { getSmartMeters } = useSmartMeterService();
     const { getMeasurements } = useMeasurementService();
     const { showSnackbar } = useSnackbar();
+    const dialogs = useDialogs();
+    const navigate = useNavigate();
 
     const hasExecutedInitialLoadSmartMeters = useRef(false);
     useEffect(() => {
@@ -74,6 +81,17 @@ const HomePage = () => {
         return smartMeters.find((smartMeter) => smartMeter.id === smartMeterId)?.name ?? '';
     };
 
+    const openAddSmartMeterDialog = async () => {
+        await dialogs.open(AddSmartMeterDialog, {
+            reloadSmartMeters: () => {
+                void navigate(SmaiaXAbsoluteRoutes.SMART_METERS);
+            },
+            isSmartMeterNameUnique: (smartMeterName) => {
+                return !smartMeters.map((smartMeter) => smartMeter.name).includes(smartMeterName);
+            },
+        });
+    };
+
     return (
         <PageContainer title={''}>
             {isSmartMetersCallPending ? (
@@ -81,9 +99,15 @@ const HomePage = () => {
                     <CircularProgress size="3em" />
                 </Box>
             ) : smartMeters.length <= 0 ? (
-                <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div>No smart meter data available</div>
-                </Box>
+                <NoSmartMetersCard
+                    title={'No smart meter data available.'}
+                    onBuyClick={() => {
+                        void navigate(SmaiaXAbsoluteRoutes.ORDERS);
+                    }}
+                    onAddClick={() => {
+                        void openAddSmartMeterDialog();
+                    }}
+                />
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2em', height: '100%', width: '100%' }}>
                     {measurementSections.map((section) => (

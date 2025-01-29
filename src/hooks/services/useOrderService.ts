@@ -2,6 +2,7 @@
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import { AxiosError } from 'axios';
 import { ProblemDetails } from '../../api/openAPI';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useOrderService = () => {
     const context = useContext(ApiContext);
@@ -18,8 +19,7 @@ export const useOrderService = () => {
             return response.data.serialNumber;
         } catch (error) {
             const axiosError = error as AxiosError<ProblemDetails>;
-            const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-            throw new Error(errorMessage);
+            throw new Error(getErrorDetails(axiosError));
         }
     }, [orderApi]);
 

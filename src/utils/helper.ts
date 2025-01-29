@@ -1,7 +1,17 @@
+import { AxiosError } from 'axios';
+import { ProblemDetails } from '../api/openAPI';
+
 export type Order = 'asc' | 'desc';
 export type SmartMeterId = string & { readonly __brand: 'SmartMeterId' };
 export type PolicyId = string & { readonly __brand: 'PolicyId' };
 export type ContractId = string & { readonly __brand: 'ContractId' };
+
+export const getErrorDetails = (axiosError: AxiosError<ProblemDetails>) => {
+    const { response, message } = axiosError;
+    const { detail, title } = response?.data ?? {};
+
+    return detail || title || message;
+};
 
 export const formatToLocalDateTime = (isoTimestamp: string | number) => {
     const localDate = new Date(isoTimestamp);

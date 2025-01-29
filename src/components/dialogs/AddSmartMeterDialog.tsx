@@ -240,6 +240,14 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
             await onClose();
         } catch (error) {
             console.error(error);
+
+            if (error instanceof Error) {
+                if (error.message !== 'Something went wrong') {
+                    showSnackbar('error', error.message);
+                    return;
+                }
+            }
+
             showSnackbar('error', 'Failed to add smart meter!');
         }
     };

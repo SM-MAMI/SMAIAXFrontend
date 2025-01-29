@@ -12,14 +12,11 @@ import Button from '@mui/material/Button';
 import SmartMeterCard from '../../components/smartMeter/SmartMeterCard.tsx';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import Grid from '@mui/material/Grid2';
-import { useTheme } from '@mui/material/styles';
-import Card from '@mui/material/Card';
 import RemoveSmartMeterDialog from '../../components/dialogs/RemoveSmartMeterDialog.tsx';
 import EditSmartMeterDialog from '../../components/dialogs/EditSmartMeterDialog.tsx';
+import NoSmartMetersCard from '../../components/smartMeter/NoSmartMeterCard.tsx';
 
 const SmartMetersPage = () => {
-    const theme = useTheme();
-
     const [smartMeters, setSmartMeters] = useState<SmartMeterOverviewDto[]>([]);
     const [isSmartMetersCallPending, setIsSmartMetersCallPending] = useState(true);
     const [recentlyAddedSmartMeterName, setRecentlyAddedSmartMeterName] = useState<string | undefined>(undefined);
@@ -106,40 +103,15 @@ const SmartMetersPage = () => {
                     <CircularProgress size="3em" />
                 </Box>
             ) : smartMeters.length <= 0 ? (
-                <Card
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        backgroundColor: theme.palette.background.paper,
-                        height: '151px',
-                        width: isSmallScreen ? '100%' : '50%',
-                        minWidth: isSmallScreen ? '' : '532px',
-                        alignSelf: 'center',
-                        borderRadius: '8px',
-                        padding: '1em',
-                        margin: '1em',
-                        boxShadow: theme.shadows[1],
-                    }}>
-                    <Box>No smart meters found.</Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            marginTop: '1em',
-                        }}>
-                        <Button onClick={() => void navigate(SmaiaXAbsoluteRoutes.ORDERS)}>👉 Buy One Here 👈</Button>
-                        <Button
-                            onClick={() => {
-                                void openAddSmartMeterDialog();
-                            }}>
-                            ⚡Add an existing smart meter⚡
-                        </Button>
-                    </Box>
-                </Card>
+                <NoSmartMetersCard
+                    title={'No smart meters found.'}
+                    onBuyClick={() => {
+                        void navigate(SmaiaXAbsoluteRoutes.ORDERS);
+                    }}
+                    onAddClick={() => {
+                        void openAddSmartMeterDialog();
+                    }}
+                />
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
                     <Box sx={{ padding: '1em' }}>

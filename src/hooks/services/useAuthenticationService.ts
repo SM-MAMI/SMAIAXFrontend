@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import { LoginDto, ProblemDetails, RegisterDto, TokenDto } from '../../api/openAPI';
 import { AxiosError } from 'axios';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useAuthenticationService = () => {
     const context = useContext(ApiContext);
@@ -19,8 +20,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [authenticationApi]
@@ -33,8 +33,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [authenticationApi]
@@ -46,8 +45,7 @@ export const useAuthenticationService = () => {
                 await authenticationApi.logout(tokenDto);
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [authenticationApi]
@@ -60,8 +58,7 @@ export const useAuthenticationService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [authenticationApi]
