@@ -8,7 +8,7 @@ import prettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config({
-    ignores: ['dist', 'src/api/openAPI'],
+    ignores: ['dist', 'src/api/openAPI', 'dev-dist'],
 }, {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, prettierConfig],
     files: ['**/*.{ts,tsx}'],
