@@ -81,18 +81,22 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                         void handleSubmit(event);
                     }}
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1em' }}>
-                    <FormControl fullWidth>
+                    <FormControl>
                         <TextField
+                            required
+                            fullWidth
+                            id="policyName"
+                            name="policyName"
+                            autoComplete="policyName"
+                            variant="outlined"
                             value={policyName}
                             onChange={(e) => {
                                 setPolicyName(e.target.value);
                             }}
-                            id="policyName"
-                            placeholder="Enter Policy Name"
-                            name="policyName"
                             color={policyNameError ? 'error' : 'primary'}
                             error={policyNameError}
                             helperText={policyNameErrorMessage}
+                            label={'Policy Name'}
                         />
                     </FormControl>
                     <FormControl>
