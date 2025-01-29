@@ -1,5 +1,5 @@
 import { Box, Button, DialogTitle, FormLabel, Input, NativeSelect, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import { LocationResolution, MeasurementResolution, PolicyCreateDto } from '../../api/openAPI';
 import { usePolicyService } from '../../hooks/services/usePolicyService.ts';
@@ -18,6 +18,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     const [policyName, setPolicyName] = useState<string>('');
     const [policyNameError, setPolicyNameError] = useState(false);
     const [policyNameErrorMessage, setPolicyNameErrorMessage] = useState('');
+    const formRef = useRef<HTMLFormElement>(null);
 
     const { createPolicy } = usePolicyService();
     const { showSnackbar } = useSnackbar();
@@ -37,12 +38,16 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!formRef.current) {
+            return;
+        }
+
         const valid = validatePolicyName();
         if (!valid) {
             return;
         }
 
-        const data = new FormData(event.currentTarget);
+        const data = new FormData(formRef.current);
 
         const policyCreateDto: PolicyCreateDto = {
             name: policyName,
@@ -71,6 +76,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
             <CustomDialogContent>
                 <Box
                     component="form"
+                    ref={formRef}
                     onSubmit={(event) => {
                         void handleSubmit(event);
                     }}
@@ -150,7 +156,7 @@ const CreatePolicyDialog = ({ payload, open, onClose }: Readonly<DialogProps<Cre
                 </Box>
             </CustomDialogContent>
             <CustomDialogActions>
-                <Button type="submit" variant="outlined">
+                <Button onClick={() => formRef.current?.requestSubmit()} variant="contained">
                     Create
                 </Button>
                 <Button
