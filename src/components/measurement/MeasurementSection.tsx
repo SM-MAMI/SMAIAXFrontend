@@ -30,10 +30,10 @@ interface MeasurementSectionProps {
         startAt: string,
         endAt: string
     ) => Promise<MeasurementListDto>;
+    chartOptions: ChartOptions;
     defaultResolution?: MeasurementResolution;
     highestAvailableResolution?: MeasurementResolution;
     requestOnInitialLoad?: boolean;
-    chartOptions?: ChartOptions;
     backgroundColor?: string;
     padding?: string;
 }
@@ -44,10 +44,10 @@ export type AggregatedVariablesOptionsKeys = keyof AggregatedVariables | 'all';
 const MeasurementSection: FC<MeasurementSectionProps> = ({
     measurementSourceId,
     getMeasurements,
+    chartOptions,
     defaultResolution = MeasurementResolution.QuarterHour,
     highestAvailableResolution = MeasurementResolution.Raw,
     requestOnInitialLoad = false,
-    chartOptions = {},
     backgroundColor = '',
     padding = '1em',
 }) => {
@@ -172,7 +172,6 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
         try {
             setIsLoading(true);
             setMeasurements([]);
-
             setVariableError(false);
 
             const measurements = await getMeasurements(

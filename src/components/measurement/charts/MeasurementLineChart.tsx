@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { MeasurementAggregatedDto, MeasurementRawDto } from '../../../api/openAPI';
 import Highcharts, { Options, SeriesOptionsType } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -25,15 +25,16 @@ export type ChartOptions = {
 
 interface MeasurementLineChartProps {
     measurements: Partial<MeasurementRawDto | MeasurementAggregatedDto>[];
-    chartOptions?: ChartOptions;
+    chartOptions: ChartOptions;
     useBoxShadow?: boolean;
 }
 
 const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
     measurements,
-    chartOptions = {},
+    chartOptions,
     useBoxShadow = true,
 }) => {
+    const [visibleDataCount, setVisibleDataCount] = useState(measurements.length);
     const theme = useTheme();
     const [chartKey, setChartKey] = useState(0);
 
@@ -61,6 +62,15 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
         );
     }
 
+    const updateVisibleDataCount = (e: Highcharts.AxisSetExtremesEventObject) => {
+        const filteredMeasurements = measurements.filter((measurement) => {
+            const timestamp = new Date(measurement.timestamp ?? '').getTime();
+            return timestamp >= e.min && timestamp <= e.max;
+        });
+
+        setVisibleDataCount(filteredMeasurements.length);
+    };
+
     const variableIds = Object.entries(measurements[0]).filter(
         ([key]) => key !== 'timestamp' && key !== 'amountOfMeasurements'
     );
@@ -71,12 +81,26 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             measurement[key as keyof (MeasurementRawDto | MeasurementAggregatedDto)] as unknown as number,
         ]);
 
+        const disableHighlighting = visibleDataCount > 300;
+
         return {
             type: 'line',
             name:
                 RawVariableLabelMap[key as keyof RawVariables] ||
                 AggregatedVariableLabelMap[key as keyof AggregatedVariables],
             data: data,
+            lineWidth: 1,
+            marker: {
+                enabled: !disableHighlighting,
+            },
+            states: {
+                hover: {
+                    enabled: !disableHighlighting,
+                },
+                inactive: {
+                    opacity: disableHighlighting ? 1 : 0.2,
+                },
+            },
         } as SeriesOptionsType;
     });
 
@@ -110,6 +134,9 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
             },
             dateTimeLabelFormats: {
                 hour: '%H:%M:%S',
+            },
+            events: {
+                afterSetExtremes: updateVisibleDataCount,
             },
         },
         yAxis: {
@@ -173,4 +200,4 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
     );
 };
 
-export default MeasurementLineChart;
+export default memo(MeasurementLineChart);

@@ -199,7 +199,7 @@ export default function SignUp() {
                             password={password}
                             error={passwordError}
                             helperText={
-                                'Password must be at least 8 characters long and contain one uppercase letter, one lowercase letter, one number, and one special character.'
+                                'Password must be at least 8 characters long and must contain one uppercase letter, one lowercase letter, one number, and one special character.'
                             }
                             color={passwordError ? 'error' : 'primary'}
                             onPasswordChange={handlePasswordChange}

@@ -9,6 +9,7 @@ import {
     ProblemDetails,
 } from '../../api/openAPI';
 import { AxiosError } from 'axios';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useContractService = () => {
     const context = useContext(ApiContext);
@@ -26,8 +27,7 @@ export const useContractService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [contractApi]
@@ -39,8 +39,7 @@ export const useContractService = () => {
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError<ProblemDetails>;
-            const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-            throw new Error(errorMessage);
+            throw new Error(getErrorDetails(axiosError));
         }
     }, [contractApi]);
 
@@ -51,8 +50,7 @@ export const useContractService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [contractApi]
@@ -75,9 +73,7 @@ export const useContractService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage =
-                    axiosError.response?.data.detail ?? axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [contractApi]

@@ -15,6 +15,7 @@ import { SmaiaXAbsoluteRoutes } from '../constants/constants.ts';
 import CustomPasswordFormControl from '../components/pure/CustomPasswordFormControl.tsx';
 import CustomAuthCardContainer from '../components/pure/CustomAuthCardContainer.tsx';
 import CustomAuthCard from '../components/pure/CustomAuthCard.tsx';
+import Divider from '@mui/material/Divider';
 
 export default function SignIn() {
     const [password, setPassword] = React.useState('');
@@ -107,6 +108,7 @@ export default function SignIn() {
                                 label="Password"
                             />
                         </FormControl>
+                        <Divider />
                         <Button type="submit" fullWidth variant="contained">
                             Sign in
                         </Button>

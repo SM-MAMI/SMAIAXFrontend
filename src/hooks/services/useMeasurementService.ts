@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import { MeasurementListDto, MeasurementResolution, ProblemDetails } from '../../api/openAPI';
 import { AxiosError } from 'axios';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useMeasurementService = () => {
     const context = useContext(ApiContext);
@@ -29,8 +30,7 @@ export const useMeasurementService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [measurementApi]

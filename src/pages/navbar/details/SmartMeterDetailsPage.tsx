@@ -235,6 +235,7 @@ const SmartMeterDetailsPage = () => {
                         measurementSourceId={smartMeter.id as SmartMeterId}
                         getMeasurements={getMeasurements}
                         requestOnInitialLoad={true}
+                        chartOptions={{}}
                     />
 
                     <Divider sx={{ margin: '2em' }} />

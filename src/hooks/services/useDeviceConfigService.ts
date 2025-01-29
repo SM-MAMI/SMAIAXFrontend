@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import { ApiContext } from '../../provider/context/ApiContext.tsx';
 import { AxiosError } from 'axios';
 import { DeviceConfigDto, ProblemDetails } from '../../api/openAPI';
+import { getErrorDetails } from '../../utils/helper.ts';
 
 export const useDeviceConfigService = () => {
     const context = useContext(ApiContext);
@@ -19,8 +20,7 @@ export const useDeviceConfigService = () => {
                 return response.data;
             } catch (error) {
                 const axiosError = error as AxiosError<ProblemDetails>;
-                const errorMessage = axiosError.response?.data.title ?? axiosError.message;
-                throw new Error(errorMessage);
+                throw new Error(getErrorDetails(axiosError));
             }
         },
         [deviceConfigApi]

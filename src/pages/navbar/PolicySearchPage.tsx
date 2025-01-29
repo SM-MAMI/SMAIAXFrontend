@@ -173,7 +173,7 @@ const PolicySearchPage = () => {
                         </NativeSelect>
                     </FormControl>
                     <FormControl>
-                        <FormLabel htmlFor="price">Maximum price</FormLabel>
+                        <FormLabel htmlFor="price">Maximum price (€)</FormLabel>
                         <Input type="number" id="price" name="price" inputProps={{ min: 0 }} />
                     </FormControl>
                     <DialogActions>
