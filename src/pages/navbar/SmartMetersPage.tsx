@@ -168,7 +168,7 @@ const SmartMetersPage = () => {
                             onClick={() => {
                                 void openAddSmartMeterDialog();
                             }}>
-                            Add Smart Meter
+                            Add Existing Smart Meter
                         </Button>
                     </Box>
                 </Box>

@@ -254,7 +254,7 @@ const AddSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<Ad
 
     return (
         <CustomDialog open={open}>
-            <DialogTitle>Add Smart Meter</DialogTitle>
+            <DialogTitle>Add Existing Smart Meter</DialogTitle>
             <CustomDialogContent>
                 <CustomStepper
                     steps={steps}
