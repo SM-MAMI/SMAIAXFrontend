@@ -58,7 +58,8 @@ const EditSmartMeterDialog = ({ payload, open, onClose }: Readonly<DialogProps<E
             <DialogTitle>Edit Smart Meter</DialogTitle>
             <CustomDialogContent>
                 <TextField
-                    label="Enter Smart Meter Name *"
+                    label="Enter Smart Meter Name"
+                    required
                     variant="outlined"
                     fullWidth
                     margin="normal"
