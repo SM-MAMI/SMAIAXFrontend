@@ -117,7 +117,7 @@ const MeasurementSection: FC<MeasurementSectionProps> = ({
 
         if (selectedResolution === MeasurementResolution.Raw && resolution !== MeasurementResolution.Raw) {
             const updatedVariables = selectedVariables.map((variable) => {
-                return variable.startsWith('avg')
+                return variable.startsWith(allVariableSelect[0])
                     ? variable
                     : `avg${variable.charAt(0).toUpperCase()}${variable.slice(1)}`;
             }) as (RawVariablesOptionsKeys | AggregatedVariablesOptionsKeys)[];

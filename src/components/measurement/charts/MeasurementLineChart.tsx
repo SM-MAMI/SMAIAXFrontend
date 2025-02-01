@@ -90,6 +90,7 @@ const MeasurementLineChart: React.FC<MeasurementLineChartProps> = ({
                 AggregatedVariableLabelMap[key as keyof AggregatedVariables],
             data: data,
             lineWidth: 1,
+            animation: !disableHighlighting,
             marker: {
                 enabled: !disableHighlighting,
             },
